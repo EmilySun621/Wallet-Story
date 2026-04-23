@@ -21,6 +21,7 @@ function Investigation() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  const [progressStep, setProgressStep] = useState(0);
 
   // Validate Ethereum address format
   const isValidAddress = (addr) => {
@@ -38,6 +39,15 @@ function Investigation() {
     }
 
     setLoading(true);
+    setProgressStep(0);
+
+    // Simulate multi-step progress with intervals
+    const progressInterval = setInterval(() => {
+      setProgressStep(prev => {
+        if (prev < 4) return prev + 1;
+        return prev;
+      });
+    }, 15000); // Advance every 15 seconds
 
     try {
       const response = await fetch(`${API_URL}/investigate`, {
@@ -48,6 +58,9 @@ function Investigation() {
         body: JSON.stringify({ address }),
       });
 
+      clearInterval(progressInterval);
+      setProgressStep(5); // Complete
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Investigation failed');
@@ -56,9 +69,11 @@ function Investigation() {
       const data = await response.json();
       setResult(data);
     } catch (err) {
+      clearInterval(progressInterval);
       setError(err.message);
     } finally {
       setLoading(false);
+      setTimeout(() => setProgressStep(0), 1000); // Reset after completion
     }
   };
 
@@ -108,8 +123,28 @@ function Investigation() {
           </div>
           {loading && (
             <div className="loading-message">
-              <span className="spinner">⏳</span>
-              Running autonomous agent... This may take 30-90 seconds.
+              <div className="progress-steps">
+                <div className={`progress-step ${progressStep >= 0 ? 'active' : ''} ${progressStep > 0 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 0 ? '✓' : '▶'}</span>
+                  <span className="step-text">Fetching wallet history...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 1 ? 'active' : ''} ${progressStep > 1 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 1 ? '✓' : progressStep === 1 ? '▶' : '○'}</span>
+                  <span className="step-text">Classifying trades...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 2 ? 'active' : ''} ${progressStep > 2 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 2 ? '✓' : progressStep === 2 ? '▶' : '○'}</span>
+                  <span className="step-text">Computing statistics...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 3 ? 'active' : ''} ${progressStep > 3 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 3 ? '✓' : progressStep === 3 ? '▶' : '○'}</span>
+                  <span className="step-text">Building cluster graph...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 4 ? 'active' : ''} ${progressStep > 4 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 4 ? '✓' : progressStep === 4 ? '▶' : '○'}</span>
+                  <span className="step-text">Generating narrative...</span>
+                </div>
+              </div>
             </div>
           )}
           {error && (
@@ -369,8 +404,55 @@ function Investigation() {
 
         .loading-message {
           color: #ffaa00;
-          padding: 1rem;
+          padding: 1.5rem;
+          background: #111;
+          border-radius: 4px;
+          border: 1px solid #333;
+        }
+
+        .progress-steps {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .progress-step {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          color: #666;
+          transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+          color: #ffaa00;
+        }
+
+        .progress-step.completed {
+          color: #00ff00;
+        }
+
+        .step-icon {
+          font-size: 1rem;
+          min-width: 20px;
           text-align: center;
+        }
+
+        .progress-step.active .step-icon {
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .step-text {
+          font-size: 0.95rem;
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
         }
 
         .spinner {
