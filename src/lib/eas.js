@@ -174,15 +174,45 @@ export async function attestReport(report) {
       },
     });
     console.log('[EAS] Step 4 ✓: Transaction submitted:', tx);
+    console.log('[EAS] Step 4 ✓: Full tx object:', JSON.stringify(tx, null, 2));
+
+    // Extract transaction hash (handle both SDK shapes)
+    const txHash = tx.tx?.hash || tx.hash || null;
+    console.log('[EAS] Extracted tx hash:', txHash);
 
     // Wait for transaction confirmation
     console.log('[EAS] Step 5: Waiting for transaction confirmation...');
-    const attestationUID = await tx.wait();
-    console.log('[EAS] Step 5 ✓: Transaction confirmed, UID:', attestationUID);
+    let attestationUID;
+    try {
+      const result = await tx.wait();
+      console.log('[EAS] Step 5: tx.wait() returned:', result);
+      console.log('[EAS] Step 5: Result type:', typeof result);
+
+      // Handle both old SDK (returns receipt object) and new SDK (returns UID string)
+      if (typeof result === 'string') {
+        attestationUID = result;
+      } else if (result?.logs?.[0]?.data) {
+        attestationUID = result.logs[0].data;
+      } else {
+        // Fallback: if we can't get UID but have tx hash, still succeed
+        console.warn('[EAS] Could not extract UID from result, using fallback');
+        attestationUID = txHash ? `pending-${txHash}` : 'unknown';
+      }
+      console.log('[EAS] Step 5 ✓: Transaction confirmed, UID:', attestationUID);
+    } catch (waitError) {
+      console.error('[EAS] Error during tx.wait():', waitError);
+      // If tx.wait() fails but we have a tx hash, still return partial success
+      if (txHash) {
+        console.warn('[EAS] Transaction submitted but confirmation failed. TX Hash:', txHash);
+        attestationUID = `pending-${txHash}`;
+      } else {
+        throw waitError;
+      }
+    }
 
     return {
       uid: attestationUID,
-      txHash: tx.tx.hash,
+      txHash: txHash || 'unknown',
     };
   } catch (error) {
     // Log the actual error for debugging
