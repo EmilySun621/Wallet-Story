@@ -14,6 +14,9 @@ import Analytics from './pages/Analytics'
 import Reports from './pages/Reports'
 import DataSource from './pages/DataSource'
 import FloatingChatbot from './components/FloatingChatbot'
+// WalletStory forensic investigation pages
+import Investigation from './pages/Investigation'
+import CaseLibrary from './pages/CaseLibrary_v2'
 
 function App() {
   const [address, setAddress] = useState('')
@@ -163,8 +166,14 @@ function App() {
 
           <div className="main-content">
             <Routes>
-              <Route
-                path="/"
+              {/* WalletStory forensic investigation routes - DEFAULT LANDING */}
+              <Route path="/" element={<CaseLibrary />} />
+              <Route path="/cases" element={<CaseLibrary />} />
+              <Route path="/investigation" element={<Investigation />} />
+
+              {/* Legacy wallet analysis routes (commented out but kept) */}
+              {/* <Route
+                path="/dashboard"
                 element={
                   <Dashboard
                     address={address}
@@ -222,7 +231,7 @@ function App() {
                 element={
                   <DataSource address={address} />
                 }
-              />
+              /> */}
             </Routes>
           </div>
         </div>
