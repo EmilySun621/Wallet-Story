@@ -8,6 +8,7 @@ import VerdictBadge from '../components/VerdictBadge';
 import CaseComparison from '../components/CaseComparison';
 import ClusterForceGraph from '../components/ClusterForceGraph';
 import MoneyFlowSankey from '../components/MoneyFlowSankey';
+import { attestReport, getEasscanUrl, formatAttestationUID, switchToSepolia } from '../lib/eas';
 import '../terminal-theme.css';
 import './CaseLibrary.css';
 
@@ -17,6 +18,11 @@ function CaseLibrary() {
   const [theoCase, setTheoCase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Attestation state
+  const [attestationLoading, setAttestationLoading] = useState(false);
+  const [attestationError, setAttestationError] = useState(null);
+  const [attestationUID, setAttestationUID] = useState(null);
 
   useEffect(() => {
     fetchCases();
@@ -36,6 +42,49 @@ function CaseLibrary() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePublishAttestation = async () => {
+    if (!theoCase) return;
+
+    setAttestationLoading(true);
+    setAttestationError(null);
+
+    try {
+      // Prepare Theo case report data
+      const reportData = {
+        ...theoCase,
+        subject_address: theoCase.cluster_summary?.candidates?.[0] || '0x0000000000000000000000000000000000000000',
+        verdict: theoCase.verdict || 'Unknown',
+        p_value: theoCase.p_value ?? 0,
+      };
+
+      // Attempt attestation
+      const { uid, txHash } = await attestReport(reportData);
+      setAttestationUID(uid);
+    } catch (err) {
+      // Check if it's a network error, offer to switch
+      if (err.message?.includes('Wrong network')) {
+        try {
+          await switchToSepolia();
+          // Retry after switching
+          const reportData = {
+            ...theoCase,
+            subject_address: theoCase.cluster_summary?.candidates?.[0] || '0x0000000000000000000000000000000000000000',
+            verdict: theoCase.verdict || 'Unknown',
+            p_value: theoCase.p_value ?? 0,
+          };
+          const { uid, txHash } = await attestReport(reportData);
+          setAttestationUID(uid);
+        } catch (retryErr) {
+          setAttestationError(retryErr.message);
+        }
+      } else {
+        setAttestationError(err.message);
+      }
+    } finally {
+      setAttestationLoading(false);
     }
   };
 
@@ -97,10 +146,56 @@ function CaseLibrary() {
               <h2 className="section-title">Case Study: Theo Cluster</h2>
               <p className="section-subtitle">13-wallet coordinated network — $85M profit, 97.3% win rate</p>
             </div>
-            <VerdictBadge
-              severity={theoCase.verdict}
-              pValue={theoCase.win_rate_analysis?.binomial_test?.p_value}
-            />
+            <div className="featured-verdict-attest">
+              <VerdictBadge
+                severity={theoCase.verdict}
+                pValue={theoCase.p_value}
+              />
+
+              {/* ATTESTATION SECTION */}
+              <div className="attestation-section">
+                {!attestationUID && (
+                  <button
+                    className="attest-button"
+                    onClick={handlePublishAttestation}
+                    disabled={attestationLoading}
+                  >
+                    {attestationLoading ? '⏳ Publishing...' : '📎 Publish Attestation to Chain'}
+                  </button>
+                )}
+
+                {attestationError && (
+                  <div className="attestation-error">
+                    <span className="error-icon">⚠️</span>
+                    <span className="error-text">{attestationError}</span>
+                    <button
+                      className="retry-button"
+                      onClick={handlePublishAttestation}
+                      disabled={attestationLoading}
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+
+                {attestationUID && (
+                  <div className="attestation-success">
+                    <span className="success-icon">✅</span>
+                    <span className="success-text">
+                      Attestation published: <code className="attestation-uid">{formatAttestationUID(attestationUID)}</code>
+                    </span>
+                    <a
+                      href={getEasscanUrl(attestationUID)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="easscan-link"
+                    >
+                      View on Easscan →
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="featured-grid">

@@ -130,10 +130,135 @@
 .featured-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 3rem;
   flex-wrap: wrap;
   gap: 2rem;
+}
+
+.featured-verdict-attest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+/* ATTESTATION UI (shared styles with Investigation.css) */
+.attestation-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.attest-button {
+  padding: var(--space-md) var(--space-xl);
+  background: var(--brand-purple);
+  color: var(--text-primary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-sans);
+}
+
+.attest-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.attest-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.attestation-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--verdict-critical-bg);
+  border: 1px solid var(--verdict-critical-border);
+  border-radius: var(--radius-md);
+  color: var(--verdict-critical);
+}
+
+.attestation-error .error-icon {
+  font-size: var(--text-xl);
+}
+
+.attestation-error .error-text {
+  flex: 1;
+  font-size: var(--text-sm);
+}
+
+.retry-button {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--verdict-critical);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.retry-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.attestation-success {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--verdict-low-bg);
+  border: 1px solid var(--verdict-low-border);
+  border-radius: var(--radius-md);
+  color: var(--verdict-low);
+}
+
+.attestation-success .success-icon {
+  font-size: var(--text-xl);
+}
+
+.attestation-success .success-text {
+  flex: 1;
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.attestation-uid {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: var(--bg-card);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  color: var(--text-mono);
+}
+
+.easscan-link {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--brand-purple);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.easscan-link:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .featured-grid {

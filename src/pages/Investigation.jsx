@@ -14,6 +14,7 @@ import VerdictBadge from '../components/VerdictBadge';
 import ClusterForceGraph from '../components/ClusterForceGraph';
 import MoneyFlowSankey from '../components/MoneyFlowSankey';
 import TimingDistributionChart from '../components/TimingDistributionChart';
+import { attestReport, getEasscanUrl, formatAttestationUID, switchToSepolia } from '../lib/eas';
 import '../terminal-theme.css';
 import '../terminal-table.css';
 import './Investigation.css';
@@ -27,6 +28,11 @@ function Investigation() {
   const [result, setResult] = useState(null);
   const [progressStep, setProgressStep] = useState(0);
 
+  // Attestation state
+  const [attestationLoading, setAttestationLoading] = useState(false);
+  const [attestationError, setAttestationError] = useState(null);
+  const [attestationUID, setAttestationUID] = useState(null);
+
   // Validate Ethereum address format
   const isValidAddress = (addr) => {
     return /^0x[a-fA-F0-9]{40}$/.test(addr);
@@ -34,6 +40,7 @@ function Investigation() {
 
   const handleInvestigate = async () => {
     setResult(null);
+    setAttestationUID(null); // Reset attestation on new investigation
 
     // Validate input
     if (!address.trim()) {
@@ -84,6 +91,47 @@ function Investigation() {
     } finally {
       setLoading(false);
       setTimeout(() => setProgressStep(0), 1000); // Reset after completion
+    }
+  };
+
+  const handlePublishAttestation = async () => {
+    setAttestationLoading(true);
+    setAttestationError(null);
+
+    try {
+      // Prepare report data with subject_address
+      const reportData = {
+        ...result,
+        subject_address: address,
+        verdict: result.insider_detection?.verdict || 'Unknown',
+        p_value: result.insider_detection?.p_value ?? 0,
+      };
+
+      // Attempt attestation
+      const { uid, txHash } = await attestReport(reportData);
+      setAttestationUID(uid);
+    } catch (err) {
+      // Check if it's a network error, offer to switch
+      if (err.message?.includes('Wrong network')) {
+        try {
+          await switchToSepolia();
+          // Retry after switching
+          const reportData = {
+            ...result,
+            subject_address: address,
+            verdict: result.insider_detection?.verdict || 'Unknown',
+            p_value: result.insider_detection?.p_value ?? 0,
+          };
+          const { uid, txHash } = await attestReport(reportData);
+          setAttestationUID(uid);
+        } catch (retryErr) {
+          setAttestationError(retryErr.message);
+        }
+      } else {
+        setAttestationError(err.message);
+      }
+    } finally {
+      setAttestationLoading(false);
     }
   };
 
@@ -171,6 +219,50 @@ function Investigation() {
               severity={result.insider_detection?.verdict || 'Low'}
               pValue={result.insider_detection?.p_value}
             />
+
+            {/* ATTESTATION SECTION */}
+            <div className="attestation-section">
+              {!attestationUID && (
+                <button
+                  className="attest-button"
+                  onClick={handlePublishAttestation}
+                  disabled={attestationLoading}
+                >
+                  {attestationLoading ? '⏳ Publishing...' : '📎 Publish Attestation to Chain'}
+                </button>
+              )}
+
+              {attestationError && (
+                <div className="attestation-error">
+                  <span className="error-icon">⚠️</span>
+                  <span className="error-text">{attestationError}</span>
+                  <button
+                    className="retry-button"
+                    onClick={handlePublishAttestation}
+                    disabled={attestationLoading}
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
+
+              {attestationUID && (
+                <div className="attestation-success">
+                  <span className="success-icon">✅</span>
+                  <span className="success-text">
+                    Attestation published: <code className="attestation-uid">{formatAttestationUID(attestationUID)}</code>
+                  </span>
+                  <a
+                    href={getEasscanUrl(attestationUID)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="easscan-link"
+                  >
+                    View on Easscan →
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* KEY METRICS GRID */}
