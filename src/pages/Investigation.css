@@ -1,17 +1,30 @@
 /* Investigation.css — Spacious, desktop-first investigation page */
 
 .investigation-page {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background: #0a0e1a;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 /* INPUT HERO SECTION */
 .input-hero-section {
+  width: 100vw;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  padding: 6rem 3vw 5rem 3vw;
+  padding: 6rem 0 5rem 0;
   text-align: center;
   border-bottom: 2px solid #1a1a2e;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .input-hero-content {
@@ -151,7 +164,21 @@
 
 /* RESULTS SECTION */
 .results-section {
-  padding: 5rem 3vw;
+  width: 100vw;
+  padding: 5rem 0;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.results-section > * {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 .results-verdict-hero {

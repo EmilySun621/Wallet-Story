@@ -1,17 +1,30 @@
 /* CaseLibrary.css — Spacious, desktop-first layout */
 
 .cases-page {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background: #0a0e1a;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 /* HERO SECTION */
 .hero-section {
+  width: 100vw;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  padding: 8rem 3vw 6rem 3vw;
+  padding: 8rem 0 6rem 0;
   text-align: center;
   border-bottom: 2px solid #1a1a2e;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .hero-content {
@@ -74,8 +87,24 @@
 .comparison-section,
 .featured-section,
 .money-flow-section {
-  padding: 5rem 3vw;
+  width: 100vw;
+  padding: 5rem 0;
   border-bottom: 1px solid #1a1a2e;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.comparison-section > *,
+.featured-section > *,
+.money-flow-section > * {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 .section-title {
@@ -202,9 +231,23 @@
 
 /* FOOTER */
 .footer-section {
-  padding: 4rem 3vw;
+  width: 100vw;
+  padding: 4rem 0;
   background: rgba(255, 255, 255, 0.01);
   text-align: center;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.footer-section > * {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 .footer-content {

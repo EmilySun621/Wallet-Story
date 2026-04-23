@@ -308,12 +308,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
 }
 
 .nav-content {
-  max-width: 1920px;
-  margin: 0 auto;
-  padding: 16px 32px;
+  width: 100%;
+  margin: 0;
+  padding: 16px 3vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -423,9 +424,8 @@ body {
 /* ========== MAIN CONTENT ========== */
 .main-content {
   flex: 1;
-  max-width: 1920px;
-  margin: 0 auto;
   width: 100%;
+  margin: 0;
   overflow-y: auto;
 }
 
