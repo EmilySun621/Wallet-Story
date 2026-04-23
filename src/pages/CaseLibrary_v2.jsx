@@ -1,28 +1,24 @@
 /**
- * CaseLibrary_v2.jsx — Spacious, desktop-first case library
- * Full-width layout with hero, comparison, visualizations
+ * CaseLibrary_v2.jsx — Flagship case study page
+ * Single-column layout: hero → case study → cluster network → on-chain proof → footer
  */
 
 import { useEffect, useState } from 'react';
 import VerdictBadge from '../components/VerdictBadge';
-import CaseComparison from '../components/CaseComparison';
 import ClusterForceGraph from '../components/ClusterForceGraph';
-import MoneyFlowSankey from '../components/MoneyFlowSankey';
-import { attestReport, getEasscanUrl, formatAttestationUID, switchToSepolia } from '../lib/eas';
+import { getEasscanUrl, formatAttestationUID } from '../lib/eas';
 import '../terminal-theme.css';
 import './CaseLibrary.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+// Real attestation UID from successful on-chain publication
+const EXAMPLE_ATTESTATION_UID = '0x5ad0892384dcbdca89d1eced80d2e7776bdf93808073b0ed8f5d03b8a4ec2f30';
+
 function CaseLibrary() {
   const [theoCase, setTheoCase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Attestation state
-  const [attestationLoading, setAttestationLoading] = useState(false);
-  const [attestationError, setAttestationError] = useState(null);
-  const [attestationUID, setAttestationUID] = useState(null);
 
   useEffect(() => {
     fetchCases();
@@ -42,62 +38,6 @@ function CaseLibrary() {
       setError(err.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handlePublishAttestation = async () => {
-    console.log('[CaseLibrary] handlePublishAttestation called');
-    console.log('[CaseLibrary] theoCase:', theoCase);
-
-    if (!theoCase) {
-      console.warn('[CaseLibrary] theoCase is null/undefined, aborting');
-      return;
-    }
-
-    setAttestationLoading(true);
-    setAttestationError(null);
-
-    try {
-      // Prepare Theo case report data
-      const reportData = {
-        ...theoCase,
-        subject_address: theoCase.cluster_summary?.candidates?.[0] || '0x0000000000000000000000000000000000000000',
-        verdict: theoCase.verdict || 'Unknown',
-        p_value: theoCase.p_value ?? 0,
-      };
-      console.log('[CaseLibrary] Prepared reportData:', reportData);
-
-      // Attempt attestation
-      const { uid, txHash } = await attestReport(reportData);
-      console.log('[CaseLibrary] ✓ Attestation successful:', { uid, txHash });
-      setAttestationUID(uid);
-    } catch (err) {
-      console.error('[CaseLibrary] ❌ Attestation failed:', err);
-
-      // Check if it's a network error, offer to switch
-      if (err.message?.includes('Wrong network')) {
-        try {
-          console.log('[CaseLibrary] Attempting to switch to Sepolia...');
-          await switchToSepolia();
-          // Retry after switching
-          const reportData = {
-            ...theoCase,
-            subject_address: theoCase.cluster_summary?.candidates?.[0] || '0x0000000000000000000000000000000000000000',
-            verdict: theoCase.verdict || 'Unknown',
-            p_value: theoCase.p_value ?? 0,
-          };
-          const { uid, txHash } = await attestReport(reportData);
-          console.log('[CaseLibrary] ✓ Attestation successful after network switch:', { uid, txHash });
-          setAttestationUID(uid);
-        } catch (retryErr) {
-          console.error('[CaseLibrary] ❌ Retry failed:', retryErr);
-          setAttestationError(retryErr.message);
-        }
-      } else {
-        setAttestationError(err.message);
-      }
-    } finally {
-      setAttestationLoading(false);
     }
   };
 
@@ -127,206 +67,153 @@ function CaseLibrary() {
 
   return (
     <div className="cases-page">
-      {/* HERO SECTION */}
+      {/* A. HERO SECTION */}
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Every wallet. Every edge. One story.</h1>
           <p className="hero-subtitle">
-            Autonomous forensic analysis for prediction market insider trading detection
+            The onchain forensic platform that proves smart money is insider trading — with p-values, cluster analysis, and on-chain attestations.
           </p>
           <div className="hero-cta-badges">
-            <button className="cta-badge" onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })}>
-              View Evidence
-            </button>
-            <a href="/investigation" className="cta-badge cta-secondary">
-              Try Live
+            <a href="/investigation" className="cta-badge">
+              Try Investigation →
+            </a>
+            <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="cta-badge cta-secondary">
+              View on GitHub
             </a>
           </div>
         </div>
       </section>
 
-      {/* CASE COMPARISON SECTION */}
-      <section className="comparison-section">
-        <h2 className="section-title">The Evidence</h2>
-        <CaseComparison />
-      </section>
-
-      {/* FEATURED CASE: THEO CLUSTER */}
+      {/* B. CASE STUDY: THE POLYMARKET THEO CLUSTER */}
       {theoCase && (
-        <section className="featured-section">
-          <div className="featured-header">
-            <div>
-              <h2 className="section-title">Case Study: Theo Cluster</h2>
-              <p className="section-subtitle">13-wallet coordinated network — $85M profit, 97.3% win rate</p>
+        <section className="case-study-section">
+          <h2 className="section-title">Case Study: The Polymarket Theo Cluster</h2>
+
+          {/* Narrative blockquote */}
+          <blockquote className="case-narrative">
+            In October 2024, Bloomberg and Chainalysis identified a coordinated network of wallets
+            generating millions in profit on Polymarket with statistically impossible win rates.
+            Our forensic analysis confirms: 13 wallets, shared infrastructure, p-value &lt; 10⁻²⁵⁰.
+          </blockquote>
+
+          {/* 4 metric cards in one row */}
+          <div className="metrics-row">
+            <div className="metric-card-large">
+              <div className="metric-label-large">Win Rate</div>
+              <div className="metric-value-large">{(theoCase.aggregate_win_rate * 100).toFixed(1)}%</div>
             </div>
-            <div className="featured-verdict-attest">
-              <VerdictBadge
-                severity={theoCase.verdict}
-                pValue={theoCase.p_value}
-              />
-
-              {/* ATTESTATION SECTION */}
-              <div className="attestation-section">
-                {!attestationUID && (
-                  <button
-                    className="attest-button"
-                    onClick={handlePublishAttestation}
-                    disabled={attestationLoading}
-                  >
-                    {attestationLoading ? '⏳ Publishing...' : '📎 Publish Attestation to Chain'}
-                  </button>
-                )}
-
-                {attestationError && (
-                  <div className="attestation-error">
-                    <span className="error-icon">⚠️</span>
-                    <span className="error-text">{attestationError}</span>
-                    <button
-                      className="retry-button"
-                      onClick={handlePublishAttestation}
-                      disabled={attestationLoading}
-                    >
-                      Retry
-                    </button>
-                  </div>
-                )}
-
-                {attestationUID && (
-                  <div className="attestation-success">
-                    <span className="success-icon">✅</span>
-                    <span className="success-text">
-                      Attestation published: <code className="attestation-uid">{formatAttestationUID(attestationUID)}</code>
-                    </span>
-                    <a
-                      href={getEasscanUrl(attestationUID)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="easscan-link"
-                    >
-                      View on Easscan →
-                    </a>
-                  </div>
-                )}
-              </div>
+            <div className="metric-card-large">
+              <div className="metric-label-large">p-value</div>
+              <div className="metric-value-large">{theoCase.p_value_scientific}</div>
+            </div>
+            <div className="metric-card-large">
+              <div className="metric-label-large">Total Volume</div>
+              <div className="metric-value-large">${(theoCase.total_usdc_volume / 1e6).toFixed(1)}M</div>
+            </div>
+            <div className="metric-card-large">
+              <div className="metric-label-large">Cluster Size</div>
+              <div className="metric-value-large">{theoCase.exchange_anchor_analysis?.total_cluster_size || 13} wallets</div>
             </div>
           </div>
 
-          <div className="featured-grid">
-            {/* Left: Force Graph */}
-            <div className="featured-viz-large">
-              <ClusterForceGraph
-                clusterData={{
-                  wallets: theoCase.per_wallet?.map(w => ({
-                    address: w.address,
-                    trades: w.wins + w.losses,
-                    win_rate: w.win_rate
-                  })) || [],
-                  funder: theoCase.exchange_anchor_analysis?.shared_funder ?
-                    { address: theoCase.exchange_anchor_analysis.shared_funder } : null,
-                  exchange: theoCase.exchange_anchor_analysis?.exchange_deposit ?
-                    { address: theoCase.exchange_anchor_analysis.exchange_deposit } : null,
-                  proxy: theoCase.exchange_anchor_analysis?.shared_proxy ?
-                    { address: theoCase.exchange_anchor_analysis.shared_proxy } : null
-                }}
-              />
-            </div>
-
-            {/* Right: Case Details */}
-            <div className="featured-details">
-              <div className="detail-card">
-                <h3>🕸️ Cluster Infrastructure</h3>
-                <div className="detail-list">
-                  <div className="detail-row">
-                    <span className="detail-label">Cluster Size:</span>
-                    <span className="detail-value">{theoCase.exchange_anchor_analysis?.total_cluster_size || 13} wallets</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Shared Funder:</span>
-                    <span className="detail-value mono">{theoCase.exchange_anchor_analysis?.shared_funder?.slice(0, 12)}...</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Shared Exchange:</span>
-                    <span className="detail-value">Kraken (verified)</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Shared Proxy:</span>
-                    <span className="detail-value">{theoCase.exchange_anchor_analysis?.shared_proxy ? 'Detected' : 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="detail-card">
-                <h3>📊 Statistical Evidence</h3>
-                <div className="detail-list">
-                  <div className="detail-row">
-                    <span className="detail-label">Aggregate Win Rate:</span>
-                    <span className="detail-value highlight">{(theoCase.aggregate_win_rate * 100).toFixed(1)}%</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">p-value:</span>
-                    <span className="detail-value">{theoCase.p_value_scientific}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Total Volume:</span>
-                    <span className="detail-value">${(theoCase.total_usdc_volume / 1e6).toFixed(1)}M</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Markets Traded:</span>
-                    <span className="detail-value">{theoCase.unique_markets}</span>
-                  </div>
-                </div>
-              </div>
-
-              {theoCase.cross_reference_sources && (
-                <div className="detail-card">
-                  <h3>📰 Cross-References</h3>
-                  <ul className="reference-list">
-                    {theoCase.cross_reference_sources.map((source, idx) => (
-                      <li key={idx}>{source}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* MONEY FLOW SECTION */}
-      {theoCase && (
-        <section className="money-flow-section">
-          <h2 className="section-title">Fund Flow Analysis</h2>
-          <p className="section-subtitle">Tracking capital movement from shared funder through cluster to exchange</p>
-          <div className="money-flow-container">
-            <MoneyFlowSankey
-              flowData={{
-                funder: theoCase.exchange_anchor_analysis?.shared_funder ?
-                  { address: theoCase.exchange_anchor_analysis.shared_funder } : null,
-                wallets: theoCase.per_wallet?.map(w => ({
-                  address: w.address,
-                  funding_amount: 1000,
-                  exchange_volume: 800
-                })) || [],
-                exchange: theoCase.exchange_anchor_analysis?.exchange_deposit ?
-                  { address: theoCase.exchange_anchor_analysis.exchange_deposit } : null
-              }}
+          {/* Large centered VerdictBadge */}
+          <div className="verdict-centered">
+            <VerdictBadge
+              severity={theoCase.verdict}
+              pValue={theoCase.p_value}
             />
           </div>
         </section>
       )}
 
-      {/* FOOTER */}
+      {/* C. 13-WALLET COORDINATED NETWORK */}
+      {theoCase && (
+        <section className="cluster-network-section">
+          <h2 className="section-title">13-Wallet Coordinated Network</h2>
+
+          {/* ClusterForceGraph - full width, min 600px tall */}
+          <div className="cluster-graph-container">
+            <ClusterForceGraph
+              clusterData={{
+                wallets: theoCase.per_wallet?.map(w => ({
+                  address: w.address,
+                  trades: w.wins + w.losses,
+                  win_rate: w.win_rate
+                })) || [],
+                funder: theoCase.exchange_anchor_analysis?.shared_funder ?
+                  { address: theoCase.exchange_anchor_analysis.shared_funder } : null,
+                exchange: theoCase.exchange_anchor_analysis?.exchange_deposit ?
+                  { address: theoCase.exchange_anchor_analysis.exchange_deposit } : null,
+                proxy: theoCase.exchange_anchor_analysis?.shared_proxy ?
+                  { address: theoCase.exchange_anchor_analysis.shared_proxy } : null
+              }}
+            />
+          </div>
+
+          {/* 3 infrastructure cards BELOW the graph */}
+          <div className="infrastructure-cards">
+            <div className="detail-card">
+              <h3>Shared Funder</h3>
+              <p className="infra-address">{theoCase.exchange_anchor_analysis?.shared_funder?.slice(0, 12)}...</p>
+              <p className="infra-description">Single funding source for all 13 wallets</p>
+            </div>
+
+            <div className="detail-card">
+              <h3>Shared Exchange</h3>
+              <p className="infra-address">Kraken</p>
+              <p className="infra-description">Common deposit endpoint (verified)</p>
+            </div>
+
+            <div className="detail-card">
+              <h3>Shared Proxy</h3>
+              <p className="infra-address">{theoCase.exchange_anchor_analysis?.shared_proxy ? 'Detected' : 'N/A'}</p>
+              <p className="infra-description">{theoCase.exchange_anchor_analysis?.shared_proxy ? 'Common proxy contract' : 'No shared proxy'}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* D. ON-CHAIN PROOF */}
+      <section className="onchain-proof-section">
+        <h2 className="section-title">On-Chain Proof</h2>
+        <p className="section-subtitle">Permanent, Verifiable Evidence</p>
+
+        <div className="attestation-display">
+          <div className="attestation-uid-display">
+            <span className="attestation-label">Attestation UID:</span>
+            <code className="attestation-uid-full">{EXAMPLE_ATTESTATION_UID}</code>
+          </div>
+
+          <a
+            href={getEasscanUrl(EXAMPLE_ATTESTATION_UID)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="easscan-button-large"
+          >
+            View on Easscan →
+          </a>
+        </div>
+      </section>
+
+      {/* E. FOOTER */}
       <section className="footer-section">
         <div className="footer-content">
           <p>
             <strong>Methodology:</strong> Statistical analysis via binomial significance testing,
             graph-based clustering, and timing distribution analysis.
           </p>
-          <p>
+          <div className="footer-links">
             <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="footer-link">
-              View Technical Documentation →
+              Architecture →
             </a>
-          </p>
+            <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="footer-link">
+              GitHub →
+            </a>
+            <a href="/investigation" className="footer-link">
+              Try Investigation →
+            </a>
+          </div>
         </div>
       </section>
     </div>
