@@ -462,6 +462,15 @@ function CaseLibrary() {
           margin-bottom: 2rem;
         }
 
+        .featured-case .terminal-card {
+          border: 2px solid #ffaa00;
+        }
+
+        .featured-case .terminal-card:hover {
+          border-color: #ffcc00;
+          box-shadow: 0 0 25px rgba(255, 170, 0, 0.4);
+        }
+
         .featured-badge {
           position: absolute;
           top: -10px;
@@ -473,6 +482,7 @@ function CaseLibrary() {
           font-weight: bold;
           font-size: 0.9rem;
           z-index: 10;
+          box-shadow: 0 2px 8px rgba(255, 170, 0, 0.5);
         }
 
         .control-badge {
@@ -486,10 +496,16 @@ function CaseLibrary() {
           font-weight: bold;
           font-size: 0.9rem;
           z-index: 10;
+          box-shadow: 0 2px 8px rgba(0, 255, 0, 0.5);
         }
 
         .control-card {
+          border: 2px solid #00ff00 !important;
+        }
+
+        .control-card:hover {
           border-color: #00ff00 !important;
+          box-shadow: 0 0 25px rgba(0, 255, 0, 0.4) !important;
         }
 
         .control-summary {
@@ -502,6 +518,19 @@ function CaseLibrary() {
           border-radius: 8px;
           margin-bottom: 1.5rem;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
+
+        .terminal-card:hover {
+          border-color: #00ff00;
+          box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+          transform: translateY(-2px);
+        }
+
+        .terminal-card:active {
+          transform: translateY(0);
+          box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
         }
 
         .card-header {
@@ -553,6 +582,13 @@ function CaseLibrary() {
           border: 1px solid #333;
           border-radius: 4px;
           text-align: center;
+          transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+          background: #161616;
+          border-color: #555;
+          transform: scale(1.02);
         }
 
         .metric-label {
