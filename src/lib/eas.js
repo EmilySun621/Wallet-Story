@@ -237,9 +237,9 @@ export async function attestReport(report) {
 }
 
 /**
- * Get Easscan URL for viewing attestation
+ * Get EASScan URL for viewing attestation
  * @param {string} uid - Attestation UID
- * @returns {string} URL to view attestation on Easscan
+ * @returns {string} URL to view attestation on EASScan
  */
 export function getEasscanUrl(uid) {
   return `https://${EAS_NETWORK}.easscan.org/attestation/view/${uid}`;

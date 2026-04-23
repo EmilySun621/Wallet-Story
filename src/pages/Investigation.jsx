@@ -331,7 +331,7 @@ function Investigation() {
                   rel="noopener noreferrer"
                   className="easscan-link"
                 >
-                  View on Easscan →
+                  View on EASScan →
                 </a>
               </div>
             )}
