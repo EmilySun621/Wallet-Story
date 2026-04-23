@@ -173,8 +173,7 @@ export async function attestReport(report) {
         data: encodedData,
       },
     });
-    console.log('[EAS] Step 4 ✓: Transaction submitted:', tx);
-    console.log('[EAS] Step 4 ✓: Full tx object:', JSON.stringify(tx, null, 2));
+    console.log('[EAS] Step 4 ✓: Transaction submitted (user signed in MetaMask):', tx);
 
     // Extract transaction hash (handle both SDK shapes)
     const txHash = tx.tx?.hash || tx.hash || null;
