@@ -1,0 +1,467 @@
+/**
+ * CaseLibrary.jsx — Featured case studies from forensic investigations
+ *
+ * Features:
+ * - List of notable cases
+ * - Theo case as featured investigation
+ * - Data fetched from /case/theo endpoint
+ * - Summary cards with key metrics
+ */
+
+import { useEffect, useState } from 'react';
+import '../terminal-theme.css';
+import '../terminal-table.css';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+function CaseLibrary() {
+  const [theoCase, setTheoCase] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchTheoCase();
+  }, []);
+
+  const fetchTheoCase = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_URL}/case/theo`);
+
+      if (!response.ok) {
+        throw new Error('Failed to load Theo case');
+      }
+
+      const data = await response.json();
+      setTheoCase(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getVerdictColor = (verdict) => {
+    const colors = {
+      Critical: '#ff4444',
+      High: '#ff8800',
+      Medium: '#ffaa00',
+      Low: '#88ff00',
+      Inconclusive: '#888888',
+    };
+    return colors[verdict] || '#888888';
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  return (
+    <div className="page-container">
+      <div className="terminal-header">
+        <h1>📚 Case Library</h1>
+        <p className="subtitle">Featured forensic investigations of insider trading</p>
+      </div>
+
+      {loading && (
+        <div className="loading-card">
+          <span className="spinner">⏳</span> Loading case studies...
+        </div>
+      )}
+
+      {error && (
+        <div className="error-card">
+          ❌ {error}
+          <br />
+          <button onClick={fetchTheoCase} className="retry-button">
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Featured Case: Theo Cluster */}
+      {theoCase && (
+        <div className="featured-case">
+          <div className="featured-badge">⭐ FEATURED CASE</div>
+
+          <div className="terminal-card">
+            <div className="card-header">
+              <h2>{theoCase.case_name}</h2>
+              <span className="timestamp">
+                {new Date(theoCase.generated_at).toLocaleDateString()}
+              </span>
+            </div>
+
+            <div className="card-body">
+              {/* Case Summary */}
+              <div className="case-summary">
+                <p className="case-description">
+                  In November 2024, Bloomberg and Chainalysis exposed a French trader who made
+                  ~$85M profit on the 2024 US election using Polymarket. WalletStory independently
+                  reproduced and exceeded their findings, discovering a <strong>13-wallet cluster</strong> with{' '}
+                  <strong>$209M funded</strong>, <strong>$186M cashed out</strong>, and a{' '}
+                  <strong>97.3% win rate</strong>.
+                </p>
+              </div>
+
+              {/* Key Metrics */}
+              <div className="metrics-grid">
+                <div className="metric-card">
+                  <div className="metric-label">Verdict</div>
+                  <div
+                    className="metric-value"
+                    style={{ color: getVerdictColor(theoCase.verdict) }}
+                  >
+                    {theoCase.verdict}
+                  </div>
+                </div>
+
+                <div className="metric-card">
+                  <div className="metric-label">Win Rate</div>
+                  <div className="metric-value">
+                    {(theoCase.aggregate_win_rate * 100).toFixed(1)}%
+                  </div>
+                </div>
+
+                <div className="metric-card">
+                  <div className="metric-label">p-value</div>
+                  <div className="metric-value">{theoCase.p_value_scientific}</div>
+                </div>
+
+                <div className="metric-card">
+                  <div className="metric-label">Total Volume</div>
+                  <div className="metric-value">
+                    {formatCurrency(theoCase.total_usdc_volume)}
+                  </div>
+                </div>
+
+                <div className="metric-card">
+                  <div className="metric-label">Trades Analyzed</div>
+                  <div className="metric-value">{theoCase.total_trades_analyzed.toLocaleString()}</div>
+                </div>
+
+                <div className="metric-card">
+                  <div className="metric-label">Unique Markets</div>
+                  <div className="metric-value">{theoCase.unique_markets}</div>
+                </div>
+              </div>
+
+              {/* Cluster Analysis */}
+              {theoCase.exchange_anchor_analysis && (
+                <div className="cluster-section">
+                  <h3>🕸️ Cluster Analysis</h3>
+                  <div className="cluster-stats">
+                    <div className="stat">
+                      <strong>Total Cluster Size:</strong>{' '}
+                      {theoCase.exchange_anchor_analysis.total_cluster_size} wallets
+                    </div>
+                    <div className="stat">
+                      <strong>Candidates Surfaced:</strong>{' '}
+                      {theoCase.exchange_anchor_analysis.candidates_surfaced?.length || 0}
+                    </div>
+                    <div className="stat">
+                      <strong>Shared Infrastructure:</strong> Funder + Exchange + Proxy
+                    </div>
+                  </div>
+
+                  <table className="terminal-table">
+                    <thead>
+                      <tr>
+                        <th>Signal</th>
+                        <th>Address</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Shared Funder</td>
+                        <td className="mono-text">
+                          {theoCase.exchange_anchor_analysis.shared_funder}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Shared Exchange</td>
+                        <td className="mono-text">
+                          {theoCase.exchange_anchor_analysis.exchange_deposit}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Shared Proxy</td>
+                        <td className="mono-text">
+                          {theoCase.exchange_anchor_analysis.shared_proxy || 'N/A'}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Per-Wallet Breakdown */}
+              {theoCase.per_wallet && theoCase.per_wallet.length > 0 && (
+                <div className="wallet-section">
+                  <h3>💼 Seed Wallets</h3>
+                  <table className="terminal-table">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Address</th>
+                        <th>Wins</th>
+                        <th>Losses</th>
+                        <th>Win Rate</th>
+                        <th>Verdict</th>
+                        <th>Volume</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {theoCase.per_wallet.map((wallet, idx) => (
+                        <tr key={idx}>
+                          <td>{wallet.username}</td>
+                          <td className="mono-text">{wallet.address.slice(0, 10)}...</td>
+                          <td>{wallet.wins.toLocaleString()}</td>
+                          <td>{wallet.losses}</td>
+                          <td>{(wallet.win_rate * 100).toFixed(1)}%</td>
+                          <td style={{ color: getVerdictColor(wallet.verdict) }}>
+                            {wallet.verdict}
+                          </td>
+                          <td>{formatCurrency(wallet.total_usdc_volume)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Cross-References */}
+              {theoCase.cross_reference_sources && (
+                <div className="references-section">
+                  <h3>📰 Cross-References</h3>
+                  <ul>
+                    {theoCase.cross_reference_sources.map((source, idx) => (
+                      <li key={idx}>{source}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Placeholder for Future Cases */}
+      <div className="terminal-card">
+        <div className="card-header">
+          <h2>More Cases Coming Soon...</h2>
+        </div>
+        <div className="card-body">
+          <p style={{ color: '#888', textAlign: 'center' }}>
+            Additional case studies will be added as new investigations are completed.
+          </p>
+        </div>
+      </div>
+
+      <style>{`
+        .page-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 2rem;
+        }
+
+        .terminal-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .terminal-header h1 {
+          font-size: 2.5rem;
+          margin-bottom: 0.5rem;
+          color: #00ff00;
+        }
+
+        .subtitle {
+          color: #888;
+          font-size: 1rem;
+        }
+
+        .loading-card,
+        .error-card {
+          padding: 2rem;
+          text-align: center;
+          background: #0a0a0a;
+          border: 1px solid #333;
+          border-radius: 8px;
+          margin-bottom: 1.5rem;
+        }
+
+        .error-card {
+          border-color: #ff4444;
+          color: #ff4444;
+        }
+
+        .retry-button {
+          margin-top: 1rem;
+          padding: 0.5rem 1rem;
+          background: #00ff00;
+          border: none;
+          color: #000;
+          font-weight: bold;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+
+        .spinner {
+          display: inline-block;
+          margin-right: 0.5rem;
+        }
+
+        .featured-case {
+          position: relative;
+          margin-bottom: 2rem;
+        }
+
+        .featured-badge {
+          position: absolute;
+          top: -10px;
+          left: 20px;
+          background: #ffaa00;
+          color: #000;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          font-weight: bold;
+          font-size: 0.9rem;
+          z-index: 10;
+        }
+
+        .terminal-card {
+          background: #0a0a0a;
+          border: 1px solid #333;
+          border-radius: 8px;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+          padding: 1rem 1.5rem;
+          border-bottom: 1px solid #333;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .card-header h2 {
+          margin: 0;
+          font-size: 1.5rem;
+          color: #00ff00;
+        }
+
+        .timestamp {
+          color: #888;
+          font-size: 0.9rem;
+        }
+
+        .card-body {
+          padding: 1.5rem;
+        }
+
+        .case-summary {
+          margin-bottom: 2rem;
+          padding: 1rem;
+          background: #111;
+          border-left: 3px solid #00ff00;
+        }
+
+        .case-description {
+          color: #ccc;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        .metrics-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 2rem;
+        }
+
+        .metric-card {
+          background: #111;
+          padding: 1rem;
+          border: 1px solid #333;
+          border-radius: 4px;
+          text-align: center;
+        }
+
+        .metric-label {
+          color: #888;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+          color: #00ff00;
+          font-size: 1.5rem;
+          font-weight: bold;
+        }
+
+        .cluster-section,
+        .wallet-section,
+        .references-section {
+          margin-top: 2rem;
+        }
+
+        .cluster-section h3,
+        .wallet-section h3,
+        .references-section h3 {
+          color: #00ff00;
+          margin-bottom: 1rem;
+        }
+
+        .cluster-stats {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.5rem;
+          margin-bottom: 1rem;
+          padding: 1rem;
+          background: #111;
+          border-radius: 4px;
+        }
+
+        .cluster-stats .stat {
+          color: #ccc;
+        }
+
+        .mono-text {
+          font-family: 'Courier New', monospace;
+          color: #00ff00;
+          font-size: 0.9rem;
+        }
+
+        .references-section ul {
+          list-style: none;
+          padding: 0;
+        }
+
+        .references-section li {
+          padding: 0.5rem;
+          background: #111;
+          margin-bottom: 0.25rem;
+          border-left: 2px solid #00ff00;
+          color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+          .metrics-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+export default CaseLibrary;
