@@ -25,7 +25,14 @@ from data_fetcher import (
     classify_trades,
     fetch_counterparties,
 )
-from insider_detection import analyze_cluster
+from insider_detection import (
+    analyze_cluster,
+    fetch_market_lifecycles,
+    compute_timing_distribution,
+    pre_resolution_load_share,
+    volume_weighted_entry_time,
+    timing_ks_test_vs_uniform,
+)
 from clustering import (
     build_graph,
     build_cotrade_graph,
@@ -80,6 +87,99 @@ def main():
     log.info("=" * 60)
 
     insider_result = analyze_cluster(verified, all_classified, baseline=0.5)
+
+    # ---- 3.5 Timing Analysis ----
+    log.info("=" * 60)
+    log.info("STEP 3.5: Timing distribution analysis")
+    log.info("=" * 60)
+
+    # Collect all unique market slugs/IDs from trades
+    market_ids = set()
+    for trades in all_trades.values():
+        for t in trades:
+            market_id = t.get("condition_id") or t.get("slug")
+            if market_id:
+                market_ids.add(market_id)
+
+    log.info("Fetching market lifecycles for %d unique markets...", len(market_ids))
+    market_lifecycles = fetch_market_lifecycles(list(market_ids))
+    log.info("Retrieved %d market lifecycles", len(market_lifecycles))
+
+    # Compute timing distribution for cluster
+    all_cluster_timings = []
+    all_cluster_trades_with_timing = []
+
+    for addr, trades in all_trades.items():
+        timings = compute_timing_distribution(trades, market_lifecycles, side_filter="BUY")
+        all_cluster_timings.extend(timings)
+
+        # Build trades_with_timing for volume-weighted calculation
+        for t in trades:
+            if t.get("side") != "BUY":
+                continue
+            market_id = t.get("condition_id") or t.get("slug")
+            if not market_id or market_id not in market_lifecycles:
+                continue
+
+            lifecycle = market_lifecycles[market_id]
+            open_ts = lifecycle["open_ts"]
+            close_ts = lifecycle["close_ts"]
+            trade_ts = t.get("timestamp")
+
+            if not trade_ts:
+                continue
+            if not open_ts:
+                open_ts = trade_ts
+
+            duration = close_ts - open_ts
+            if duration <= 0:
+                continue
+
+            frac = (trade_ts - open_ts) / duration
+            if frac < -0.05 or frac > 1.05:
+                continue
+            frac = max(0.0, min(1.0, frac))
+
+            all_cluster_trades_with_timing.append({
+                "timing": frac,
+                "size_usd": t.get("usdcSize", 0) or 0,
+            })
+
+    # Compute aggregate timing metrics
+    load_share = pre_resolution_load_share(all_cluster_timings, threshold=0.9)
+    vw_median = volume_weighted_entry_time(all_cluster_trades_with_timing)
+    ks_result = timing_ks_test_vs_uniform(all_cluster_timings)
+
+    # Build histogram bins [0, 0.1), [0.1, 0.2), ..., [0.9, 1.0]
+    histogram = [0] * 10
+    for t in all_cluster_timings:
+        bin_idx = min(int(t * 10), 9)
+        histogram[bin_idx] += 1
+
+    # Interpretation
+    if ks_result and ks_result["p_value"] < 1e-10 and load_share > 0.5:
+        interpretation = "Critical: Overwhelming evidence of pre-resolution loading (>50% trades in final 10%, KS p<1e-10)"
+    elif ks_result and ks_result["p_value"] < 1e-5 and load_share > 0.4:
+        interpretation = "High: Strong evidence of timing bias toward resolution (KS p<1e-5)"
+    elif ks_result and ks_result["p_value"] < 0.01 and load_share > 0.3:
+        interpretation = "Medium: Moderate timing bias detected"
+    else:
+        interpretation = "Low: Timing distribution consistent with uniform/random entry"
+
+    timing_analysis = {
+        "normalized_times_histogram": histogram,
+        "histogram_bins": ["[0.0, 0.1)", "[0.1, 0.2)", "[0.2, 0.3)", "[0.3, 0.4)", "[0.4, 0.5)",
+                           "[0.5, 0.6)", "[0.6, 0.7)", "[0.7, 0.8)", "[0.8, 0.9)", "[0.9, 1.0]"],
+        "pre_resolution_load_share": round(load_share, 4),
+        "volume_weighted_median_entry_time": round(vw_median, 4),
+        "ks_vs_uniform": ks_result,
+        "total_timing_samples": len(all_cluster_timings),
+        "interpretation": interpretation,
+    }
+
+    log.info("Timing: %d samples, load_share=%.2f%%, vw_median=%.3f, KS_p=%.2e",
+             len(all_cluster_timings), load_share * 100, vw_median,
+             ks_result["p_value"] if ks_result else 1.0)
 
     # ---- 4. Clustering ----
     log.info("=" * 60)
@@ -147,6 +247,7 @@ def main():
         "p_value_scientific": insider_result["aggregate"]["p_value_scientific"],
         "verdict": insider_result["aggregate"]["verdict"],
         "total_usdc_volume": insider_result["aggregate"]["total_usdc_volume"],
+        "timing_analysis": timing_analysis,
         "cluster_analysis": {
             "graph_type": cluster_result.graph_type,
             "graph_nodes": cluster_result.graph_nodes,
