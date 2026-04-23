@@ -853,6 +853,84 @@ function Investigation() {
         .na-hint strong {
           color: #00ff00;
         }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .page-container {
+            padding: 1rem;
+          }
+
+          .terminal-header h1 {
+            font-size: 2rem;
+          }
+
+          .input-group {
+            flex-direction: column;
+          }
+
+          .terminal-button {
+            width: 100%;
+          }
+
+          .verdict-badge-large {
+            min-width: 240px;
+            padding: 1.5rem 2rem;
+          }
+
+          .verdict-icon {
+            font-size: 2.5rem;
+          }
+
+          .verdict-value {
+            font-size: 2rem;
+          }
+
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .results-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+          }
+
+          .chart-legend {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .terminal-header h1 {
+            font-size: 1.5rem;
+          }
+
+          .stats-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .results-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .verdict-badge-large {
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+          }
+
+          .stat-value {
+            font-size: 1.5rem;
+          }
+
+          .terminal-table {
+            font-size: 0.85rem;
+          }
+
+          .mono-text {
+            font-size: 0.75rem;
+          }
+        }
       `}</style>
     </div>
   );

@@ -673,8 +673,63 @@ function CaseLibrary() {
         }
 
         @media (max-width: 768px) {
+          .page-container {
+            padding: 1rem;
+          }
+
+          .terminal-header h1 {
+            font-size: 2rem;
+          }
+
           .metrics-grid {
             grid-template-columns: repeat(2, 1fr);
+          }
+
+          .featured-badge,
+          .control-badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+          }
+
+          .terminal-table {
+            font-size: 0.85rem;
+            overflow-x: auto;
+            display: block;
+          }
+
+          .mono-text {
+            font-size: 0.75rem;
+          }
+
+          .cluster-stats {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .terminal-header h1 {
+            font-size: 1.5rem;
+          }
+
+          .metrics-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .metric-value {
+            font-size: 1.2rem;
+          }
+
+          .comparison-table {
+            font-size: 0.75rem;
+          }
+
+          .terminal-card {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          }
+
+          .terminal-card:hover {
+            transform: none;
           }
         }
       `}</style>
