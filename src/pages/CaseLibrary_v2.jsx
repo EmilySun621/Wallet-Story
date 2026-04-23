@@ -85,6 +85,24 @@ function CaseLibrary() {
         </div>
       </section>
 
+      {/* B. TRUST INDICATORS */}
+      <section className="trust-indicators-section">
+        <div className="trust-indicators-row">
+          <div className="trust-badge">
+            <span className="trust-badge-icon">🔍</span>
+            <span>Independent Analysis</span>
+          </div>
+          <div className="trust-badge">
+            <span className="trust-badge-icon">📖</span>
+            <span>Methodology Open-Source</span>
+          </div>
+          <div className="trust-badge">
+            <span className="trust-badge-icon">⛓️</span>
+            <span>Findings Verifiable on Ethereum</span>
+          </div>
+        </div>
+      </section>
+
       {/* B. CASE STUDY: THE POLYMARKET THEO CLUSTER */}
       {theoCase && (
         <section className="case-study-section">
@@ -196,17 +214,46 @@ function CaseLibrary() {
         </div>
       </section>
 
-      {/* E. FOOTER */}
+      {/* E. METHODOLOGY */}
+      <section className="methodology-section">
+        <h2 className="section-title">Methodology</h2>
+        <p className="section-subtitle">Rigorous forensic analysis, verifiable on-chain</p>
+
+        <div className="methodology-cards">
+          <a href="https://github.com/your-repo/methodology.md" target="_blank" rel="noopener noreferrer" className="methodology-card">
+            <h3>Statistical Framework<span className="methodology-link-icon">→</span></h3>
+            <p>
+              Binomial significance testing, Bayesian prior probability modeling,
+              and timing distribution analysis to detect statistically impossible win rates.
+            </p>
+          </a>
+
+          <a href="https://github.com/your-repo/architecture.md" target="_blank" rel="noopener noreferrer" className="methodology-card">
+            <h3>Architecture<span className="methodology-link-icon">→</span></h3>
+            <p>
+              Graph-based clustering, shared infrastructure detection, and wallet
+              relationship mapping using on-chain transaction history.
+            </p>
+          </a>
+
+          <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="methodology-card">
+            <h3>Open Source<span className="methodology-link-icon">→</span></h3>
+            <p>
+              Full pipeline publicly available on GitHub. Reproduce findings,
+              audit methodology, and verify results independently.
+            </p>
+          </a>
+        </div>
+      </section>
+
+      {/* F. FOOTER */}
       <section className="footer-section">
         <div className="footer-content">
           <p>
-            <strong>Methodology:</strong> Statistical analysis via binomial significance testing,
-            graph-based clustering, and timing distribution analysis.
+            WalletStory is an independent forensic analysis platform.
+            Findings are corroborated by Bloomberg and Chainalysis investigations.
           </p>
           <div className="footer-links">
-            <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="footer-link">
-              Architecture →
-            </a>
             <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="footer-link">
               GitHub →
             </a>

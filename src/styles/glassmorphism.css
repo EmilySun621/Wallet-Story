@@ -1,0 +1,162 @@
+/**
+ * Glassmorphism Fintech Forensics Theme
+ * Dark-mode professional financial intelligence platform aesthetic
+ * Inspired by: Chainalysis Reactor, Linear.app, Bloomberg Terminal dark
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* === BACKGROUNDS === */
+  --bg-page: #0a0e1a;
+  --bg-surface: rgba(17, 24, 39, 0.6);
+  --bg-card: rgba(17, 24, 39, 0.6);
+  --bg-card-hover: rgba(17, 24, 39, 0.8);
+  --bg-input: rgba(17, 24, 39, 0.6);
+  --bg-input-focus: rgba(17, 24, 39, 0.8);
+  --bg-dark: #0f172a;
+
+  /* === TEXT === */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-mono: #e2e8f0;
+
+  /* === BRAND === */
+  --brand-purple: #8b5cf6;
+  --brand-purple-dark: #7c3aed;
+  --brand-purple-light: #a78bfa;
+
+  /* === SEMANTIC — VERDICTS (Only for VerdictBadge) === */
+  --verdict-critical: #ef4444;
+  --verdict-critical-bg: rgba(239, 68, 68, 0.1);
+  --verdict-critical-border: rgba(239, 68, 68, 0.3);
+
+  --verdict-high: #f97316;
+  --verdict-high-bg: rgba(249, 115, 22, 0.1);
+  --verdict-high-border: rgba(249, 115, 22, 0.3);
+
+  --verdict-medium: #eab308;
+  --verdict-medium-bg: rgba(234, 179, 8, 0.1);
+  --verdict-medium-border: rgba(234, 179, 8, 0.3);
+
+  --verdict-low: #22c55e;
+  --verdict-low-bg: rgba(34, 197, 94, 0.1);
+  --verdict-low-border: rgba(34, 197, 94, 0.3);
+
+  --verdict-baseline: #64748b;
+  --verdict-baseline-bg: rgba(100, 116, 139, 0.1);
+  --verdict-baseline-border: rgba(100, 116, 139, 0.3);
+
+  /* === BORDERS === */
+  --border-default: rgba(139, 92, 246, 0.15);
+  --border-hover: rgba(139, 92, 246, 0.3);
+  --border-focus: rgba(139, 92, 246, 0.5);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* === TYPOGRAPHY === */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* === SCALE — SPACING === */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 5rem;
+
+  /* === SCALE — TYPOGRAPHY === */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.5rem;
+
+  /* === LINE HEIGHT === */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+
+  /* === LETTER SPACING === */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+
+  /* === SHADOWS === */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-glass-lg: 0 12px 48px rgba(0, 0, 0, 0.3);
+  --shadow-none: none;
+
+  /* === TRANSITIONS === */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === BORDERS — RADIUS === */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* === GLASSMORPHISM CARD BASE === */
+.card-glass {
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-base);
+}
+
+.card-glass:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* === GLOBAL RESETS === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}

@@ -3,85 +3,94 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) var(--space-xl);
-  border-radius: var(--radius-full);
-  font-weight: 600;
+  padding: 2rem 3rem;
+  border-radius: 1rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  box-shadow: var(--shadow-none);
-  transition: all var(--transition-fast);
-  gap: var(--space-xs);
+  letter-spacing: 0.1em;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+  transition: all var(--transition-base);
+  gap: 0.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .verdict-label {
-  font-size: var(--text-2xl);
-  line-height: var(--leading-tight);
-  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 800;
+  font-family: var(--font-sans);
 }
 
 .verdict-pvalue {
-  font-size: var(--text-xs);
-  opacity: 0.8;
-  font-weight: 500;
-  letter-spacing: var(--tracking-normal);
+  font-size: 0.875rem;
+  opacity: 0.9;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .pvalue-mono {
   font-family: var(--font-mono);
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* Severity color schemes */
+/* Severity color schemes - ONLY for VerdictBadge */
 .verdict-critical {
-  background: var(--verdict-critical-bg);
-  color: var(--verdict-critical);
-  border: 1px solid var(--verdict-critical-border);
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 2px solid rgba(239, 68, 68, 0.4);
 }
 
 .verdict-high {
-  background: var(--verdict-high-bg);
-  color: var(--verdict-high);
-  border: 1px solid var(--verdict-high-border);
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  border: 2px solid rgba(249, 115, 22, 0.4);
 }
 
 .verdict-medium {
-  background: var(--verdict-medium-bg);
-  color: var(--verdict-medium);
-  border: 1px solid var(--verdict-medium-border);
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+  border: 2px solid rgba(234, 179, 8, 0.4);
 }
 
 .verdict-low {
-  background: var(--verdict-low-bg);
-  color: var(--verdict-low);
-  border: 1px solid var(--verdict-low-border);
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 2px solid rgba(34, 197, 94, 0.4);
 }
 
 .verdict-baseline {
-  background: var(--verdict-baseline-bg);
-  color: var(--verdict-baseline);
-  border: 1px solid var(--verdict-baseline-border);
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+  border: 2px solid rgba(100, 116, 139, 0.4);
+}
+
+.verdict-unknown {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+  border: 2px solid rgba(100, 116, 139, 0.4);
 }
 
 /* Pulse animation for Critical severity */
 .verdict-badge.pulse {
-  animation: verdict-pulse 2s ease-in-out infinite;
+  animation: verdict-pulse 2.5s ease-in-out infinite;
 }
 
 @keyframes verdict-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.6);
+    transform: scale(1.03);
+    box-shadow: 0 16px 64px rgba(239, 68, 68, 0.5);
   }
 }
 
 /* Hover effect */
 .verdict-badge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.4);
 }
 
 /* Responsive sizing */
