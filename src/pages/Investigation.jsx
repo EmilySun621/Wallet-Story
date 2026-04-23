@@ -161,36 +161,85 @@ function Investigation() {
           {/* Summary Card */}
           <div className="terminal-card">
             <div className="card-header">
-              <h2>Investigation Results</h2>
+              <h2>Forensic Report</h2>
               <span className="timestamp">{new Date(result.generated_at).toLocaleString()}</span>
             </div>
             <div className="card-body">
-              <div className="results-grid">
-                <div className="result-item">
-                  <label>Verdict</label>
-                  <div
-                    className="verdict-badge"
-                    style={{ color: getVerdictColor(result.insider_detection?.verdict) }}
-                  >
-                    {result.insider_detection?.verdict || 'N/A'}
-                  </div>
+              {/* Large Verdict Badge */}
+              <div className="verdict-section">
+                <div
+                  className="verdict-badge-large"
+                  style={{
+                    borderColor: getVerdictColor(result.insider_detection?.verdict),
+                    color: getVerdictColor(result.insider_detection?.verdict)
+                  }}
+                >
+                  <span className="verdict-icon">
+                    {result.insider_detection?.verdict === 'Critical' ? '🚨' :
+                     result.insider_detection?.verdict === 'High' ? '⚠️' :
+                     result.insider_detection?.verdict === 'Medium' ? '⚡' :
+                     result.insider_detection?.verdict === 'Low' ? '✓' : '○'}
+                  </span>
+                  <span className="verdict-label">VERDICT</span>
+                  <span className="verdict-value">{result.insider_detection?.verdict || 'N/A'}</span>
                 </div>
-                <div className="result-item">
-                  <label>Win Rate</label>
-                  <div className="metric">
+              </div>
+
+              {/* Key Metrics as Stat Cards */}
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <div className="stat-header">
+                    <span className="stat-label">Win Rate</span>
+                    <span className="tooltip-icon" title="Percentage of trades that resulted in profit">?</span>
+                  </div>
+                  <div className="stat-value">
                     {(result.insider_detection?.win_rate * 100)?.toFixed(1) || 'N/A'}%
                   </div>
+                  <div className="stat-footer">Baseline: 50%</div>
                 </div>
-                <div className="result-item">
-                  <label>p-value</label>
-                  <div className="metric">
-                    {result.insider_detection?.p_value?.toExponential(2) || 'N/A'}
+
+                <div className="stat-card">
+                  <div className="stat-header">
+                    <span className="stat-label">p-value</span>
+                    <span className="tooltip-icon" title="Statistical significance: probability this win rate occurred by chance. Lower = stronger evidence.">?</span>
+                  </div>
+                  <div className="stat-value stat-pvalue">
+                    {result.insider_detection?.p_value < 1e-10
+                      ? `< 10⁻¹⁰`
+                      : result.insider_detection?.p_value?.toExponential(2) || 'N/A'}
+                  </div>
+                  <div className="stat-footer">
+                    {result.insider_detection?.p_value < 1e-10
+                      ? 'Astronomically significant'
+                      : 'See interpretation'}
                   </div>
                 </div>
-                <div className="result-item">
-                  <label>Cluster Size</label>
-                  <div className="metric">{result.total_cluster_size || 'N/A'} wallets</div>
+
+                <div className="stat-card">
+                  <div className="stat-header">
+                    <span className="stat-label">Cluster Size</span>
+                    <span className="tooltip-icon" title="Number of coordinated wallets discovered via exchange-anchor clustering">?</span>
+                  </div>
+                  <div className="stat-value">
+                    {result.total_cluster_size || 'N/A'}
+                  </div>
+                  <div className="stat-footer">Related wallets</div>
                 </div>
+
+                {result.timing_analysis?.ks_vs_uniform && (
+                  <div className="stat-card">
+                    <div className="stat-header">
+                      <span className="stat-label">KS Test</span>
+                      <span className="tooltip-icon" title="Kolmogorov-Smirnov test: measures timing distribution uniformity. Low p-value = coordinated timing pattern.">?</span>
+                    </div>
+                    <div className="stat-value stat-pvalue">
+                      {result.timing_analysis.ks_vs_uniform.p_value < 1e-10
+                        ? `< 10⁻¹⁰`
+                        : result.timing_analysis.ks_vs_uniform.p_value.toExponential(2)}
+                    </div>
+                    <div className="stat-footer">Timing anomaly</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -472,6 +521,110 @@ function Investigation() {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
           gap: 1.5rem;
+        }
+
+        .verdict-section {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 2rem;
+        }
+
+        .verdict-badge-large {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 2rem 3rem;
+          border: 3px solid;
+          border-radius: 12px;
+          background: rgba(0, 0, 0, 0.3);
+          min-width: 280px;
+        }
+
+        .verdict-icon {
+          font-size: 3rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .verdict-label {
+          font-size: 0.9rem;
+          color: #888;
+          letter-spacing: 2px;
+          margin-bottom: 0.25rem;
+        }
+
+        .verdict-value {
+          font-size: 2.5rem;
+          font-weight: bold;
+          letter-spacing: 1px;
+        }
+
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 1rem;
+        }
+
+        .stat-card {
+          background: #0f0f0f;
+          border: 1px solid #333;
+          border-radius: 8px;
+          padding: 1.25rem;
+          transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+          border-color: #00ff00;
+          box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .stat-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.75rem;
+        }
+
+        .stat-label {
+          color: #888;
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .tooltip-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 18px;
+          height: 18px;
+          background: #333;
+          color: #888;
+          border-radius: 50%;
+          font-size: 0.75rem;
+          cursor: help;
+          transition: all 0.2s ease;
+        }
+
+        .tooltip-icon:hover {
+          background: #00ff00;
+          color: #000;
+        }
+
+        .stat-value {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #00ff00;
+          margin-bottom: 0.5rem;
+          font-family: 'Courier New', monospace;
+        }
+
+        .stat-value.stat-pvalue {
+          font-size: 1.5rem;
+        }
+
+        .stat-footer {
+          color: #666;
+          font-size: 0.8rem;
         }
 
         .result-item {
