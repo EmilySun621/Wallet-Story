@@ -10,6 +10,9 @@
  */
 
 import { useEffect, useState } from 'react';
+import VerdictBadge from '../components/VerdictBadge';
+import CaseComparison from '../components/CaseComparison';
+import ClusterForceGraph from '../components/ClusterForceGraph';
 import '../terminal-theme.css';
 import '../terminal-table.css';
 
@@ -98,6 +101,34 @@ function CaseLibrary() {
         </div>
       )}
 
+      {/* Hero Section: Case Comparison */}
+      {!loading && !error && (
+        <>
+          <div style={{ marginBottom: '2rem' }}>
+            <CaseComparison />
+          </div>
+
+          {/* Cluster Visualization */}
+          {theoCase && theoCase.exchange_anchor_analysis && (
+            <div style={{ marginBottom: '2rem' }}>
+              <ClusterForceGraph
+                clusterData={{
+                  wallets: theoCase.per_wallet?.map(w => ({
+                    address: w.address,
+                    trades: w.wins + w.losses,
+                    win_rate: w.win_rate
+                  })) || [],
+                  funder: { address: theoCase.exchange_anchor_analysis.shared_funder },
+                  exchange: { address: theoCase.exchange_anchor_analysis.exchange_deposit },
+                  proxy: theoCase.exchange_anchor_analysis.shared_proxy ?
+                    { address: theoCase.exchange_anchor_analysis.shared_proxy } : null
+                }}
+              />
+            </div>
+          )}
+        </>
+      )}
+
       {/* Featured Case: Theo Cluster */}
       {theoCase && (
         <div className="featured-case">
@@ -125,14 +156,11 @@ function CaseLibrary() {
 
               {/* Key Metrics */}
               <div className="metrics-grid">
-                <div className="metric-card">
-                  <div className="metric-label">Verdict</div>
-                  <div
-                    className="metric-value"
-                    style={{ color: getVerdictColor(theoCase.verdict) }}
-                  >
-                    {theoCase.verdict}
-                  </div>
+                <div className="metric-card verdict-card">
+                  <VerdictBadge
+                    severity={theoCase.verdict}
+                    pValue={theoCase.win_rate_analysis?.binomial_test?.p_value}
+                  />
                 </div>
 
                 <div className="metric-card">
@@ -347,14 +375,12 @@ function CaseLibrary() {
 
               {/* Control Stats */}
               <div className="metrics-grid">
-                <div className="metric-card">
-                  <div className="metric-label">Verdict</div>
-                  <div
-                    className="metric-value"
-                    style={{ color: getVerdictColor(controlCase.verdict) }}
-                  >
-                    {controlCase.verdict}
-                  </div>
+                <div className="metric-card verdict-card">
+                  <VerdictBadge
+                    severity={controlCase.verdict}
+                    pValue={controlCase.win_rate_analysis?.binomial_test?.p_value}
+                    pulse={false}
+                  />
                 </div>
 
                 <div className="metric-card">
@@ -612,6 +638,15 @@ function CaseLibrary() {
           background: #161616;
           border-color: #555;
           transform: scale(1.02);
+        }
+
+        .metric-card.verdict-card {
+          grid-column: span 2;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: transparent;
+          border: none;
         }
 
         .metric-label {

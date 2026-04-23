@@ -10,6 +10,9 @@
  */
 
 import { useState } from 'react';
+import VerdictBadge from '../components/VerdictBadge';
+import ClusterForceGraph from '../components/ClusterForceGraph';
+import MoneyFlowSankey from '../components/MoneyFlowSankey';
 import TimingDistributionChart from '../components/TimingDistributionChart';
 import '../terminal-theme.css';
 import '../terminal-table.css';
@@ -181,24 +184,12 @@ function Investigation() {
               <span className="timestamp">{new Date(result.generated_at).toLocaleString()}</span>
             </div>
             <div className="card-body">
-              {/* Large Verdict Badge */}
+              {/* VerdictBadge Component */}
               <div className="verdict-section">
-                <div
-                  className="verdict-badge-large"
-                  style={{
-                    borderColor: getVerdictColor(result.insider_detection?.verdict),
-                    color: getVerdictColor(result.insider_detection?.verdict)
-                  }}
-                >
-                  <span className="verdict-icon">
-                    {result.insider_detection?.verdict === 'Critical' ? '🚨' :
-                     result.insider_detection?.verdict === 'High' ? '⚠️' :
-                     result.insider_detection?.verdict === 'Medium' ? '⚡' :
-                     result.insider_detection?.verdict === 'Low' ? '✓' : '○'}
-                  </span>
-                  <span className="verdict-label">VERDICT</span>
-                  <span className="verdict-value">{result.insider_detection?.verdict || 'N/A'}</span>
-                </div>
+                <VerdictBadge
+                  severity={result.insider_detection?.verdict || 'Low'}
+                  pValue={result.insider_detection?.p_value}
+                />
               </div>
 
               {/* Key Metrics as Stat Cards */}
@@ -265,6 +256,58 @@ function Investigation() {
             <div className="terminal-card">
               <div className="card-body">
                 <TimingDistributionChart timingAnalysis={result.timing_analysis} />
+              </div>
+            </div>
+          )}
+
+          {/* Cluster Force Graph Visualization */}
+          {result.cluster_info?.candidates_found > 0 && (
+            <div className="terminal-card">
+              <div className="card-body">
+                <ClusterForceGraph
+                  clusterData={{
+                    wallets: result.per_wallet?.map(w => ({
+                      address: w.address,
+                      trades: w.wins + w.losses,
+                      win_rate: w.win_rate
+                    })) || result.cluster_info.candidates?.slice(0, 13).map(addr => ({
+                      address: addr,
+                      trades: 0,
+                      win_rate: 0
+                    })) || [],
+                    funder: result.cluster_info.shared_infrastructure?.funder ?
+                      { address: result.cluster_info.shared_infrastructure.funder } : null,
+                    exchange: result.cluster_info.shared_infrastructure?.exchange ?
+                      { address: result.cluster_info.shared_infrastructure.exchange } : null,
+                    proxy: result.cluster_info.shared_infrastructure?.proxy ?
+                      { address: result.cluster_info.shared_infrastructure.proxy } : null
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Money Flow Sankey Diagram */}
+          {result.cluster_info?.candidates_found > 0 && (
+            <div className="terminal-card">
+              <div className="card-body">
+                <MoneyFlowSankey
+                  flowData={{
+                    funder: result.cluster_info.shared_infrastructure?.funder ?
+                      { address: result.cluster_info.shared_infrastructure.funder } : null,
+                    wallets: result.per_wallet?.map(w => ({
+                      address: w.address,
+                      funding_amount: 1000,
+                      exchange_volume: 800
+                    })) || result.cluster_info.candidates?.slice(0, 13).map(addr => ({
+                      address: addr,
+                      funding_amount: 1000,
+                      exchange_volume: 800
+                    })) || [],
+                    exchange: result.cluster_info.shared_infrastructure?.exchange ?
+                      { address: result.cluster_info.shared_infrastructure.exchange } : null
+                  }}
+                />
               </div>
             </div>
           )}
