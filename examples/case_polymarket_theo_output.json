@@ -1,0 +1,81 @@
+{
+  "case_name": "Polymarket Theo Cluster",
+  "generated_at": "2026-04-23T07:41:39.081248+00:00",
+  "wallets_analyzed": 3,
+  "matches_public_reporting": true,
+  "total_trades_analyzed": 12000,
+  "total_trades_fetched": 12000,
+  "unique_markets": 15,
+  "aggregate_win_rate": 0.973333,
+  "baseline_win_rate": 0.5,
+  "p_value": 0.0,
+  "p_value_scientific": "0.00e+00",
+  "verdict": "Critical",
+  "total_usdc_volume": 15440961.77,
+  "cluster_analysis": {
+    "graph_type": "co-trade",
+    "graph_nodes": 3,
+    "graph_edges": 2,
+    "communities_found": 1,
+    "modularity_score": 0.0,
+    "all_seeds_in_same_community": true,
+    "seed_community_size": 3,
+    "candidate_wallets": []
+  },
+  "per_wallet": [
+    {
+      "address": "0x1f2dd6d473f3e824cd2f8a89d9c69fb96f6ad0cf",
+      "username": "Fredi9999",
+      "total_trades": 4000,
+      "wins": 3993,
+      "losses": 7,
+      "skipped": 0,
+      "win_rate": 0.99825,
+      "baseline": 0.5,
+      "p_value": 0.0,
+      "verdict": "Critical",
+      "total_usdc_volume": 4263388.26,
+      "markets_traded": 9
+    },
+    {
+      "address": "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+      "username": "Theo4",
+      "total_trades": 4000,
+      "wins": 3969,
+      "losses": 31,
+      "skipped": 0,
+      "win_rate": 0.99225,
+      "baseline": 0.5,
+      "p_value": 0.0,
+      "verdict": "Critical",
+      "total_usdc_volume": 7490738.62,
+      "markets_traded": 12
+    },
+    {
+      "address": "0x8119010a6e589062aa03583bb3f39ca632d9f887",
+      "username": "PrincessCaro",
+      "total_trades": 4000,
+      "wins": 3718,
+      "losses": 282,
+      "skipped": 0,
+      "win_rate": 0.9295,
+      "baseline": 0.5,
+      "p_value": 0.0,
+      "verdict": "Critical",
+      "total_usdc_volume": 3686834.89,
+      "markets_traded": 13
+    }
+  ],
+  "cross_reference_sources": [
+    "NYT DealBook 2024-10-24",
+    "WSJ 2024-11-01",
+    "Bloomberg 2024-11-06",
+    "Bloomberg/Chainalysis 2024-11-07",
+    "Chainalysis X thread 2024-11-06"
+  ],
+  "attestation_uid": "TODO: publish to EAS Sepolia on Day 2",
+  "notes": {
+    "data_api_limit": "Polymarket Data API caps at ~4000 trades per wallet (offset pagination stops at 4000). True trade counts may be higher \u2014 the statistical signal is already overwhelming at this sample size.",
+    "clustering_note": "Co-trade graph built from 3 seed wallets only. Transfer graph (Alchemy) needed for 2-hop neighbor discovery and candidate Michie wallet surfacing."
+  }
+}
