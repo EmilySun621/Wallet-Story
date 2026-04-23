@@ -28,6 +28,7 @@ from data_fetcher import (
 from insider_detection import (
     analyze_cluster,
     fetch_market_lifecycles,
+    derive_market_lifecycles_from_trades,
     compute_timing_distribution,
     pre_resolution_load_share,
     volume_weighted_entry_time,
@@ -102,8 +103,30 @@ def main():
                 market_ids.add(market_id)
 
     log.info("Fetching market lifecycles for %d unique markets...", len(market_ids))
+
+    # Try Gamma API first
     market_lifecycles = fetch_market_lifecycles(list(market_ids))
-    log.info("Retrieved %d market lifecycles", len(market_lifecycles))
+    api_count = len(market_lifecycles)
+    log.info("Retrieved %d market lifecycles from Gamma API", api_count)
+
+    # Fallback: derive from trade timestamps for missing markets
+    missing_markets = market_ids - set(market_lifecycles.keys())
+    if missing_markets:
+        log.info("Deriving lifecycles from trade data for %d missing markets...", len(missing_markets))
+        derived_lifecycles = derive_market_lifecycles_from_trades(all_trades)
+
+        # Merge derived lifecycles for missing markets only
+        for market_id in missing_markets:
+            if market_id in derived_lifecycles:
+                market_lifecycles[market_id] = derived_lifecycles[market_id]
+
+        derived_count = len(market_lifecycles) - api_count
+        log.info("Derived %d additional lifecycles from trades", derived_count)
+    else:
+        derived_count = 0
+
+    log.info("Total market lifecycles available: %d (API: %d, derived: %d)",
+             len(market_lifecycles), api_count, derived_count)
 
     # Compute timing distribution for cluster
     all_cluster_timings = []
@@ -176,6 +199,7 @@ def main():
         "volume_weighted_median_entry_time": round(vw_median, 4),
         "ks_vs_uniform": ks_result,
         "total_timing_samples": len(all_cluster_timings),
+        "lifecycle_source": {"api": api_count, "derived": derived_count},
         "interpretation": interpretation,
     }
 

@@ -1,6 +1,6 @@
 {
   "case_name": "Polymarket Theo Cluster",
-  "generated_at": "2026-04-23T09:25:19.661386+00:00",
+  "generated_at": "2026-04-23T15:21:04.959520+00:00",
   "wallets_analyzed": 3,
   "matches_public_reporting": true,
   "total_trades_analyzed": 12000,
@@ -14,16 +14,16 @@
   "total_usdc_volume": 15440961.77,
   "timing_analysis": {
     "normalized_times_histogram": [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      1990,
+      82,
+      1926,
+      1678,
+      819,
+      2868,
+      848,
+      621,
+      20,
+      1141
     ],
     "histogram_bins": [
       "[0.0, 0.1)",
@@ -37,122 +37,585 @@
       "[0.8, 0.9)",
       "[0.9, 1.0]"
     ],
-    "pre_resolution_load_share": 0.0,
-    "volume_weighted_median_entry_time": 0.5,
-    "ks_vs_uniform": null,
-    "total_timing_samples": 0,
-    "interpretation": "N/A: Insufficient timing data (markets archived or lifecycle unavailable via Gamma API). Timing analysis requires active/recent markets with startDate/endDate metadata."
+    "pre_resolution_load_share": 0.0951,
+    "volume_weighted_median_entry_time": 0.4863,
+    "ks_vs_uniform": {
+      "ks_statistic": 0.18709806582637956,
+      "p_value": 0.0,
+      "n": 11993
+    },
+    "total_timing_samples": 11993,
+    "lifecycle_source": {
+      "api": 0,
+      "derived": 13
+    },
+    "interpretation": "Low: Timing distribution consistent with uniform/random entry"
   },
   "cluster_analysis": {
     "graph_type": "exchange-anchor",
-    "graph_nodes": 14,
-    "graph_edges": 91,
+    "graph_nodes": 79,
+    "graph_edges": 3081,
     "communities_found": 1,
     "modularity_score": -0.0,
     "all_seeds_in_same_community": true,
-    "seed_community_size": 14,
+    "seed_community_size": 79,
     "candidate_wallets": [
+      "0x000000006612c4b9996cfcfc68d7dfa14d4d3d75",
+      "0x00000070ee937917c1d9bd91729ce1dd9a77d8e3",
       "0x000d257d2dc7616feaef4ae0f14600fdf50a758e",
+      "0x00c600b30fb0400701010f4b080409018b9006e0",
+      "0x012267b4a71f2df482223870e94c293d7c66d4ef",
+      "0x012b9cdda3dac7e2c0c3f5af9c88efcbf4df0b81",
+      "0x0182db893e4eea9c273e915675c0ec9790099ee8",
+      "0x02d2b4fb6e7b8176fe70a103304ae4cdeb8cff27",
+      "0x033a07b3de5947eab4306676ad74eb546da30d50",
+      "0x0435c4f3f81821697377c3e51445a5af8d217ffc",
+      "0x051b16ffac0f10a8df96b93cc03facce011ea5e5",
+      "0x0562c423912e325f83fa79df55085979e1f5594f",
+      "0x095cc00152a0b71b20b73e5fee77ea675915cd3b",
+      "0x0daf9707397575b67dc9eb152c9e6e3f7621662b",
+      "0x0f4a1d7fdf4890be35e71f3e0bbc4a0ec377eca3",
       "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3",
+      "0x198b6f2515ad7d39543916ca24c3a1a8bcc282ba",
       "0x23786fdad0073692157c6d7dc81f281843a35fcb",
+      "0x275575bb11522eb29f82fe0a601d7c4dc94b5016",
+      "0x2c43c705d1f7f314de4eb55f840db7b4765b9689",
+      "0x2fef6792255c4a901d11d5a92bb45bd62efcb55c",
+      "0x31083a78e11b18e450fd139f9abea98cd53181b7",
+      "0x32fa8e47be76fe39d86767a03bc1791b6c8fa0ec",
+      "0x3c66133a7fd29ab1e551db9e8832dca0cead7a16",
+      "0x41069abff72d1f7c81d21cf11c8c9739eded9122",
+      "0x431552c3a89f647cd4ea1cf4980bb742eabd992c",
       "0x45ebb1c54f223c5905a7683164656b63527bc11b",
+      "0x4bb5d3f54c76aa52f39d3150b2ea33293775942c",
+      "0x571dbc37082936b2cb4a26e0d85ca835195d19d6",
+      "0x5cf2cde33b4697a7c09684833b82bf460a735340",
+      "0x5e0220909135c88382a2128e1e8ef1278567817e",
+      "0x5f515f6c524b18ca30f7783fb58dd4be2e9904ec",
+      "0x64f8d315efd2d03897a03985fc42719f56952daa",
       "0x6597282ce8d8b81904621e6f75c9f3882a3bca42",
+      "0x686ec64ae1c2e299c6684e1e2640fcec7d2c01f1",
+      "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "0x73f8dd50a114884493dbf4a5ea1503f96f348234",
+      "0x748f8bc6db49da87f131e073f68aaefc4edbc80b",
       "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76",
+      "0x793491fe4a7b25eee0065e484a52c7a0dfd8c0d9",
+      "0x79cbcf5037d52c4adceb48757d8a5b013a7db270",
+      "0x7a8f557916d99945eaf2f8763935a70bdc81f650",
+      "0x7bb5686910e22c4348265ab86e38b06f7579db04",
+      "0x80c228786e4940904fccdd54999edce5d3cbec5e",
       "0x863134d00841b2e200492805a01e1e2f5defaa53",
       "0x885783760858e1bd5dd09a3c3f916cfa251ac270",
+      "0x8929cbd35e9648821dd525cf977269e640a77d8f",
+      "0x8ca5712e00cd8bab6d0accab3d8b524668e976bf",
+      "0x8d3d65f675f096db9f27fc4162757a5162ef103a",
+      "0x8e5c0cc55cda93d6cae14becb3b738a44dcaa68a",
+      "0x94a428cfa4f84b264e01f70d93d02bc96cb36356",
       "0xa8a29bc8816e19d2b41cdaae48bd602180b0ff3e",
+      "0xad3b67bca8935cb510c8d18bd45f0b94f54a968f",
+      "0xaefc8e7151de4fdc78db100eb507df4c26ed21a0",
+      "0xbbc7298464b536edc68ab5089d76d110efc9c2c1",
+      "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+      "0xc4439174a5d5f821e173ce86def1d86c3145f19f",
+      "0xca23f2f702140b5245c517aef5cd9888a6320e77",
+      "0xce0ebbbfb38babb8951c413f77a6e7d543a90d92",
       "0xd0c042c08f755ff940249f62745e82d356345565",
-      "0xed2239a9150c3920000d0094d28fa51c7db03dd0"
+      "0xd235973291b2b75ff4070e9c0b01728c520b0f29",
+      "0xd31a2ea0b5f9a10c2eb78dcc36df016497d5386e",
+      "0xd456646742a36c1d92f0bacba8a38d5e69157e8f",
+      "0xdb6f1920a889355780af7570773609bd8cb1f498",
+      "0xdb7513a3c54d579d64ee64c948c85d2f27620252",
+      "0xdef171fe48cf0115b1d80b88dc8eab59176fee57",
+      "0xe37e799d5077682fa0a244d46e5649f71457bd09",
+      "0xe4c99e75306e0e1421b4712a21e8f90c47cd6ef7",
+      "0xe5a565a0564dc54159e503ca74925835f00585c3",
+      "0xea749fd6ba492dbc14c24fe8a3d08769229b896c",
+      "0xec7be89e9d109e7e3fec59c222cf297125fefda2",
+      "0xed2239a9150c3920000d0094d28fa51c7db03dd0",
+      "0xed9e3f98bbed560e66b89aac922e29d4596a9642",
+      "0xee2147fcf090ce08095e65a3c9e193c459364d5b",
+      "0xf9f5581d4d7a599b8e2f8d1b1b0e29ca0218227a",
+      "0xff4b330c5bc3811b66d8864cf8078d8f2db20dd6"
     ]
   },
   "exchange_anchor_analysis": {
     "exchange_deposit": "0xd36ec33c8bed5a9f7b6630855f1533455b98a418",
-    "shared_funder": "0x4b6f17856215eab57c29ebfa18b0a0f74a3627bb",
-    "shared_proxy": null,
-    "total_cluster_size": 14,
+    "shared_funder": "0xd36ec33c8bed5a9f7b6630855f1533455b98a418",
+    "shared_proxy": "0x8824098a24686eb2e5ac1e08e743196e36d6d492",
+    "total_cluster_size": 79,
     "seeds_found": 3,
     "candidates_surfaced": [
+      "0x000000006612c4b9996cfcfc68d7dfa14d4d3d75",
+      "0x00000070ee937917c1d9bd91729ce1dd9a77d8e3",
       "0x000d257d2dc7616feaef4ae0f14600fdf50a758e",
+      "0x00c600b30fb0400701010f4b080409018b9006e0",
+      "0x012267b4a71f2df482223870e94c293d7c66d4ef",
+      "0x012b9cdda3dac7e2c0c3f5af9c88efcbf4df0b81",
+      "0x0182db893e4eea9c273e915675c0ec9790099ee8",
+      "0x02d2b4fb6e7b8176fe70a103304ae4cdeb8cff27",
+      "0x033a07b3de5947eab4306676ad74eb546da30d50",
+      "0x0435c4f3f81821697377c3e51445a5af8d217ffc",
+      "0x051b16ffac0f10a8df96b93cc03facce011ea5e5",
+      "0x0562c423912e325f83fa79df55085979e1f5594f",
+      "0x095cc00152a0b71b20b73e5fee77ea675915cd3b",
+      "0x0daf9707397575b67dc9eb152c9e6e3f7621662b",
+      "0x0f4a1d7fdf4890be35e71f3e0bbc4a0ec377eca3",
       "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3",
+      "0x198b6f2515ad7d39543916ca24c3a1a8bcc282ba",
       "0x23786fdad0073692157c6d7dc81f281843a35fcb",
+      "0x275575bb11522eb29f82fe0a601d7c4dc94b5016",
+      "0x2c43c705d1f7f314de4eb55f840db7b4765b9689",
+      "0x2fef6792255c4a901d11d5a92bb45bd62efcb55c",
+      "0x31083a78e11b18e450fd139f9abea98cd53181b7",
+      "0x32fa8e47be76fe39d86767a03bc1791b6c8fa0ec",
+      "0x3c66133a7fd29ab1e551db9e8832dca0cead7a16",
+      "0x41069abff72d1f7c81d21cf11c8c9739eded9122",
+      "0x431552c3a89f647cd4ea1cf4980bb742eabd992c",
       "0x45ebb1c54f223c5905a7683164656b63527bc11b",
+      "0x4bb5d3f54c76aa52f39d3150b2ea33293775942c",
+      "0x571dbc37082936b2cb4a26e0d85ca835195d19d6",
+      "0x5cf2cde33b4697a7c09684833b82bf460a735340",
+      "0x5e0220909135c88382a2128e1e8ef1278567817e",
+      "0x5f515f6c524b18ca30f7783fb58dd4be2e9904ec",
+      "0x64f8d315efd2d03897a03985fc42719f56952daa",
       "0x6597282ce8d8b81904621e6f75c9f3882a3bca42",
+      "0x686ec64ae1c2e299c6684e1e2640fcec7d2c01f1",
+      "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "0x73f8dd50a114884493dbf4a5ea1503f96f348234",
+      "0x748f8bc6db49da87f131e073f68aaefc4edbc80b",
       "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76",
+      "0x793491fe4a7b25eee0065e484a52c7a0dfd8c0d9",
+      "0x79cbcf5037d52c4adceb48757d8a5b013a7db270",
+      "0x7a8f557916d99945eaf2f8763935a70bdc81f650",
+      "0x7bb5686910e22c4348265ab86e38b06f7579db04",
+      "0x80c228786e4940904fccdd54999edce5d3cbec5e",
       "0x863134d00841b2e200492805a01e1e2f5defaa53",
       "0x885783760858e1bd5dd09a3c3f916cfa251ac270",
+      "0x8929cbd35e9648821dd525cf977269e640a77d8f",
+      "0x8ca5712e00cd8bab6d0accab3d8b524668e976bf",
+      "0x8d3d65f675f096db9f27fc4162757a5162ef103a",
+      "0x8e5c0cc55cda93d6cae14becb3b738a44dcaa68a",
+      "0x94a428cfa4f84b264e01f70d93d02bc96cb36356",
       "0xa8a29bc8816e19d2b41cdaae48bd602180b0ff3e",
+      "0xad3b67bca8935cb510c8d18bd45f0b94f54a968f",
+      "0xaefc8e7151de4fdc78db100eb507df4c26ed21a0",
+      "0xbbc7298464b536edc68ab5089d76d110efc9c2c1",
+      "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+      "0xc4439174a5d5f821e173ce86def1d86c3145f19f",
+      "0xca23f2f702140b5245c517aef5cd9888a6320e77",
+      "0xce0ebbbfb38babb8951c413f77a6e7d543a90d92",
       "0xd0c042c08f755ff940249f62745e82d356345565",
-      "0xed2239a9150c3920000d0094d28fa51c7db03dd0"
+      "0xd235973291b2b75ff4070e9c0b01728c520b0f29",
+      "0xd31a2ea0b5f9a10c2eb78dcc36df016497d5386e",
+      "0xd456646742a36c1d92f0bacba8a38d5e69157e8f",
+      "0xdb6f1920a889355780af7570773609bd8cb1f498",
+      "0xdb7513a3c54d579d64ee64c948c85d2f27620252",
+      "0xdef171fe48cf0115b1d80b88dc8eab59176fee57",
+      "0xe37e799d5077682fa0a244d46e5649f71457bd09",
+      "0xe4c99e75306e0e1421b4712a21e8f90c47cd6ef7",
+      "0xe5a565a0564dc54159e503ca74925835f00585c3",
+      "0xea749fd6ba492dbc14c24fe8a3d08769229b896c",
+      "0xec7be89e9d109e7e3fec59c222cf297125fefda2",
+      "0xed2239a9150c3920000d0094d28fa51c7db03dd0",
+      "0xed9e3f98bbed560e66b89aac922e29d4596a9642",
+      "0xee2147fcf090ce08095e65a3c9e193c459364d5b",
+      "0xf9f5581d4d7a599b8e2f8d1b1b0e29ca0218227a",
+      "0xff4b330c5bc3811b66d8864cf8078d8f2db20dd6"
     ],
     "cluster_wallets": {
+      "0x000000006612c4b9996cfcfc68d7dfa14d4d3d75": {
+        "from_funder": 1470891.8381710006,
+        "to_exchange": 665881.3953790002,
+        "is_seed": false
+      },
+      "0x00000070ee937917c1d9bd91729ce1dd9a77d8e3": {
+        "from_funder": 2665.298222,
+        "to_exchange": 874595.640396,
+        "is_seed": false
+      },
       "0x000d257d2dc7616feaef4ae0f14600fdf50a758e": {
-        "from_funder": 49999.0,
+        "from_funder": 24586308.65120401,
         "to_exchange": 801000.0,
         "is_seed": false
       },
+      "0x00c600b30fb0400701010f4b080409018b9006e0": {
+        "from_funder": 8813532.283572001,
+        "to_exchange": 7511873.263355997,
+        "is_seed": false
+      },
+      "0x012267b4a71f2df482223870e94c293d7c66d4ef": {
+        "from_funder": 499881.500878,
+        "to_exchange": 754137.890863,
+        "is_seed": false
+      },
+      "0x012b9cdda3dac7e2c0c3f5af9c88efcbf4df0b81": {
+        "from_funder": 77253540.12931998,
+        "to_exchange": 60305382.59977501,
+        "is_seed": false
+      },
+      "0x0182db893e4eea9c273e915675c0ec9790099ee8": {
+        "from_funder": 528064307.7973629,
+        "to_exchange": 117780675.572748,
+        "is_seed": false
+      },
+      "0x02d2b4fb6e7b8176fe70a103304ae4cdeb8cff27": {
+        "from_funder": 503083.09768,
+        "to_exchange": 782090.900007,
+        "is_seed": false
+      },
+      "0x033a07b3de5947eab4306676ad74eb546da30d50": {
+        "from_funder": 3544718.6046329997,
+        "to_exchange": 7410429.480278,
+        "is_seed": false
+      },
+      "0x0435c4f3f81821697377c3e51445a5af8d217ffc": {
+        "from_funder": 192281.324535,
+        "to_exchange": 529453.31509,
+        "is_seed": false
+      },
+      "0x051b16ffac0f10a8df96b93cc03facce011ea5e5": {
+        "from_funder": 1999487.6098109998,
+        "to_exchange": 3170066.0,
+        "is_seed": false
+      },
+      "0x0562c423912e325f83fa79df55085979e1f5594f": {
+        "from_funder": 2513698.121641,
+        "to_exchange": 3439757.369224,
+        "is_seed": false
+      },
+      "0x095cc00152a0b71b20b73e5fee77ea675915cd3b": {
+        "from_funder": 1004863.732666,
+        "to_exchange": 652012.89897,
+        "is_seed": false
+      },
+      "0x0daf9707397575b67dc9eb152c9e6e3f7621662b": {
+        "from_funder": 2213965.2841600003,
+        "to_exchange": 2851747.461701,
+        "is_seed": false
+      },
+      "0x0f4a1d7fdf4890be35e71f3e0bbc4a0ec377eca3": {
+        "from_funder": 3551022.442850001,
+        "to_exchange": 706445.2914910002,
+        "is_seed": false
+      },
       "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3": {
-        "from_funder": 6893228.722562,
+        "from_funder": 8541069.735837,
         "to_exchange": 6138969.16081,
         "is_seed": false
       },
+      "0x198b6f2515ad7d39543916ca24c3a1a8bcc282ba": {
+        "from_funder": 5833953.870349001,
+        "to_exchange": 1175428.009697,
+        "is_seed": false
+      },
       "0x1f2dd6d473f3e824cd2f8a89d9c69fb96f6ad0cf": {
-        "from_funder": 17365966.982070997,
+        "from_funder": 18403110.863540996,
         "to_exchange": 25362453.238693997,
         "is_seed": true
       },
       "0x23786fdad0073692157c6d7dc81f281843a35fcb": {
-        "from_funder": 5949464.619167,
+        "from_funder": 6247684.305722,
         "to_exchange": 6563368.812914,
         "is_seed": false
       },
+      "0x275575bb11522eb29f82fe0a601d7c4dc94b5016": {
+        "from_funder": 425100.797174,
+        "to_exchange": 760432.46,
+        "is_seed": false
+      },
+      "0x2c43c705d1f7f314de4eb55f840db7b4765b9689": {
+        "from_funder": 4323952.421196002,
+        "to_exchange": 1169566.978984,
+        "is_seed": false
+      },
+      "0x2fef6792255c4a901d11d5a92bb45bd62efcb55c": {
+        "from_funder": 866507.1363359989,
+        "to_exchange": 672045.0184149997,
+        "is_seed": false
+      },
+      "0x31083a78e11b18e450fd139f9abea98cd53181b7": {
+        "from_funder": 3296079.8413429996,
+        "to_exchange": 1425606.7995060002,
+        "is_seed": false
+      },
+      "0x32fa8e47be76fe39d86767a03bc1791b6c8fa0ec": {
+        "from_funder": 1784011.1135639993,
+        "to_exchange": 1347310.9121299996,
+        "is_seed": false
+      },
+      "0x3c66133a7fd29ab1e551db9e8832dca0cead7a16": {
+        "from_funder": 12067155.207599001,
+        "to_exchange": 10713346.147422,
+        "is_seed": false
+      },
+      "0x41069abff72d1f7c81d21cf11c8c9739eded9122": {
+        "from_funder": 778117.1517420001,
+        "to_exchange": 664348.8908010001,
+        "is_seed": false
+      },
+      "0x431552c3a89f647cd4ea1cf4980bb742eabd992c": {
+        "from_funder": 1699630.1994200002,
+        "to_exchange": 1266563.591578,
+        "is_seed": false
+      },
       "0x45ebb1c54f223c5905a7683164656b63527bc11b": {
-        "from_funder": 31549207.7347,
+        "from_funder": 254337.741604,
         "to_exchange": 5994284.550316,
         "is_seed": false
       },
+      "0x4bb5d3f54c76aa52f39d3150b2ea33293775942c": {
+        "from_funder": 499886.06629,
+        "to_exchange": 759955.668488,
+        "is_seed": false
+      },
       "0x56687bf447db6ffa42ffe2204a05edaa20f55839": {
-        "from_funder": 20103199.449937,
+        "from_funder": 20819266.530449,
         "to_exchange": 18100552.008929,
         "is_seed": true
       },
+      "0x571dbc37082936b2cb4a26e0d85ca835195d19d6": {
+        "from_funder": 344786.22464699997,
+        "to_exchange": 593926.238025,
+        "is_seed": false
+      },
+      "0x5cf2cde33b4697a7c09684833b82bf460a735340": {
+        "from_funder": 2706694.587754003,
+        "to_exchange": 1149072.7804699999,
+        "is_seed": false
+      },
+      "0x5e0220909135c88382a2128e1e8ef1278567817e": {
+        "from_funder": 4248220.552203,
+        "to_exchange": 850010.0,
+        "is_seed": false
+      },
+      "0x5f515f6c524b18ca30f7783fb58dd4be2e9904ec": {
+        "from_funder": 26650536.560389034,
+        "to_exchange": 1330950.8010840002,
+        "is_seed": false
+      },
+      "0x64f8d315efd2d03897a03985fc42719f56952daa": {
+        "from_funder": 875965.5190219999,
+        "to_exchange": 1738026.210138,
+        "is_seed": false
+      },
       "0x6597282ce8d8b81904621e6f75c9f3882a3bca42": {
-        "from_funder": 153192.628857,
+        "from_funder": 801021.1986750001,
         "to_exchange": 754894.11697,
         "is_seed": false
       },
+      "0x686ec64ae1c2e299c6684e1e2640fcec7d2c01f1": {
+        "from_funder": 11066251.000193993,
+        "to_exchange": 750903.6315309999,
+        "is_seed": false
+      },
+      "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45": {
+        "from_funder": 861892.3165860001,
+        "to_exchange": 1199115.526709998,
+        "is_seed": false
+      },
+      "0x73f8dd50a114884493dbf4a5ea1503f96f348234": {
+        "from_funder": 1418465.104928,
+        "to_exchange": 2028535.560329,
+        "is_seed": false
+      },
+      "0x748f8bc6db49da87f131e073f68aaefc4edbc80b": {
+        "from_funder": 489198.409255,
+        "to_exchange": 939823.166126,
+        "is_seed": false
+      },
       "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76": {
-        "from_funder": 7886702.227426,
+        "from_funder": 7884449.727906,
         "to_exchange": 5813790.355836,
         "is_seed": false
       },
+      "0x793491fe4a7b25eee0065e484a52c7a0dfd8c0d9": {
+        "from_funder": 5686164.409432,
+        "to_exchange": 580000.0,
+        "is_seed": false
+      },
+      "0x79cbcf5037d52c4adceb48757d8a5b013a7db270": {
+        "from_funder": 1432344.634381,
+        "to_exchange": 1444769.165101,
+        "is_seed": false
+      },
+      "0x7a8f557916d99945eaf2f8763935a70bdc81f650": {
+        "from_funder": 484675.48188100045,
+        "to_exchange": 18095218.26891096,
+        "is_seed": false
+      },
+      "0x7bb5686910e22c4348265ab86e38b06f7579db04": {
+        "from_funder": 501196.46031500003,
+        "to_exchange": 811047.738634,
+        "is_seed": false
+      },
+      "0x80c228786e4940904fccdd54999edce5d3cbec5e": {
+        "from_funder": 435966.10240599996,
+        "to_exchange": 559000.0,
+        "is_seed": false
+      },
       "0x8119010a6e589062aa03583bb3f39ca632d9f887": {
-        "from_funder": 6551999.0,
+        "from_funder": 6942628.995650999,
         "to_exchange": 11380374.563712,
         "is_seed": true
       },
       "0x863134d00841b2e200492805a01e1e2f5defaa53": {
-        "from_funder": 6658623.781198001,
+        "from_funder": 6856532.291428999,
         "to_exchange": 4707495.788172,
         "is_seed": false
       },
       "0x885783760858e1bd5dd09a3c3f916cfa251ac270": {
-        "from_funder": 5281995.315839001,
+        "from_funder": 6280373.4742910005,
         "to_exchange": 7369938.48079,
         "is_seed": false
       },
+      "0x8929cbd35e9648821dd525cf977269e640a77d8f": {
+        "from_funder": 5394223.290281999,
+        "to_exchange": 1058671.5603549997,
+        "is_seed": false
+      },
+      "0x8ca5712e00cd8bab6d0accab3d8b524668e976bf": {
+        "from_funder": 5576067.937358,
+        "to_exchange": 2333642.9799430002,
+        "is_seed": false
+      },
+      "0x8d3d65f675f096db9f27fc4162757a5162ef103a": {
+        "from_funder": 46048108.300104044,
+        "to_exchange": 77296411.65037014,
+        "is_seed": false
+      },
+      "0x8e5c0cc55cda93d6cae14becb3b738a44dcaa68a": {
+        "from_funder": 1987992.0872600002,
+        "to_exchange": 610200.0,
+        "is_seed": false
+      },
+      "0x94a428cfa4f84b264e01f70d93d02bc96cb36356": {
+        "from_funder": 6998239.707671001,
+        "to_exchange": 5000000.0,
+        "is_seed": false
+      },
       "0xa8a29bc8816e19d2b41cdaae48bd602180b0ff3e": {
-        "from_funder": 15664137.271281,
+        "from_funder": 9274635.045165999,
         "to_exchange": 3916642.8808399998,
         "is_seed": false
       },
+      "0xad3b67bca8935cb510c8d18bd45f0b94f54a968f": {
+        "from_funder": 7518103.949217999,
+        "to_exchange": 795222.8221949999,
+        "is_seed": false
+      },
+      "0xaefc8e7151de4fdc78db100eb507df4c26ed21a0": {
+        "from_funder": 3137270.266799,
+        "to_exchange": 1916578.3576559997,
+        "is_seed": false
+      },
+      "0xbbc7298464b536edc68ab5089d76d110efc9c2c1": {
+        "from_funder": 2000016.78009,
+        "to_exchange": 2055002.365848,
+        "is_seed": false
+      },
+      "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8": {
+        "from_funder": 3632953.5313840006,
+        "to_exchange": 731390.713995,
+        "is_seed": false
+      },
+      "0xc4439174a5d5f821e173ce86def1d86c3145f19f": {
+        "from_funder": 29770606.609137997,
+        "to_exchange": 2000000.0,
+        "is_seed": false
+      },
+      "0xca23f2f702140b5245c517aef5cd9888a6320e77": {
+        "from_funder": 400075.20659,
+        "to_exchange": 713966.348953,
+        "is_seed": false
+      },
+      "0xce0ebbbfb38babb8951c413f77a6e7d543a90d92": {
+        "from_funder": 613494.115631,
+        "to_exchange": 782120.847708,
+        "is_seed": false
+      },
       "0xd0c042c08f755ff940249f62745e82d356345565": {
-        "from_funder": 5249997.0,
+        "from_funder": 5248504.24524,
         "to_exchange": 6304237.419658,
         "is_seed": false
       },
+      "0xd235973291b2b75ff4070e9c0b01728c520b0f29": {
+        "from_funder": 21773902.403996006,
+        "to_exchange": 29472972.897856,
+        "is_seed": false
+      },
+      "0xd31a2ea0b5f9a10c2eb78dcc36df016497d5386e": {
+        "from_funder": 742366.940721,
+        "to_exchange": 1671533.431044,
+        "is_seed": false
+      },
+      "0xd456646742a36c1d92f0bacba8a38d5e69157e8f": {
+        "from_funder": 439590.395083,
+        "to_exchange": 659328.961571,
+        "is_seed": false
+      },
+      "0xdb6f1920a889355780af7570773609bd8cb1f498": {
+        "from_funder": 443955.8073180005,
+        "to_exchange": 2364018.994398001,
+        "is_seed": false
+      },
+      "0xdb7513a3c54d579d64ee64c948c85d2f27620252": {
+        "from_funder": 999373.662283,
+        "to_exchange": 700000.0,
+        "is_seed": false
+      },
+      "0xdef171fe48cf0115b1d80b88dc8eab59176fee57": {
+        "from_funder": 1587874.0165899997,
+        "to_exchange": 12093900.28360101,
+        "is_seed": false
+      },
+      "0xe37e799d5077682fa0a244d46e5649f71457bd09": {
+        "from_funder": 3928826.1235609986,
+        "to_exchange": 98159525.80765705,
+        "is_seed": false
+      },
+      "0xe4c99e75306e0e1421b4712a21e8f90c47cd6ef7": {
+        "from_funder": 2378743.463112999,
+        "to_exchange": 500000.0,
+        "is_seed": false
+      },
+      "0xe5a565a0564dc54159e503ca74925835f00585c3": {
+        "from_funder": 453486.113614,
+        "to_exchange": 812787.123844,
+        "is_seed": false
+      },
+      "0xea749fd6ba492dbc14c24fe8a3d08769229b896c": {
+        "from_funder": 2221782.534760002,
+        "to_exchange": 557471.9813679997,
+        "is_seed": false
+      },
+      "0xec7be89e9d109e7e3fec59c222cf297125fefda2": {
+        "from_funder": 1574431.0771700004,
+        "to_exchange": 603879.1901479998,
+        "is_seed": false
+      },
       "0xed2239a9150c3920000d0094d28fa51c7db03dd0": {
-        "from_funder": 3796500.0,
+        "from_funder": 3953085.178216,
         "to_exchange": 6224461.619692,
+        "is_seed": false
+      },
+      "0xed9e3f98bbed560e66b89aac922e29d4596a9642": {
+        "from_funder": 3219391.2945320066,
+        "to_exchange": 804781.707036,
+        "is_seed": false
+      },
+      "0xee2147fcf090ce08095e65a3c9e193c459364d5b": {
+        "from_funder": 14768895.440179003,
+        "to_exchange": 8522718.994554,
+        "is_seed": false
+      },
+      "0xf9f5581d4d7a599b8e2f8d1b1b0e29ca0218227a": {
+        "from_funder": 1063696.211308,
+        "to_exchange": 1782603.913594,
+        "is_seed": false
+      },
+      "0xff4b330c5bc3811b66d8864cf8078d8f2db20dd6": {
+        "from_funder": 532972.0838689995,
+        "to_exchange": 1967201.492559,
         "is_seed": false
       }
     }

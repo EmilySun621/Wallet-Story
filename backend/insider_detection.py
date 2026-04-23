@@ -271,6 +271,78 @@ def fetch_market_lifecycles(market_slugs_or_ids):
     return lifecycles
 
 
+def derive_market_lifecycles_from_trades(all_trades):
+    """
+    Fallback: derive market lifecycles from trade timestamps.
+
+    For archived markets where Gamma API doesn't return lifecycle metadata,
+    we can approximate:
+      - open_ts = earliest trade timestamp for that market
+      - close_ts = latest trade timestamp for that market
+
+    Args:
+        all_trades: dict {wallet_addr: [trade_dicts]} or list of trade dicts
+
+    Returns:
+        dict: market_id -> {'open_ts': unix, 'close_ts': unix, 'slug': str, 'source': 'derived'}
+
+    Quality guard: require at least 10 trades per market to compute lifecycle.
+    """
+    # Flatten trades if dict
+    if isinstance(all_trades, dict):
+        flat_trades = []
+        for trades in all_trades.values():
+            flat_trades.extend(trades)
+    else:
+        flat_trades = all_trades
+
+    # Group trades by market
+    markets_trades = {}
+    for t in flat_trades:
+        market_id = t.get('condition_id') or t.get('market_id') or t.get('slug')
+        if not market_id:
+            continue
+        if market_id not in markets_trades:
+            markets_trades[market_id] = []
+        markets_trades[market_id].append(t)
+
+    # Derive lifecycles
+    lifecycles = {}
+    for market_id, trades in markets_trades.items():
+        # Quality guard: require at least 10 trades
+        if len(trades) < 10:
+            log.debug(f"Market {market_id}: only {len(trades)} trades, skipping lifecycle derivation (need >=10)")
+            continue
+
+        # Extract timestamps
+        timestamps = []
+        for t in trades:
+            ts = t.get('timestamp')
+            if ts:
+                timestamps.append(ts)
+
+        if len(timestamps) < 10:
+            continue
+
+        open_ts = min(timestamps)
+        close_ts = max(timestamps)
+
+        # Sanity check: close > open
+        if close_ts <= open_ts:
+            log.warning(f"Market {market_id}: close_ts <= open_ts, skipping")
+            continue
+
+        lifecycles[market_id] = {
+            'open_ts': open_ts,
+            'close_ts': close_ts,
+            'slug': market_id,
+            'source': 'derived'
+        }
+        log.debug(f"Derived lifecycle for {market_id}: {len(trades)} trades, span={(close_ts-open_ts)/(86400):.1f} days")
+
+    return lifecycles
+
+
 def _parse_timestamp(date_str):
     """Parse ISO timestamp or unix timestamp to unix seconds."""
     if isinstance(date_str, (int, float)):
