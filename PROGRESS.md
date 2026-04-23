@@ -233,11 +233,86 @@ Signal 4 (Timing Distribution Anomaly Detection) successfully implemented as pro
 
 ---
 
+## Day 2 UI Polish Session (6 commits) — COMPLETED
+
+**Session Goal**: Make Investigation, CaseLibrary, and TimingDistributionChart views judge-ready with polished UI/UX.
+
+### Completed Tasks (All 6/6)
+
+**1. Multi-Step Progress Indicator** (`f404385`)
+- Added 5-step progress tracker to Investigation page during agent execution
+- Steps: Fetching → Classifying → Statistics → Clustering → Narrative
+- Staggered 15-second intervals with pulsing animation on active step
+- Auto-advances or skips forward when backend completes faster
+
+**2. Forensic Report Card Polish** (`fc8cf4a`)
+- Large centered verdict badge (3rem icon, color-coded border)
+- Key metrics as hoverable stat cards with visual hierarchy
+- p-value formatting: displays `< 10⁻¹⁰` with "astronomically significant" label
+- Tooltips (?) on technical terms (KS test, Louvain, cluster size) with plain-English explanations
+- Stat cards have green glow hover effect
+
+**3. CaseLibrary Card Hover/Active States** (`a61c35a`)
+- Hover: green border glow + subtle lift animation (`translateY(-2px)`)
+- Active/pressed state with feedback
+- Featured case (Theo): distinct yellow border (`#ffaa00`) with enhanced hover
+- Control case: distinct green border with enhanced hover
+- Metric cards: scale effect (1.02) with subtle background change on hover
+
+**4. TimingDistributionChart Refinement** (`bb8dc35`)
+- Added color legend (observed bar vs uniform baseline line)
+- Chart caption with plain-English key finding summary
+- Updated title: "Timing Distribution Anomaly Detection" (more accurate)
+- Enhanced N/A empty state with icon, clearer messaging
+- Increased chart height to 280px for better readability
+
+**5. Mobile Responsive Breakpoints** (`a84389f`)
+- **768px breakpoint**: 2-column grid for metrics, stacked input group
+- **480px breakpoint**: single-column layout, reduced font sizes
+- Tables: horizontal scroll on small screens
+- Cards: removed hover transform on mobile
+- No horizontal overflow issues
+- Flexbox wrap for cluster stats and chart legend
+
+**6. Error Handling UI** (`46a9db6`)
+- Investigation: structured error card with icon, title, detail, and inline retry button
+- Input validation: red border on invalid address, auto-clears on input change
+- Better error messages (empty vs invalid format)
+- CaseLibrary: improved error card with retry button
+- All error states have clear visual hierarchy and actionable retry options
+
+### Build Status
+✅ `npm run build` — No errors (warning on chunk size is expected, non-blocking)
+
+### Files Modified (No violations of strict boundaries)
+- ✅ `src/pages/Investigation.jsx`
+- ✅ `src/pages/CaseLibrary.jsx`
+- ✅ `src/pages/CaseLibrary_v2.jsx`
+- ✅ `src/components/TimingDistributionChart.jsx`
+
+**No files touched**:
+- ✅ App.jsx, Navigation.jsx, Sidebar.jsx, main.jsx (unchanged)
+- ✅ Backend files (unchanged)
+- ✅ Existing terminal-*.css files (unchanged)
+- ✅ Package.json (no new packages installed)
+
+### Acceptance Checks
+- [x] Multi-step loading states during 1-5 min agent execution
+- [x] Large verdict badge with icons and color-coding
+- [x] Stat cards with tooltips explaining technical terms
+- [x] p-value shows `< 10⁻¹⁰` with human-readable label
+- [x] CaseLibrary cards have hover/active states with distinct Featured styling
+- [x] TimingDistributionChart has legend, caption, improved empty state
+- [x] Mobile responsive at 768px and 480px breakpoints
+- [x] Error cards have retry buttons and inline validation feedback
+- [x] Build completes without errors
+
+---
+
 ## Day 2 Remaining Priorities
 1. ~~Investigator agent (`backend/investigator_agent.py`)~~ ✅ Done
 2. ~~Timing Distribution Anomaly Detection (Signal 4)~~ ✅ Done (9 commits)
-3. EAS attestation (`src/lib/eas.js`) — NEXT
-4. ~~Investigation page (`src/pages/Investigation.jsx`)~~ ✅ Done
-5. ~~Case Library page~~ ✅ Done
-6. Frontend integration with pipeline API (navigation, routing)
-7. Testing end-to-end flow (backend → frontend)
+3. ~~UI polish (Investigation, CaseLibrary, TimingDistributionChart)~~ ✅ Done (6 commits)
+4. EAS attestation (`src/lib/eas.js`) — NEXT (user will work on in person)
+5. Frontend integration with pipeline API (navigation, routing)
+6. Testing end-to-end flow (backend → frontend)
