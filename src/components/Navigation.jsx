@@ -4,28 +4,28 @@ function Navigation() {
   const location = useLocation()
 
   return (
-    <nav className="top-nav">
-      <div className="nav-content">
-        <div className="nav-left">
-          <h1 className="nav-logo">
+    <nav className="top-nav-full-width">
+      <div className="nav-container-full">
+        <div className="nav-left-full">
+          <h1 className="nav-logo-full">
             <span className="logo-hex">⬡</span>
             WalletStory
           </h1>
+        </div>
 
-          <div className="nav-links">
-            <Link
-              to="/cases"
-              className={`nav-link ${location.pathname === '/' || location.pathname === '/cases' ? 'active' : ''}`}
-            >
-              📚 Case Library
-            </Link>
-            <Link
-              to="/investigation"
-              className={`nav-link ${location.pathname === '/investigation' ? 'active' : ''}`}
-            >
-              🔍 Investigate
-            </Link>
-          </div>
+        <div className="nav-links-full">
+          <Link
+            to="/cases"
+            className={`nav-link-full ${location.pathname === '/' || location.pathname === '/cases' ? 'active' : ''}`}
+          >
+            📚 Case Library
+          </Link>
+          <Link
+            to="/investigation"
+            className={`nav-link-full ${location.pathname === '/investigation' ? 'active' : ''}`}
+          >
+            🔍 Investigate
+          </Link>
         </div>
       </div>
     </nav>

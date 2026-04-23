@@ -1,0 +1,285 @@
+/* Investigation.css — Spacious, desktop-first investigation page */
+
+.investigation-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #0a0e1a;
+}
+
+/* INPUT HERO SECTION */
+.input-hero-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 6rem 3vw 5rem 3vw;
+  text-align: center;
+  border-bottom: 2px solid #1a1a2e;
+}
+
+.input-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.input-hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 1rem;
+}
+
+.input-hero-subtitle {
+  font-size: 1.125rem;
+  color: #94a3b8;
+  margin-bottom: 3rem;
+}
+
+.input-large-group {
+  display: flex;
+  gap: 1rem;
+  max-width: 700px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.input-large {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #e2e8f0;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s;
+}
+
+.input-large:focus {
+  outline: none;
+  border-color: #a78bfa;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.1);
+}
+
+.input-large.input-error {
+  border-color: #ef4444;
+}
+
+.input-large::placeholder {
+  color: #64748b;
+}
+
+.button-large {
+  padding: 1.25rem 3rem;
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.button-large:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(167, 139, 250, 0.4);
+}
+
+.button-large:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message-large {
+  color: #fca5a5;
+  font-size: 0.9375rem;
+  margin-top: 1rem;
+}
+
+/* PROGRESS STEPS */
+.progress-container {
+  max-width: 600px;
+  margin: 2rem auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progress-step-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.progress-step-item.active {
+  border-left-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.05);
+}
+
+.progress-step-item.completed {
+  border-left-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.progress-icon {
+  font-size: 1.25rem;
+  color: #64748b;
+}
+
+.progress-step-item.active .progress-icon {
+  color: #fbbf24;
+}
+
+.progress-step-item.completed .progress-icon {
+  color: #10b981;
+}
+
+.progress-text {
+  color: #94a3b8;
+  font-size: 0.9375rem;
+}
+
+.progress-step-item.active .progress-text,
+.progress-step-item.completed .progress-text {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+/* RESULTS SECTION */
+.results-section {
+  padding: 5rem 3vw;
+}
+
+.results-verdict-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 3rem 0;
+}
+
+.results-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto 5rem auto;
+}
+
+.metric-card-large {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.metric-card-large:hover {
+  transform: translateY(-4px);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.metric-label-large {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.metric-value-large {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  line-height: 1.2;
+}
+
+.metric-footer-large {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin-top: 0.75rem;
+}
+
+/* VISUALIZATIONS GRID */
+.viz-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1600px;
+  margin: 0 auto 5rem auto;
+}
+
+.viz-card-large {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* EVIDENCE TABLES */
+.evidence-section {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 3rem 0;
+}
+
+.evidence-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.evidence-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .results-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .viz-grid-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .input-hero-section {
+    padding: 4rem 5vw 3rem 5vw;
+  }
+
+  .input-hero-title {
+    font-size: 2rem;
+  }
+
+  .input-large-group {
+    flex-direction: column;
+  }
+
+  .results-metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .metric-value-large {
+    font-size: 2rem;
+  }
+
+  .results-section {
+    padding: 3rem 5vw;
+  }
+}

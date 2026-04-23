@@ -6,19 +6,17 @@ import Investigation from './pages/Investigation'
 import CaseLibrary from './pages/CaseLibrary_v2'
 
 function App() {
-
   return (
     <Router>
-      <div className="app-container">
+      <div className="app-full-width">
         <Navigation />
-
-        <div className="main-content">
+        <main className="main-content-full-width">
           <Routes>
             <Route path="/" element={<CaseLibrary />} />
             <Route path="/cases" element={<CaseLibrary />} />
             <Route path="/investigation" element={<Investigation />} />
           </Routes>
-        </div>
+        </main>
       </div>
     </Router>
   )

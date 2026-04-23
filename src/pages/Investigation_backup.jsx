@@ -16,7 +16,6 @@ import MoneyFlowSankey from '../components/MoneyFlowSankey';
 import TimingDistributionChart from '../components/TimingDistributionChart';
 import '../terminal-theme.css';
 import '../terminal-table.css';
-import './Investigation.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -99,82 +98,102 @@ function Investigation() {
   };
 
   return (
-    <div className="investigation-page">
-      {/* INPUT HERO SECTION */}
-      <section className="input-hero-section">
-        <div className="input-hero-content">
-          <h1 className="input-hero-title">Investigate any wallet</h1>
-          <p className="input-hero-subtitle">
-            Autonomous forensic analysis for prediction market insider trading detection
-          </p>
+    <div className="page-container">
+      <div className="terminal-header">
+        <h1>🔍 Wallet Investigation</h1>
+        <p className="subtitle">
+          Autonomous forensic analysis for prediction market insider trading detection
+        </p>
+      </div>
 
-          <div className="input-large-group">
+      {/* Input Section */}
+      <div className="terminal-card">
+        <div className="card-header">
+          <h2>Enter Wallet Address</h2>
+        </div>
+        <div className="card-body">
+          <div className="input-group">
             <input
               type="text"
-              placeholder="0x... (Ethereum address)"
+              placeholder="0x..."
               value={address}
               onChange={(e) => {
                 setAddress(e.target.value.trim());
-                setError(null);
+                setError(null); // Clear error on input change
               }}
-              className={`input-large ${error ? 'input-error' : ''}`}
+              className={`terminal-input ${error ? 'input-error' : ''}`}
               disabled={loading}
               onKeyPress={(e) => e.key === 'Enter' && handleInvestigate()}
             />
             <button
               onClick={handleInvestigate}
               disabled={loading || !address}
-              className="button-large"
+              className="terminal-button"
             >
-              {loading ? 'Analyzing...' : 'Investigate'}
+              {loading ? 'Investigating...' : 'Run Investigation'}
             </button>
           </div>
-
-          {error && (
-            <div className="error-message-large">
-              ❌ {error}
+          {loading && (
+            <div className="loading-message">
+              <div className="progress-steps">
+                <div className={`progress-step ${progressStep >= 0 ? 'active' : ''} ${progressStep > 0 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 0 ? '✓' : '▶'}</span>
+                  <span className="step-text">Fetching wallet history...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 1 ? 'active' : ''} ${progressStep > 1 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 1 ? '✓' : progressStep === 1 ? '▶' : '○'}</span>
+                  <span className="step-text">Classifying trades...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 2 ? 'active' : ''} ${progressStep > 2 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 2 ? '✓' : progressStep === 2 ? '▶' : '○'}</span>
+                  <span className="step-text">Computing statistics...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 3 ? 'active' : ''} ${progressStep > 3 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 3 ? '✓' : progressStep === 3 ? '▶' : '○'}</span>
+                  <span className="step-text">Building cluster graph...</span>
+                </div>
+                <div className={`progress-step ${progressStep >= 4 ? 'active' : ''} ${progressStep > 4 ? 'completed' : ''}`}>
+                  <span className="step-icon">{progressStep > 4 ? '✓' : progressStep === 4 ? '▶' : '○'}</span>
+                  <span className="step-text">Generating narrative...</span>
+                </div>
+              </div>
             </div>
           )}
-          {loading && (
-            <div className="progress-container">
-              <div className={`progress-step-item ${progressStep >= 0 ? 'active' : ''} ${progressStep > 0 ? 'completed' : ''}`}>
-                <span className="progress-icon">{progressStep > 0 ? '✅' : '⏳'}</span>
-                <span className="progress-text">Fetching wallet history...</span>
-              </div>
-              <div className={`progress-step-item ${progressStep >= 1 ? 'active' : ''} ${progressStep > 1 ? 'completed' : ''}`}>
-                <span className="progress-icon">{progressStep > 1 ? '✅' : progressStep === 1 ? '⏳' : '⏺️'}</span>
-                <span className="progress-text">Classifying trades...</span>
-              </div>
-              <div className={`progress-step-item ${progressStep >= 2 ? 'active' : ''} ${progressStep > 2 ? 'completed' : ''}`}>
-                <span className="progress-icon">{progressStep > 2 ? '✅' : progressStep === 2 ? '⏳' : '⏺️'}</span>
-                <span className="progress-text">Computing statistics...</span>
-              </div>
-              <div className={`progress-step-item ${progressStep >= 3 ? 'active' : ''} ${progressStep > 3 ? 'completed' : ''}`}>
-                <span className="progress-icon">{progressStep > 3 ? '✅' : progressStep === 3 ? '⏳' : '⏺️'}</span>
-                <span className="progress-text">Building cluster graph...</span>
-              </div>
-              <div className={`progress-step-item ${progressStep >= 4 ? 'active' : ''} ${progressStep > 4 ? 'completed' : ''}`}>
-                <span className="progress-icon">{progressStep > 4 ? '✅' : progressStep === 4 ? '⏳' : '⏺️'}</span>
-                <span className="progress-text">Generating report...</span>
+          {error && (
+            <div className="error-message">
+              <div className="error-icon">❌</div>
+              <div className="error-content">
+                <div className="error-title">Investigation Failed</div>
+                <div className="error-detail">{error}</div>
+                <button onClick={handleInvestigate} className="retry-button-inline">
+                  Retry Investigation
+                </button>
               </div>
             </div>
           )}
         </div>
-      </section>
+      </div>
 
-      {/* RESULTS SECTION */}
+      {/* Results Panel */}
       {result && (
-        <section className="results-section">
-          {/* VERDICT HERO */}
-          <div className="results-verdict-hero">
-            <VerdictBadge
-              severity={result.insider_detection?.verdict || 'Low'}
-              pValue={result.insider_detection?.p_value}
-            />
-          </div>
+        <>
+          {/* Summary Card */}
+          <div className="terminal-card">
+            <div className="card-header">
+              <h2>Forensic Report</h2>
+              <span className="timestamp">{new Date(result.generated_at).toLocaleString()}</span>
+            </div>
+            <div className="card-body">
+              {/* VerdictBadge Component */}
+              <div className="verdict-section">
+                <VerdictBadge
+                  severity={result.insider_detection?.verdict || 'Low'}
+                  pValue={result.insider_detection?.p_value}
+                />
+              </div>
 
-          {/* KEY METRICS GRID */}
-          <div className="results-metrics-grid">
+              {/* Key Metrics as Stat Cards */}
+              <div className="stats-grid">
                 <div className="stat-card">
                   <div className="stat-header">
                     <span className="stat-label">Win Rate</span>
@@ -228,6 +247,8 @@ function Investigation() {
                     <div className="stat-footer">Timing anomaly</div>
                   </div>
                 )}
+              </div>
+            </div>
           </div>
 
           {/* Timing Distribution Chart */}
@@ -239,10 +260,10 @@ function Investigation() {
             </div>
           )}
 
-          {/* VISUALIZATIONS */}
+          {/* Cluster Force Graph Visualization */}
           {result.cluster_info?.candidates_found > 0 && (
-            <div className="viz-grid-2col">
-              <div className="viz-card-large">
+            <div className="terminal-card">
+              <div className="card-body">
                 <ClusterForceGraph
                   clusterData={{
                     wallets: result.per_wallet?.map(w => ({
@@ -263,8 +284,13 @@ function Investigation() {
                   }}
                 />
               </div>
+            </div>
+          )}
 
-              <div className="viz-card-large">
+          {/* Money Flow Sankey Diagram */}
+          {result.cluster_info?.candidates_found > 0 && (
+            <div className="terminal-card">
+              <div className="card-body">
                 <MoneyFlowSankey
                   flowData={{
                     funder: result.cluster_info.shared_infrastructure?.funder ?
@@ -286,11 +312,13 @@ function Investigation() {
             </div>
           )}
 
-          {/* EVIDENCE SECTION */}
-          <div className="evidence-section">
-            {result.cluster_info?.candidates_found > 0 && (
-              <div className="evidence-card">
-                <h3>Cluster Discovery</h3>
+          {/* Cluster Info Card */}
+          {result.cluster_info?.candidates_found > 0 && (
+            <div className="terminal-card">
+              <div className="card-header">
+                <h2>Cluster Discovery</h2>
+              </div>
+              <div className="card-body">
                 <p>
                   Found <strong>{result.cluster_info.candidates_found}</strong> related wallets
                   via exchange-anchor clustering.
@@ -333,12 +361,16 @@ function Investigation() {
                   </div>
                 )}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Per-Wallet Breakdown */}
-            {result.per_wallet?.length > 0 && (
-              <div className="evidence-card">
-                <h3>Per-Wallet Breakdown</h3>
+          {/* Per-Wallet Breakdown */}
+          {result.per_wallet?.length > 0 && (
+            <div className="terminal-card">
+              <div className="card-header">
+                <h2>Per-Wallet Breakdown</h2>
+              </div>
+              <div className="card-body">
                 <table className="terminal-table">
                   <thead>
                     <tr>
@@ -364,9 +396,21 @@ function Investigation() {
                   </tbody>
                 </table>
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Methodology Footer */}
+          <div className="terminal-card">
+            <div className="card-body">
+              <p className="methodology-note">
+                <strong>Methodology:</strong> {result.methodology}
+              </p>
+              <p className="methodology-note">
+                <strong>Agent Iterations:</strong> {result.agent_iterations}
+              </p>
+            </div>
           </div>
-        </section>
+        </>
       )}
 
       <style>{`
