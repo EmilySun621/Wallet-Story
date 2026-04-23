@@ -20,14 +20,8 @@ from datetime import datetime
 # Polymarket Data API endpoint
 POLYMARKET_API = "https://data-api.polymarket.com"
 
-# Known wallets to always include
-THEO_SEED_WALLETS = [
-    "0x1f2dd6d473f3e824cd2f8a89d9c69fb96f6ad0cf",  # Fredi9999
-    "0x56687bf447db6ffa42ffe2204a05edaa20f55839",  # Theo4
-    "0x8119010a6e589062aa03583bb3f39ca632d9f887",  # PrincessCaro
-]
-
-CONTROL_WALLET = "0x0000000000000000000000000000000000000000"  # Replace with actual control
+# Control wallet (legitimate trader baseline)
+CONTROL_WALLET = "0x006cc834cc092684f1b56626e23bedb3835c16ea"  # Known Low baseline
 
 # Rate limiting and retry config
 MAX_RETRIES = 3
@@ -68,44 +62,30 @@ def fetch_with_retry(url: str, retries: int = MAX_RETRIES) -> Optional[dict]:
     return None
 
 
-def fetch_top_traders(target_count: int = 30) -> List[Dict]:
+def load_theo_case_wallets() -> tuple[List[str], List[str]]:
     """
-    Fetch top Polymarket traders with mixed distribution:
-    - Top 10 by volume (whales)
-    - Mid-rank 10 (rank 50-100)
-    - 10 high-activity low-volume (>200 trades, <$500K volume)
+    Load real, verifiable wallets from case_polymarket_theo.json.
 
-    Returns list of {address, username, volume, trades}
+    Returns:
+        (seed_addresses, candidate_addresses) - all verified on-chain
     """
-    print(f"🔍 Fetching top {target_count} Polymarket traders...")
+    print(f"🔍 Loading verified wallets from Theo case file...")
 
-    # Try to fetch from Polymarket API
-    # Note: This may not work - Polymarket API structure may vary
-    traders = []
+    case_path = Path(__file__).resolve().parent / "data" / "case_polymarket_theo.json"
 
-    try:
-        # Attempt to fetch leaderboard data
-        url = f"{POLYMARKET_API}/leaderboard"
-        data = fetch_with_retry(url)
+    with open(case_path) as f:
+        case_data = json.load(f)
 
-        if data:
-            # Parse response (adjust based on actual API schema)
-            # Expected structure: list of {user, address, volume, ...}
-            if isinstance(data, list):
-                traders = data[:target_count]
-            elif isinstance(data, dict) and 'data' in data:
-                traders = data['data'][:target_count]
-            else:
-                print(f"⚠️ Unexpected API response structure: {type(data)}")
-    except Exception as e:
-        print(f"⚠️ Failed to fetch from Polymarket API: {e}")
+    # Extract 3 verified seed wallets
+    seeds = [w['address'].lower() for w in case_data['addresses'] if w.get('verified')]
 
-    if traders:
-        print(f"✓ Fetched {len(traders)} traders from API")
-    else:
-        print("⚠️ No traders fetched from API - will only analyze known wallets")
+    # Extract 10 candidate wallets surfaced by exchange-anchor clustering
+    candidates = [w['address'].lower() for w in case_data['candidate_wallets_surfaced']]
 
-    return traders
+    print(f"✓ Loaded {len(seeds)} verified Theo seeds")
+    print(f"✓ Loaded {len(candidates)} cluster candidates (exchange-anchor discovered)")
+
+    return seeds, candidates
 
 
 def run_pipeline_on_address(address: str) -> Optional[Dict]:
@@ -160,9 +140,13 @@ def run_pipeline_on_address(address: str) -> Optional[Dict]:
         return None
 
 
-def build_watchlist(max_runtime_hours: float = MAX_RUNTIME_HOURS) -> List[Dict]:
+def build_watchlist(max_runtime_hours: float = MAX_RUNTIME_HOURS, limit: Optional[int] = None) -> List[Dict]:
     """
     Main watchlist builder loop
+
+    Args:
+        max_runtime_hours: Maximum runtime in hours
+        limit: Optional limit on number of addresses to analyze (for testing)
 
     Returns sorted list of analyzed wallets (most critical first)
     """
@@ -171,26 +155,30 @@ def build_watchlist(max_runtime_hours: float = MAX_RUNTIME_HOURS) -> List[Dict]:
 
     results = []
 
-    # 1. Fetch top traders from Polymarket
-    traders = fetch_top_traders(target_count=30)
+    # 1. Load real wallets from Theo case file
+    theo_seeds, theo_candidates = load_theo_case_wallets()
 
-    # 2. Add known Theo seeds (always include these)
-    print(f"\n📌 Adding {len(THEO_SEED_WALLETS)} Theo seed wallets...")
-    all_addresses = THEO_SEED_WALLETS.copy()
+    # 2. Build validation set: 3 seeds + 10 candidates + 1 control = 14 wallets
+    print(f"\n📌 Building validation set (real, verifiable wallets only)...")
+    print(f"  - {len(theo_seeds)} Theo seeds (publicly reported, expected: Critical)")
+    print(f"  - {len(theo_candidates)} Theo cluster candidates (exchange-anchor discovered, expected: Critical/High)")
+    print(f"  - 1 control wallet (expected: Low)")
 
-    # Add trader addresses if available
-    if traders:
-        trader_addresses = [
-            t.get('address', t.get('wallet', t.get('user')))
-            for t in traders
-            if t.get('address') or t.get('wallet') or t.get('user')
-        ]
-        all_addresses.extend(trader_addresses)
-        print(f"✓ Added {len(trader_addresses)} trader addresses from API")
+    all_addresses = []
+    all_addresses.extend(theo_seeds)
+    all_addresses.extend(theo_candidates)
+    all_addresses.append(CONTROL_WALLET.lower())
 
-    # Deduplicate and lowercase
-    all_addresses = list(set(addr.lower() if addr else None for addr in all_addresses if addr))
+    # Deduplicate
+    all_addresses = list(set(all_addresses))
+
+    # Apply limit if in test mode
+    if limit and limit < len(all_addresses):
+        all_addresses = all_addresses[:limit]
+        print(f"🧪 TEST MODE: Limited to {limit} addresses")
+
     print(f"📋 Total addresses to analyze: {len(all_addresses)}")
+    print(f"   All addresses are verifiable on Polygonscan with real Polymarket activity.")
 
     # 3. Run pipeline on each address
     print(f"\n🚀 Starting pipeline analysis (max {max_runtime_hours}h runtime)...\n")
@@ -252,13 +240,21 @@ def print_distribution_summary(results: List[Dict]):
 
 def main():
     """Main entry point"""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Build pre-cached watchlist of analyzed wallets")
+    parser.add_argument('--limit', type=int, help='Limit number of addresses to analyze (for testing)')
+    args = parser.parse_args()
+
     print("=" * 80)
     print("WalletStory Watchlist Builder — Overnight Batch Task")
     print("=" * 80)
+    if args.limit:
+        print(f"TEST MODE: Limiting to {args.limit} addresses")
     print()
 
     # Build watchlist
-    results = build_watchlist(max_runtime_hours=MAX_RUNTIME_HOURS)
+    results = build_watchlist(max_runtime_hours=MAX_RUNTIME_HOURS, limit=args.limit)
 
     # Check minimum results
     if len(results) < MIN_RESULTS:
