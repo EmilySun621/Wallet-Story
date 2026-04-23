@@ -63,7 +63,7 @@ The probability of achieving this win rate by chance is effectively **zero**. Th
 
 ---
 
-#### Cluster Discovery: 13 Wallets, 3 Shared Signals
+#### Cluster Discovery: 13 Wallets, 3 Shared Infrastructure Signals
 
 Using our **exchange-anchor clustering** strategy (see [Methodology](docs/methodology.md)), we discovered **10 additional wallets** beyond Chainalysis's published 11:
 
@@ -109,6 +109,39 @@ We built a **transfer graph** from the 13-wallet cluster and ran **Louvain commu
 | **All seeds in same community?** | ✅ **YES** |
 
 This confirms: the cluster is **real**, not coincidental. All 13 wallets are tightly coordinated.
+
+---
+
+#### Signal 4: Pre-Resolution Loading Analysis (NEW)
+
+**Background**: Market microstructure theory (Kyle 1985) predicts that informed traders with MNPI will load positions **close to resolution** when private information has peak value, while uninformed traders enter uniformly across a market's lifetime.
+
+**Method**: For each trade, we compute a **normalized entry time** = `(trade_timestamp - market_open) / (market_close - market_open)` ∈ [0, 1].
+
+- **0.0** = market just opened
+- **1.0** = market about to resolve
+
+We then:
+1. Build a histogram of entry times (10 bins: [0.0, 0.1), [0.1, 0.2), ..., [0.9, 1.0])
+2. Compute **pre-resolution load share**: fraction of trades in final 10% of market lifecycle
+3. Calculate **volume-weighted median entry time**
+4. Run **Kolmogorov-Smirnov test** against uniform distribution
+
+**Thresholds**:
+- **Critical**: KS p-value < 1e-10 AND load_share > 50%
+- **High**: KS p-value < 1e-5 AND load_share > 40%
+- **Medium**: KS p-value < 0.01 AND load_share > 30%
+- **Low**: Otherwise (consistent with uniform/random entry)
+
+**Result for Theo cluster**:
+> **N/A**: Timing analysis unavailable — all markets archived (2024 election markets no longer queryable via Polymarket Gamma API). This feature works for investigations on **active markets**.
+
+**Result for Control case** (legitimate trader):
+> **Low**: 39.3% win rate, p=1.00 → timing distribution consistent with random entry (no pre-resolution loading).
+
+**Note**: This is a **forward-looking feature** for new investigations. Historical markets (like the 2024 election) lack lifecycle metadata (startDate/endDate) via Polymarket's API, resulting in graceful degradation to "N/A".
+
+📖 **[Technical details + theoretical motivation](docs/methodology.md#signal-4-timing-analysis)**
 
 ---
 
@@ -264,9 +297,35 @@ Why this works:
 - They cashout through the same CEX to convert profits
 - Shared Polymarket proxy is the smoking gun (nearly impossible coincidence)
 
-Result for Theo: **13-wallet cluster**, all 3 signals matched, modularity = 0.71
+Result for Theo: **13-wallet cluster**, all 3 infrastructure signals matched, modularity = 0.71
 
 📖 **[Full methodology with math](docs/methodology.md)**
+
+---
+
+## FAQ
+
+### Why does timing analysis show "N/A" for the Theo cluster?
+The timing analysis feature requires market lifecycle metadata (startDate, endDate) from Polymarket's Gamma API. The 2024 US election markets are now **archived** and no longer return this data. This feature is production-ready for **new investigations on active markets**, where lifecycle data IS available.
+
+We validated this by querying active 2025/2026 markets (e.g., "Russia-Ukraine Ceasefire before GTA VI?"), which DO return startDate/endDate. When investigating current wallets on current markets, the timing signal will work correctly.
+
+### What's the difference between the 3 infrastructure signals and Signal 4?
+- **Infrastructure signals** (shared funder, shared exchange, shared proxy): Evidence of **coordination** — wallets controlled by the same actor
+- **Signal 4 (timing analysis)**: Evidence of **insider information** — trading patterns inconsistent with random entry
+
+Both are independent dimensions:
+- High win rate + pre-resolution loading = insider trading
+- Shared infrastructure = coordinated cluster
+- Together = coordinated insider ring
+
+### Can I use this for other prediction markets?
+Currently WalletStory is optimized for Polymarket (Polygon-based). The methodology generalizes to any prediction market with:
+1. Public trade data API
+2. Resolved market outcomes
+3. On-chain transfer history
+
+We plan to add support for Augur, Azuro, and other platforms in Phase 3.
 
 ---
 
