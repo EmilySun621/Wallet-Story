@@ -1,32 +1,343 @@
 """
 clustering.py — Louvain community detection for WalletStory.
 
-Two graph construction strategies:
-  1. On-chain transfer graph (requires Alchemy/Polygonscan API key)
+Three graph construction strategies:
+  1. Exchange-anchor transfer graph (requires Alchemy API key)
+     - Anchors on the shared exchange deposit address
+     - Finds wallets that share: same funder, same exchange, same proxy
+     - Strongest signal — reproduces Chainalysis methodology
+  2. On-chain transfer graph (requires Alchemy/Polygonscan API key)
      - Edges = token transfers between wallets, weighted by value
      - 2-hop crawl from seed addresses
-  2. Polymarket co-trading graph (no API key required)
+  3. Polymarket co-trading graph (no API key required)
      - Edges = wallets that traded the same markets within a time window
      - Weighted by number of co-traded markets and timing proximity
 
-Strategy 1 is preferred (stronger signal for "coordinated wallets").
-Strategy 2 is a fallback that still produces valid clusters.
+Strategy 1 is preferred. Strategies 2 and 3 are fallbacks.
 """
 
 import json
 import logging
+import os
+import time as _time
 from collections import defaultdict
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
+from itertools import combinations
 from pathlib import Path
 
 import networkx as nx
 from networkx.algorithms.community import louvain_communities
 
+try:
+    import requests
+except ImportError:
+    requests = None  # type: ignore
+
 log = logging.getLogger("clustering")
 
 
 # ===================================================================
-# Graph construction
+# Known contract addresses (excluded from clustering)
+# ===================================================================
+
+KNOWN_CONTRACTS = {
+    "0x4d97dcd97ec945f40cf65f87097ace5ea0476045",  # Polymarket CTF Exchange
+    "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e",  # Conditional Tokens
+    "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",  # USDC.e (bridged)
+    "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",  # USDC (native)
+    "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",  # USDT
+    "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",  # DAI
+    "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",  # WMATIC
+    "0xa1470dbaedc0e3a1eb4af7da18e0c1f080fc3985",  # Polymarket Proxy Factory
+    "0xc5d563a36ae78145c45a50134d48a1215220f80a",  # NegRisk adapter
+    "0x0000000000000000000000000000000000000000",
+    "0x0000000000000000000000000000000000001010",  # MATIC system
+}
+
+
+# ===================================================================
+# Strategy 1: Exchange-anchor transfer graph
+# ===================================================================
+
+def _alchemy_get_transfers(
+    alchemy_url: str,
+    from_addr: str | None = None,
+    to_addr: str | None = None,
+    from_block: str = "0x0",
+    to_block: str = "latest",
+    max_pages: int = 50,
+) -> list[dict]:
+    """Paginated Alchemy getAssetTransfers."""
+    if requests is None:
+        raise ImportError("requests is required for Alchemy API calls")
+
+    all_transfers: list[dict] = []
+    page_key = None
+
+    for _ in range(max_pages):
+        params: dict = {
+            "category": ["erc20"],
+            "maxCount": "0x3e8",
+            "order": "asc",
+            "fromBlock": from_block,
+            "toBlock": to_block,
+        }
+        if from_addr:
+            params["fromAddress"] = from_addr
+        if to_addr:
+            params["toAddress"] = to_addr
+        if page_key:
+            params["pageKey"] = page_key
+
+        payload = {
+            "id": 1,
+            "jsonrpc": "2.0",
+            "method": "alchemy_getAssetTransfers",
+            "params": [params],
+        }
+        resp = requests.post(alchemy_url, json=payload, timeout=30)
+        result = resp.json().get("result", {})
+        transfers = result.get("transfers", [])
+        all_transfers.extend(transfers)
+        page_key = result.get("pageKey")
+        if not page_key:
+            break
+
+    return all_transfers
+
+
+def discover_cluster_via_exchange(
+    seed_addresses: list[str],
+    alchemy_key: str,
+    min_cashout_usd: float = 500_000,
+    cashout_from_block: int = 63_960_000,
+    cashout_to_block: int = 64_400_000,
+) -> dict:
+    """
+    Discover the full wallet cluster by anchoring on the shared
+    exchange deposit address.
+
+    Algorithm:
+      1. For each seed, find its top counterparties (incoming/outgoing)
+      2. Identify the shared exchange deposit address (all seeds send to it)
+      3. Identify the shared funder address (all seeds receive from it)
+      4. Search the exchange's incoming transfers in the cashout window
+         for other wallets that also deposited >min_cashout_usd
+      5. For each candidate, verify it also received funds from the
+         shared funder
+      6. Verify all cluster wallets share the same Polymarket proxy
+
+    Returns dict with cluster info and list of candidate wallets.
+    """
+    alchemy_url = f"https://polygon-mainnet.g.alchemy.com/v2/{alchemy_key}"
+    seeds = {a.lower() for a in seed_addresses}
+
+    log.info("=== Exchange-anchor cluster discovery ===")
+
+    # --- Step 1: Find shared counterparties across all seeds ---
+    log.info("Step 1: Finding shared counterparties for %d seeds", len(seeds))
+    seed_counterparties: dict[str, dict[str, float]] = {}
+
+    for seed in seeds:
+        counterparties: dict[str, float] = defaultdict(float)
+
+        # Incoming
+        transfers = _alchemy_get_transfers(
+            alchemy_url, to_addr=seed, max_pages=2
+        )
+        for t in transfers:
+            addr = t["from"].lower()
+            val = float(t.get("value", 0) or 0)
+            counterparties[addr] += val
+
+        # Outgoing
+        transfers = _alchemy_get_transfers(
+            alchemy_url, from_addr=seed, max_pages=2
+        )
+        for t in transfers:
+            addr = t["to"].lower()
+            val = float(t.get("value", 0) or 0)
+            counterparties[addr] += val
+
+        # Remove contracts
+        for c in KNOWN_CONTRACTS:
+            counterparties.pop(c, None)
+
+        seed_counterparties[seed] = dict(counterparties)
+
+    # Find addresses common to ALL seeds (by top counterparty value)
+    all_cp_sets = [set(cp.keys()) for cp in seed_counterparties.values()]
+    shared = set.intersection(*all_cp_sets) if all_cp_sets else set()
+    log.info("Shared counterparties across all seeds: %d", len(shared))
+
+    # Identify exchange (seeds send to it) and funder (sends to seeds)
+    exchange_addr = None
+    funder_addr = None
+
+    for addr in shared:
+        # Check if all seeds have outgoing to this address
+        all_send = True
+        all_receive = True
+        total_out = 0.0
+        total_in = 0.0
+        for seed, cps in seed_counterparties.items():
+            # Check by looking at raw transfer direction
+            pass
+
+    # Fallback: use the largest shared counterparty for each role
+    # The exchange is where seeds SEND money; the funder is where seeds
+    # RECEIVE money. We detect this by checking transfer direction.
+    for addr in shared:
+        out_transfers = _alchemy_get_transfers(
+            alchemy_url, from_addr=list(seeds)[0], to_addr=addr, max_pages=1
+        )
+        in_transfers = _alchemy_get_transfers(
+            alchemy_url, from_addr=addr, to_addr=list(seeds)[0], max_pages=1
+        )
+        if out_transfers and not exchange_addr:
+            out_val = sum(float(t.get("value", 0) or 0) for t in out_transfers)
+            if out_val > 1_000_000:
+                exchange_addr = addr
+                log.info("Exchange deposit identified: %s ($%.0f)", addr[:10], out_val)
+        if in_transfers and not funder_addr:
+            in_val = sum(float(t.get("value", 0) or 0) for t in in_transfers)
+            if in_val > 1_000_000:
+                funder_addr = addr
+                log.info("Funder identified: %s ($%.0f)", addr[:10], in_val)
+
+        if exchange_addr and funder_addr:
+            break
+
+    if not exchange_addr or not funder_addr:
+        log.warning("Could not identify exchange or funder. Shared: %s", shared)
+        return {"exchange": None, "funder": None, "candidates": []}
+
+    # --- Step 2: Search exchange incoming in cashout window ---
+    log.info(
+        "Step 2: Searching exchange incoming (blocks %d-%d)",
+        cashout_from_block, cashout_to_block,
+    )
+    exchange_incoming = _alchemy_get_transfers(
+        alchemy_url,
+        to_addr=exchange_addr,
+        from_block=hex(cashout_from_block),
+        to_block=hex(cashout_to_block),
+        max_pages=50,
+    )
+    log.info("Found %d incoming transfers to exchange", len(exchange_incoming))
+
+    # Aggregate by sender
+    sender_totals: dict[str, float] = defaultdict(float)
+    for t in exchange_incoming:
+        from_addr = t["from"].lower()
+        val = float(t.get("value", 0) or 0)
+        sender_totals[from_addr] += val
+
+    # Filter: >min_cashout, not a contract, not already a seed
+    large_senders = {
+        addr: val
+        for addr, val in sender_totals.items()
+        if val >= min_cashout_usd and addr not in KNOWN_CONTRACTS
+    }
+    log.info("Senders >$%.0fK to exchange: %d", min_cashout_usd / 1000, len(large_senders))
+
+    # --- Step 3: Verify shared funder ---
+    log.info("Step 3: Verifying shared funder for candidates")
+    cluster_wallets: dict[str, dict] = {}
+
+    for addr in sorted(large_senders.keys()):
+        funder_transfers = _alchemy_get_transfers(
+            alchemy_url, from_addr=funder_addr, to_addr=addr, max_pages=1
+        )
+        if funder_transfers:
+            from_funder = sum(float(t.get("value", 0) or 0) for t in funder_transfers)
+            to_exchange = large_senders[addr]
+            is_seed = addr in seeds
+            cluster_wallets[addr] = {
+                "from_funder": from_funder,
+                "to_exchange": to_exchange,
+                "is_seed": is_seed,
+            }
+            label = "SEED" if is_seed else "CANDIDATE"
+            log.info(
+                "  %s: %s (funder=$%.0f, exchange=$%.0f)",
+                label, addr[:10], from_funder, to_exchange,
+            )
+
+    # --- Step 4: Check shared proxy ---
+    log.info("Step 4: Checking Polymarket proxy")
+    shared_proxy = None
+    try:
+        for addr in list(cluster_wallets.keys())[:3]:
+            url = f"https://data-api.polymarket.com/trades?maker_address={addr}&limit=1"
+            resp = requests.get(url, timeout=10)
+            if resp.status_code == 200:
+                data = resp.json()
+                if data:
+                    proxy = data[0].get("proxyWallet", "")
+                    if proxy:
+                        if shared_proxy is None:
+                            shared_proxy = proxy
+                        elif proxy == shared_proxy:
+                            continue
+                        else:
+                            shared_proxy = None
+                            break
+            _time.sleep(0.3)
+    except Exception as e:
+        log.warning("Proxy check failed: %s", e)
+
+    if shared_proxy:
+        log.info("Shared Polymarket proxy confirmed: %s", shared_proxy[:10])
+
+    candidates = sorted([
+        addr for addr, info in cluster_wallets.items()
+        if not info["is_seed"]
+    ])
+
+    return {
+        "exchange": exchange_addr,
+        "funder": funder_addr,
+        "shared_proxy": shared_proxy,
+        "cluster_wallets": cluster_wallets,
+        "candidates": candidates,
+        "total_cluster_size": len(cluster_wallets),
+        "seeds_found": len([a for a, i in cluster_wallets.items() if i["is_seed"]]),
+    }
+
+
+def build_exchange_anchor_graph(
+    cluster_info: dict,
+) -> nx.Graph:
+    """
+    Build a wallet-to-wallet graph from exchange-anchor cluster discovery.
+
+    All wallets sharing the same funder + exchange + proxy are connected
+    with edge weight = geometric mean of their total volumes.
+    """
+    wallets = cluster_info.get("cluster_wallets", {})
+    if len(wallets) < 2:
+        return nx.Graph()
+
+    g = nx.Graph()
+    addrs = list(wallets.keys())
+
+    for i, j in combinations(range(len(addrs)), 2):
+        a, b = addrs[i], addrs[j]
+        vol_a = wallets[a]["from_funder"] + wallets[a]["to_exchange"]
+        vol_b = wallets[b]["from_funder"] + wallets[b]["to_exchange"]
+        weight = (vol_a * vol_b) ** 0.5
+        g.add_edge(a, b, weight=weight)
+
+    log.info(
+        "Exchange-anchor graph: %d nodes, %d edges",
+        g.number_of_nodes(), g.number_of_edges(),
+    )
+    return g
+
+
+# ===================================================================
+# Graph construction (general)
 # ===================================================================
 
 def build_graph(edges: list[tuple[str, str, float]]) -> nx.Graph:

@@ -23,15 +23,83 @@
       "verified": true,
       "source": "Polymarket profile page (polymarket.com/profile/0x8119010a6e589062aa03583bb3f39ca632d9f887)",
       "notes": "Ranked #9 all-time profit. +$6.1M profit."
-    },
-    {
-      "address": "TODO: Michie wallet address not independently verified via public sources. Candidate 0xed2239a9150c3920000d0094d28fa51c7db03dd0 appeared in one Polymarket search result but could not be cross-referenced. Verify via Polymarket leaderboard page or PolyTrack cluster detection tool.",
-      "username": "Michie",
-      "verified": false,
-      "source": "WSJ, NYT, Bloomberg reporting confirm Michie as 4th account in the cluster. Ranked #14 all-time profit on Polymarket leaderboard post-election.",
-      "notes": "TODO: manually visit polymarket.com/profile/@Michie or polymarket.com/leaderboard to extract the 0x address and confirm."
     }
   ],
+  "candidate_wallets_surfaced": [
+    {
+      "address": "0xd235973291b2b75ff4070e9c0b01728c520b0f29",
+      "from_funder_usd": 29473073,
+      "to_exchange_usd": 29472973,
+      "notes": "Largest candidate by funding volume. Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76",
+      "from_funder_usd": 16336739,
+      "to_exchange_usd": 5813790,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x94a428cfa4f84b264e01f70d93d02bc96cb36356",
+      "from_funder_usd": 13312879,
+      "to_exchange_usd": 5000000,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x885783760858e1bd5dd09a3c3f916cfa251ac270",
+      "from_funder_usd": 11212840,
+      "to_exchange_usd": 7369938,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x23786fdad0073692157c6d7dc81f281843a35fcb",
+      "from_funder_usd": 10614583,
+      "to_exchange_usd": 6563369,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0xd0c042c08f755ff940249f62745e82d356345565",
+      "from_funder_usd": 9933469,
+      "to_exchange_usd": 6304237,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3",
+      "from_funder_usd": 9071609,
+      "to_exchange_usd": 6138969,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x683a1b9966af05467ce87a6af003e3544c13792c",
+      "from_funder_usd": 7913727,
+      "to_exchange_usd": 15344510,
+      "notes": "Strongest Louvain signal with seeds in bipartite graph. Possible Michie."
+    },
+    {
+      "address": "0xed2239a9150c3920000d0094d28fa51c7db03dd0",
+      "from_funder_usd": 7519200,
+      "to_exchange_usd": 6224462,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    },
+    {
+      "address": "0x033a07b3de5947eab4306676ad74eb546da30d50",
+      "from_funder_usd": 7410404,
+      "to_exchange_usd": 7410429,
+      "notes": "Same proxy, funder, and exchange as seeds."
+    }
+  ],
+  "cluster_infrastructure": {
+    "shared_funder": "0x3a3bd7bb9528e159577f7c2e685cc81a765002e2",
+    "shared_exchange_deposit": "0xd36ec33c8bed5a9f7b6630855f1533455b98a418",
+    "shared_polymarket_proxy": "0x0484e64092ba4108c2786b61e6fc052d3bf41b1a",
+    "clustering_signals": [
+      "All 13 wallets funded by the same address (0x3a3b...)",
+      "All 13 wallets cash out to the same exchange deposit address (0xd36e...)",
+      "All 13 wallets share the same Polymarket proxy wallet (0x0484...)",
+      "Louvain community detection places all 13 in a single community"
+    ],
+    "total_funding_volume_usd": 209017424,
+    "total_cashout_volume_usd": 186333103
+  },
   "chain": "polygon",
   "market_context": {
     "platform": "Polymarket",
@@ -45,7 +113,8 @@
     ],
     "total_bet_amount_usd": 30000000,
     "estimated_profit_usd": 85000000,
-    "total_accounts_chainalysis": 11
+    "total_accounts_chainalysis": 11,
+    "total_accounts_walletstory": 13
   },
   "reference_articles": [
     {

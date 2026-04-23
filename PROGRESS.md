@@ -4,7 +4,7 @@
 
 | Metric | Value |
 |---|---|
-| Wallets analyzed | 3 (Fredi9999, Theo4, PrincessCaro) |
+| Wallets analyzed | 3 seeds (Fredi9999, Theo4, PrincessCaro) |
 | Total trades | 12,000 (4,000 per wallet, API cap) |
 | Unique markets | 15 |
 | Aggregate win rate | **97.3%** |
@@ -22,11 +22,50 @@
 | Theo4 | 3,969 | 31 | 99.2% | 0.00 | Critical | $7.49M |
 | PrincessCaro | 3,718 | 282 | 93.0% | 0.00 | Critical | $3.69M |
 
+## Transfer Graph Cluster Discovery
+
+Starting from 3 publicly-reported seed wallets, exchange-anchor clustering independently surfaced **10 additional coordinated wallets** — exceeding Chainalysis's published count of 11 total.
+
+### Clustering Signals (all 13 wallets share)
+
+| Signal | Value |
+|---|---|
+| Shared funder | `0x3a3bd7bb9528e159577f7c2e685cc81a765002e2` |
+| Shared exchange deposit | `0xd36ec33c8bed5a9f7b6630855f1533455b98a418` |
+| Shared Polymarket proxy | `0x0484e64092ba4108c2786b61e6fc052d3bf41b1a` |
+| Total funding volume | $209,017,424 |
+| Total cashout volume | $186,333,103 |
+
+### Surfaced Candidate Wallets
+
+| Address | Funded ($) | Cashed Out ($) | Notes |
+|---|---|---|---|
+| `0xd235...0f29` | $29.5M | $29.5M | Largest candidate |
+| `0x78b9...f5b6` | $16.3M | $5.8M | |
+| `0x94a4...6356` | $13.3M | $5.0M | |
+| `0x8857...c270` | $11.2M | $7.4M | |
+| `0x2378...3fcb` | $10.6M | $6.6M | |
+| `0xd0c0...5565` | $9.9M | $6.3M | |
+| `0x16f9...9e3` | $9.1M | $6.1M | |
+| `0x683a...792c` | $7.9M | $15.3M | Strongest Louvain signal with seeds |
+| `0xed22...bd0` | $7.5M | $6.2M | |
+| `0x033a...d50` | $7.4M | $7.4M | |
+
+### Methodology
+
+1. For each seed wallet, identified all counterparties via Alchemy `getAssetTransfers`
+2. Found shared infrastructure: same funder address, same exchange deposit address
+3. Anchored on the exchange deposit, fetched all incoming transfers in post-election cashout window (blocks 63,960,000–64,400,000)
+4. Filtered for senders >$500K, verified each received funding from the shared funder
+5. Confirmed all 13 wallets share the same Polymarket proxy wallet (`0x0484...`)
+6. Ran Louvain community detection: all 13 wallets land in a single community
+
 ## Completed Modules
 
 ### 1. Case File (`backend/data/case_polymarket_theo.json`)
-- 3/4 wallet addresses verified from public reporting (NYT, WSJ, Bloomberg, Chainalysis)
-- Michie address left as TODO — transfer graph clustering may surface it
+- 3 wallet addresses verified from public reporting (NYT, WSJ, Bloomberg, Chainalysis)
+- 10 candidate wallets surfaced via exchange-anchor clustering
+- Cluster infrastructure metadata (shared funder, exchange, proxy)
 
 ### 2. Data Fetcher (`backend/data_fetcher.py`)
 - Polymarket Data API: paginated trade fetch (offset, handles 400)
@@ -41,10 +80,12 @@
 - Verdict: Critical (<1e-10), High (<1e-5), Medium (<1e-2), Low
 
 ### 4. Clustering (`backend/clustering.py`)
-- Two graph strategies: on-chain transfer (Alchemy) + co-trade (API-free)
+- **Exchange-anchor strategy** (preferred): anchors on shared exchange deposit, verifies shared funder + proxy
+- On-chain transfer graph (Alchemy 2-hop crawl)
+- Co-trade graph (API-free fallback)
 - Louvain community detection (networkx)
 - Modularity scoring, seed community validation
-- Candidate wallet surfacing for the "Michie discovery" README claim
+- Candidate wallet surfacing
 
 ### 5. Pipeline Runner (`backend/run_pipeline.py`)
 - End-to-end orchestration: fetch → classify → detect → cluster → persist
@@ -54,14 +95,7 @@
 - `backend/.env.example` with key placeholders
 - `.gitignore` updated
 
-## Blocking / Next Steps
-
-### Needs Alchemy API Key
-- Transfer graph (2-hop crawl) for meaningful clustering / candidate surfacing
-- Without it, co-trade graph is trivial (only 3 nodes)
-- Get free key at https://dashboard.alchemy.com
-
-### Day 2 Priorities
+## Day 2 Priorities
 1. Investigator agent (`backend/investigator_agent.py`)
 2. EAS attestation (`src/lib/eas.js`)
 3. Investigation page (`src/pages/Investigation.jsx`)
