@@ -10,6 +10,7 @@
  */
 
 import { useState } from 'react';
+import TimingDistributionChart from '../components/TimingDistributionChart';
 import '../terminal-theme.css';
 import '../terminal-table.css';
 
@@ -158,6 +159,15 @@ function Investigation() {
               </div>
             </div>
           </div>
+
+          {/* Timing Distribution Chart */}
+          {result.timing_analysis && (
+            <div className="terminal-card">
+              <div className="card-body">
+                <TimingDistributionChart timingAnalysis={result.timing_analysis} />
+              </div>
+            </div>
+          )}
 
           {/* Cluster Info Card */}
           {result.cluster_info?.candidates_found > 0 && (
@@ -435,6 +445,116 @@ function Investigation() {
           color: #888;
           font-size: 0.9rem;
           margin-bottom: 0.5rem;
+        }
+
+        /* Timing Chart Styles */
+        .timing-chart-container {
+          padding: 1rem 0;
+        }
+
+        .timing-chart-container h3 {
+          color: #00ff00;
+          margin-bottom: 1.5rem;
+          font-size: 1.3rem;
+        }
+
+        .timing-metrics {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+          padding: 1rem;
+          background: #111;
+          border-radius: 4px;
+        }
+
+        .timing-metric {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .timing-metric .metric-label {
+          color: #888;
+          font-size: 0.85rem;
+        }
+
+        .timing-metric .metric-value {
+          color: #00ff00;
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+
+        .timing-metric .metric-value.suspicious {
+          color: #ff8800;
+        }
+
+        .timing-chart-wrapper {
+          margin: 1.5rem 0;
+        }
+
+        .timing-interpretation {
+          padding: 1rem;
+          margin: 1.5rem 0;
+          border-radius: 4px;
+          background: #111;
+          border-left: 4px solid #888;
+        }
+
+        .timing-interpretation.verdict-critical {
+          border-left-color: #ff4444;
+          background: #331111;
+        }
+
+        .timing-interpretation.verdict-high {
+          border-left-color: #ff8800;
+          background: #332200;
+        }
+
+        .timing-interpretation.verdict-medium {
+          border-left-color: #ffaa00;
+          background: #332800;
+        }
+
+        .timing-interpretation.verdict-low {
+          border-left-color: #88ff00;
+          background: #113311;
+        }
+
+        .timing-explainer {
+          padding: 1rem;
+          background: #0a0a0a;
+          border: 1px solid #222;
+          border-radius: 4px;
+          margin-top: 1rem;
+        }
+
+        .explainer-text {
+          color: #888;
+          font-size: 0.9rem;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        .timing-na-message {
+          padding: 2rem;
+          text-align: center;
+        }
+
+        .na-text {
+          color: #ffaa00;
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
+        }
+
+        .na-hint {
+          color: #888;
+          font-size: 0.9rem;
+          line-height: 1.6;
+        }
+
+        .na-hint strong {
+          color: #00ff00;
         }
       `}</style>
     </div>
