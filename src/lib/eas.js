@@ -95,6 +95,9 @@ export async function switchToSepolia() {
  * @returns {string} Encoded data
  */
 export function encodeReport(report) {
+  console.log('[EAS] encodeReport: Starting encoding');
+  console.log('[EAS] encodeReport: Schema:', SCHEMA);
+
   const encoder = new SchemaEncoder(SCHEMA);
 
   // Extract values from report
@@ -102,8 +105,11 @@ export function encodeReport(report) {
   const verdict = report.verdict || report.insider_detection?.verdict || 'Unknown';
   const pValue = report.p_value ?? report.insider_detection?.p_value ?? 0;
 
+  console.log('[EAS] encodeReport: Extracted values:', { subject, verdict, pValue });
+
   // Scale p-value to uint256 (multiply by 1e18 for precision)
   const pValueScaled = BigInt(Math.floor(pValue * 1e18));
+  console.log('[EAS] encodeReport: pValueScaled:', pValueScaled.toString());
 
   // Create deterministic hash of report
   const reportHash = ethers.id(JSON.stringify({
@@ -112,6 +118,7 @@ export function encodeReport(report) {
     pValue,
     timestamp: report.timestamp || Date.now(),
   }));
+  console.log('[EAS] encodeReport: reportHash:', reportHash);
 
   const encodedData = encoder.encodeData([
     { name: 'subject', value: subject, type: 'address' },
@@ -120,6 +127,7 @@ export function encodeReport(report) {
     { name: 'reportHash', value: reportHash, type: 'bytes32' },
   ]);
 
+  console.log('[EAS] encodeReport: Encoding complete');
   return encodedData;
 }
 
@@ -131,20 +139,31 @@ export function encodeReport(report) {
  */
 export async function attestReport(report) {
   try {
+    console.log('[EAS] Starting attestReport flow');
+    console.log('[EAS] Report data:', report);
+
     // Connect wallet and get signer
+    console.log('[EAS] Step 1: Connecting wallet...');
     const { signer } = await connectWallet();
+    console.log('[EAS] Step 1 ✓: Wallet connected, signer obtained');
 
     // Initialize EAS with signer
+    console.log('[EAS] Step 2: Initializing EAS contract...');
     const eas = new EAS(EAS_CONTRACT_ADDRESS);
     eas.connect(signer);
+    console.log('[EAS] Step 2 ✓: EAS initialized with contract address:', EAS_CONTRACT_ADDRESS);
 
     // Encode report data
+    console.log('[EAS] Step 3: Encoding report data...');
     const encodedData = encodeReport(report);
+    console.log('[EAS] Step 3 ✓: Data encoded:', encodedData);
 
     // Determine recipient (subject of investigation)
     const recipient = report.subject_address || report.cluster_summary?.candidates?.[0] || ethers.ZeroAddress;
+    console.log('[EAS] Recipient address:', recipient);
 
     // Create attestation
+    console.log('[EAS] Step 4: Calling eas.attest() with schema:', EAS_SCHEMA_UID);
     const tx = await eas.attest({
       schema: EAS_SCHEMA_UID,
       data: {
@@ -154,15 +173,24 @@ export async function attestReport(report) {
         data: encodedData,
       },
     });
+    console.log('[EAS] Step 4 ✓: Transaction submitted:', tx);
 
     // Wait for transaction confirmation
+    console.log('[EAS] Step 5: Waiting for transaction confirmation...');
     const attestationUID = await tx.wait();
+    console.log('[EAS] Step 5 ✓: Transaction confirmed, UID:', attestationUID);
 
     return {
       uid: attestationUID,
       txHash: tx.tx.hash,
     };
   } catch (error) {
+    // Log the actual error for debugging
+    console.error('[EAS] ❌ Error in attestReport:', error);
+    console.error('[EAS] Error code:', error.code);
+    console.error('[EAS] Error message:', error.message);
+    console.error('[EAS] Full error object:', error);
+
     // Handle specific error cases
     if (error.code === 'ACTION_REJECTED') {
       throw new Error('Transaction rejected by user.');

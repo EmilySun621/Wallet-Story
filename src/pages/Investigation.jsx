@@ -95,6 +95,10 @@ function Investigation() {
   };
 
   const handlePublishAttestation = async () => {
+    console.log('[Investigation] handlePublishAttestation called');
+    console.log('[Investigation] result:', result);
+    console.log('[Investigation] address:', address);
+
     setAttestationLoading(true);
     setAttestationError(null);
 
@@ -106,14 +110,19 @@ function Investigation() {
         verdict: result.insider_detection?.verdict || 'Unknown',
         p_value: result.insider_detection?.p_value ?? 0,
       };
+      console.log('[Investigation] Prepared reportData:', reportData);
 
       // Attempt attestation
       const { uid, txHash } = await attestReport(reportData);
+      console.log('[Investigation] ✓ Attestation successful:', { uid, txHash });
       setAttestationUID(uid);
     } catch (err) {
+      console.error('[Investigation] ❌ Attestation failed:', err);
+
       // Check if it's a network error, offer to switch
       if (err.message?.includes('Wrong network')) {
         try {
+          console.log('[Investigation] Attempting to switch to Sepolia...');
           await switchToSepolia();
           // Retry after switching
           const reportData = {
@@ -123,8 +132,10 @@ function Investigation() {
             p_value: result.insider_detection?.p_value ?? 0,
           };
           const { uid, txHash } = await attestReport(reportData);
+          console.log('[Investigation] ✓ Attestation successful after network switch:', { uid, txHash });
           setAttestationUID(uid);
         } catch (retryErr) {
+          console.error('[Investigation] ❌ Retry failed:', retryErr);
           setAttestationError(retryErr.message);
         }
       } else {

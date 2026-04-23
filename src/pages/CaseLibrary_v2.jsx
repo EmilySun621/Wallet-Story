@@ -46,7 +46,13 @@ function CaseLibrary() {
   };
 
   const handlePublishAttestation = async () => {
-    if (!theoCase) return;
+    console.log('[CaseLibrary] handlePublishAttestation called');
+    console.log('[CaseLibrary] theoCase:', theoCase);
+
+    if (!theoCase) {
+      console.warn('[CaseLibrary] theoCase is null/undefined, aborting');
+      return;
+    }
 
     setAttestationLoading(true);
     setAttestationError(null);
@@ -59,14 +65,19 @@ function CaseLibrary() {
         verdict: theoCase.verdict || 'Unknown',
         p_value: theoCase.p_value ?? 0,
       };
+      console.log('[CaseLibrary] Prepared reportData:', reportData);
 
       // Attempt attestation
       const { uid, txHash } = await attestReport(reportData);
+      console.log('[CaseLibrary] ✓ Attestation successful:', { uid, txHash });
       setAttestationUID(uid);
     } catch (err) {
+      console.error('[CaseLibrary] ❌ Attestation failed:', err);
+
       // Check if it's a network error, offer to switch
       if (err.message?.includes('Wrong network')) {
         try {
+          console.log('[CaseLibrary] Attempting to switch to Sepolia...');
           await switchToSepolia();
           // Retry after switching
           const reportData = {
@@ -76,8 +87,10 @@ function CaseLibrary() {
             p_value: theoCase.p_value ?? 0,
           };
           const { uid, txHash } = await attestReport(reportData);
+          console.log('[CaseLibrary] ✓ Attestation successful after network switch:', { uid, txHash });
           setAttestationUID(uid);
         } catch (retryErr) {
+          console.error('[CaseLibrary] ❌ Retry failed:', retryErr);
           setAttestationError(retryErr.message);
         }
       } else {
