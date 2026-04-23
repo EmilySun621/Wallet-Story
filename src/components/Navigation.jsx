@@ -18,13 +18,13 @@ function Navigation() {
             to="/cases"
             className={`nav-link-full ${location.pathname === '/' || location.pathname === '/cases' ? 'active' : ''}`}
           >
-            📚 Case Library
+            Case Library
           </Link>
           <Link
             to="/investigation"
             className={`nav-link-full ${location.pathname === '/investigation' ? 'active' : ''}`}
           >
-            🔍 Investigate
+            Investigate
           </Link>
         </div>
       </div>

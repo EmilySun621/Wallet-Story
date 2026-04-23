@@ -66,12 +66,9 @@ export default function CaseComparison() {
     );
   }
 
-  const getSeverity = (pValue) => {
-    if (pValue === null || pValue === undefined) return 'Baseline';
-    if (pValue < 1e-10) return 'Critical';
-    if (pValue < 1e-5) return 'High';
-    if (pValue < 0.01) return 'Medium';
-    return 'Low';
+  const getSeverity = (verdict) => {
+    if (!verdict) return 'Low';
+    return verdict; // verdict is already "Critical", "High", "Medium", "Low"
   };
 
   return (
@@ -82,32 +79,33 @@ export default function CaseComparison() {
         {/* Theo Cluster Column */}
         <div className="case-column theo-column">
           <div className="case-header">
-            <h3 className="case-name">🎯 Theo Cluster</h3>
+            <h3 className="case-name">Theo Cluster</h3>
             <p className="case-subtitle">13-wallet coordinated network</p>
           </div>
 
           <VerdictBadge
-            severity={getSeverity(theoCase?.win_rate_analysis?.binomial_test?.p_value)}
-            pValue={theoCase?.win_rate_analysis?.binomial_test?.p_value}
+            severity={getSeverity(theoCase?.verdict)}
+            pValue={theoCase?.p_value}
           />
 
           <div className="case-metrics">
             <div className="metric-row">
               <span className="metric-label">Win Rate:</span>
               <span className="metric-value highlight">
-                {(theoCase?.win_rate_analysis?.win_rate * 100).toFixed(1)}%
+                {theoCase?.aggregate_win_rate ? (theoCase.aggregate_win_rate * 100).toFixed(1) : '0.0'}%
               </span>
             </div>
             <div className="metric-row">
               <span className="metric-label">Total Trades:</span>
               <span className="metric-value">
-                {theoCase?.win_rate_analysis?.total_trades || 0}
+                {theoCase?.total_trades_analyzed?.toLocaleString() || 0}
               </span>
             </div>
             <div className="metric-row">
               <span className="metric-label">Wins:</span>
               <span className="metric-value">
-                {theoCase?.win_rate_analysis?.winning_trades || 0}
+                {theoCase?.aggregate_win_rate && theoCase?.total_trades_analyzed ?
+                  Math.round(theoCase.aggregate_win_rate * theoCase.total_trades_analyzed).toLocaleString() : 0}
               </span>
             </div>
             <div className="metric-row">
@@ -138,13 +136,13 @@ export default function CaseComparison() {
         {/* Control Case Column */}
         <div className="case-column control-column">
           <div className="case-header">
-            <h3 className="case-name">📊 Control</h3>
+            <h3 className="case-name">Control</h3>
             <p className="case-subtitle">Random baseline wallet</p>
           </div>
 
           <VerdictBadge
-            severity={getSeverity(controlCase?.win_rate_analysis?.binomial_test?.p_value)}
-            pValue={controlCase?.win_rate_analysis?.binomial_test?.p_value}
+            severity={getSeverity(controlCase?.verdict)}
+            pValue={controlCase?.p_value}
             pulse={false}
           />
 
@@ -152,19 +150,20 @@ export default function CaseComparison() {
             <div className="metric-row">
               <span className="metric-label">Win Rate:</span>
               <span className="metric-value">
-                {(controlCase?.win_rate_analysis?.win_rate * 100).toFixed(1)}%
+                {controlCase?.aggregate_win_rate ? (controlCase.aggregate_win_rate * 100).toFixed(1) : '0.0'}%
               </span>
             </div>
             <div className="metric-row">
               <span className="metric-label">Total Trades:</span>
               <span className="metric-value">
-                {controlCase?.win_rate_analysis?.total_trades || 0}
+                {controlCase?.total_trades_analyzed?.toLocaleString() || 0}
               </span>
             </div>
             <div className="metric-row">
               <span className="metric-label">Wins:</span>
               <span className="metric-value">
-                {controlCase?.win_rate_analysis?.winning_trades || 0}
+                {controlCase?.aggregate_win_rate && controlCase?.total_trades_analyzed ?
+                  Math.round(controlCase.aggregate_win_rate * controlCase.total_trades_analyzed).toLocaleString() : 0}
               </span>
             </div>
             <div className="metric-row">
@@ -195,9 +194,9 @@ export default function CaseComparison() {
 
       <div className="comparison-footer">
         <p className="footer-note">
-          <strong>Key Insight:</strong> Theo cluster shows {theoCase?.win_rate_analysis?.win_rate > controlCase?.win_rate_analysis?.win_rate ? 'elevated' : 'comparable'} win rate
-          ({(theoCase?.win_rate_analysis?.win_rate * 100).toFixed(1)}% vs {(controlCase?.win_rate_analysis?.win_rate * 100).toFixed(1)}%)
-          with {getSeverity(theoCase?.win_rate_analysis?.binomial_test?.p_value).toLowerCase()} statistical significance.
+          <strong>Key Insight:</strong> Theo cluster shows {theoCase?.aggregate_win_rate > controlCase?.aggregate_win_rate ? 'elevated' : 'comparable'} win rate
+          ({theoCase?.aggregate_win_rate ? (theoCase.aggregate_win_rate * 100).toFixed(1) : '0.0'}% vs {controlCase?.aggregate_win_rate ? (controlCase.aggregate_win_rate * 100).toFixed(1) : '0.0'}%)
+          with {theoCase?.verdict?.toLowerCase() || 'low'} statistical significance.
         </p>
       </div>
     </div>

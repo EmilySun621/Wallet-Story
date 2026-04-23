@@ -74,10 +74,10 @@ function CaseLibrary() {
           </p>
           <div className="hero-cta-badges">
             <button className="cta-badge" onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })}>
-              📊 View Evidence
+              View Evidence
             </button>
             <a href="/investigation" className="cta-badge cta-secondary">
-              🔍 Try Live
+              Try Live
             </a>
           </div>
         </div>
