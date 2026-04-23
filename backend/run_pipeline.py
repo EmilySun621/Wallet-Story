@@ -157,7 +157,9 @@ def main():
         histogram[bin_idx] += 1
 
     # Interpretation
-    if ks_result and ks_result["p_value"] < 1e-10 and load_share > 0.5:
+    if len(all_cluster_timings) < 20:
+        interpretation = "N/A: Insufficient timing data (markets archived or lifecycle unavailable via Gamma API). Timing analysis requires active/recent markets with startDate/endDate metadata."
+    elif ks_result and ks_result["p_value"] < 1e-10 and load_share > 0.5:
         interpretation = "Critical: Overwhelming evidence of pre-resolution loading (>50% trades in final 10%, KS p<1e-10)"
     elif ks_result and ks_result["p_value"] < 1e-5 and load_share > 0.4:
         interpretation = "High: Strong evidence of timing bias toward resolution (KS p<1e-5)"

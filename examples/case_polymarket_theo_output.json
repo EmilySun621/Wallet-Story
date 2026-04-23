@@ -1,6 +1,6 @@
 {
   "case_name": "Polymarket Theo Cluster",
-  "generated_at": "2026-04-23T07:41:39.081248+00:00",
+  "generated_at": "2026-04-23T09:25:19.661386+00:00",
   "wallets_analyzed": 3,
   "matches_public_reporting": true,
   "total_trades_analyzed": 12000,
@@ -12,15 +12,150 @@
   "p_value_scientific": "0.00e+00",
   "verdict": "Critical",
   "total_usdc_volume": 15440961.77,
+  "timing_analysis": {
+    "normalized_times_histogram": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "histogram_bins": [
+      "[0.0, 0.1)",
+      "[0.1, 0.2)",
+      "[0.2, 0.3)",
+      "[0.3, 0.4)",
+      "[0.4, 0.5)",
+      "[0.5, 0.6)",
+      "[0.6, 0.7)",
+      "[0.7, 0.8)",
+      "[0.8, 0.9)",
+      "[0.9, 1.0]"
+    ],
+    "pre_resolution_load_share": 0.0,
+    "volume_weighted_median_entry_time": 0.5,
+    "ks_vs_uniform": null,
+    "total_timing_samples": 0,
+    "interpretation": "N/A: Insufficient timing data (markets archived or lifecycle unavailable via Gamma API). Timing analysis requires active/recent markets with startDate/endDate metadata."
+  },
   "cluster_analysis": {
-    "graph_type": "co-trade",
-    "graph_nodes": 3,
-    "graph_edges": 2,
+    "graph_type": "exchange-anchor",
+    "graph_nodes": 14,
+    "graph_edges": 91,
     "communities_found": 1,
-    "modularity_score": 0.0,
+    "modularity_score": -0.0,
     "all_seeds_in_same_community": true,
-    "seed_community_size": 3,
-    "candidate_wallets": []
+    "seed_community_size": 14,
+    "candidate_wallets": [
+      "0x000d257d2dc7616feaef4ae0f14600fdf50a758e",
+      "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3",
+      "0x23786fdad0073692157c6d7dc81f281843a35fcb",
+      "0x45ebb1c54f223c5905a7683164656b63527bc11b",
+      "0x6597282ce8d8b81904621e6f75c9f3882a3bca42",
+      "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76",
+      "0x863134d00841b2e200492805a01e1e2f5defaa53",
+      "0x885783760858e1bd5dd09a3c3f916cfa251ac270",
+      "0xa8a29bc8816e19d2b41cdaae48bd602180b0ff3e",
+      "0xd0c042c08f755ff940249f62745e82d356345565",
+      "0xed2239a9150c3920000d0094d28fa51c7db03dd0"
+    ]
+  },
+  "exchange_anchor_analysis": {
+    "exchange_deposit": "0xd36ec33c8bed5a9f7b6630855f1533455b98a418",
+    "shared_funder": "0x4b6f17856215eab57c29ebfa18b0a0f74a3627bb",
+    "shared_proxy": null,
+    "total_cluster_size": 14,
+    "seeds_found": 3,
+    "candidates_surfaced": [
+      "0x000d257d2dc7616feaef4ae0f14600fdf50a758e",
+      "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3",
+      "0x23786fdad0073692157c6d7dc81f281843a35fcb",
+      "0x45ebb1c54f223c5905a7683164656b63527bc11b",
+      "0x6597282ce8d8b81904621e6f75c9f3882a3bca42",
+      "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76",
+      "0x863134d00841b2e200492805a01e1e2f5defaa53",
+      "0x885783760858e1bd5dd09a3c3f916cfa251ac270",
+      "0xa8a29bc8816e19d2b41cdaae48bd602180b0ff3e",
+      "0xd0c042c08f755ff940249f62745e82d356345565",
+      "0xed2239a9150c3920000d0094d28fa51c7db03dd0"
+    ],
+    "cluster_wallets": {
+      "0x000d257d2dc7616feaef4ae0f14600fdf50a758e": {
+        "from_funder": 49999.0,
+        "to_exchange": 801000.0,
+        "is_seed": false
+      },
+      "0x16f91db2592924cfed6e03b7e5cb5bb1e32299e3": {
+        "from_funder": 6893228.722562,
+        "to_exchange": 6138969.16081,
+        "is_seed": false
+      },
+      "0x1f2dd6d473f3e824cd2f8a89d9c69fb96f6ad0cf": {
+        "from_funder": 17365966.982070997,
+        "to_exchange": 25362453.238693997,
+        "is_seed": true
+      },
+      "0x23786fdad0073692157c6d7dc81f281843a35fcb": {
+        "from_funder": 5949464.619167,
+        "to_exchange": 6563368.812914,
+        "is_seed": false
+      },
+      "0x45ebb1c54f223c5905a7683164656b63527bc11b": {
+        "from_funder": 31549207.7347,
+        "to_exchange": 5994284.550316,
+        "is_seed": false
+      },
+      "0x56687bf447db6ffa42ffe2204a05edaa20f55839": {
+        "from_funder": 20103199.449937,
+        "to_exchange": 18100552.008929,
+        "is_seed": true
+      },
+      "0x6597282ce8d8b81904621e6f75c9f3882a3bca42": {
+        "from_funder": 153192.628857,
+        "to_exchange": 754894.11697,
+        "is_seed": false
+      },
+      "0x78b9ac44a6d7d7a076c14e0ad518b301b63c6b76": {
+        "from_funder": 7886702.227426,
+        "to_exchange": 5813790.355836,
+        "is_seed": false
+      },
+      "0x8119010a6e589062aa03583bb3f39ca632d9f887": {
+        "from_funder": 6551999.0,
+        "to_exchange": 11380374.563712,
+        "is_seed": true
+      },
+      "0x863134d00841b2e200492805a01e1e2f5defaa53": {
+        "from_funder": 6658623.781198001,
+        "to_exchange": 4707495.788172,
+        "is_seed": false
+      },
+      "0x885783760858e1bd5dd09a3c3f916cfa251ac270": {
+        "from_funder": 5281995.315839001,
+        "to_exchange": 7369938.48079,
+        "is_seed": false
+      },
+      "0xa8a29bc8816e19d2b41cdaae48bd602180b0ff3e": {
+        "from_funder": 15664137.271281,
+        "to_exchange": 3916642.8808399998,
+        "is_seed": false
+      },
+      "0xd0c042c08f755ff940249f62745e82d356345565": {
+        "from_funder": 5249997.0,
+        "to_exchange": 6304237.419658,
+        "is_seed": false
+      },
+      "0xed2239a9150c3920000d0094d28fa51c7db03dd0": {
+        "from_funder": 3796500.0,
+        "to_exchange": 6224461.619692,
+        "is_seed": false
+      }
+    }
   },
   "per_wallet": [
     {
@@ -76,6 +211,6 @@
   "attestation_uid": "TODO: publish to EAS Sepolia on Day 2",
   "notes": {
     "data_api_limit": "Polymarket Data API caps at ~4000 trades per wallet (offset pagination stops at 4000). True trade counts may be higher \u2014 the statistical signal is already overwhelming at this sample size.",
-    "clustering_note": "Co-trade graph built from 3 seed wallets only. Transfer graph (Alchemy) needed for 2-hop neighbor discovery and candidate Michie wallet surfacing."
+    "clustering_note": "Exchange-anchor clustering anchors on the shared Kraken deposit address, then verifies shared funder and shared Polymarket proxy wallet. This reproduces the Chainalysis methodology (funding patterns + exchange deposits) and independently surfaces the full wallet cluster."
   }
 }
