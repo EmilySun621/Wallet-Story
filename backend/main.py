@@ -46,18 +46,20 @@ class WalletRequest(BaseModel):
 @app.post("/api/wallet-context")
 async def get_wallet_context(req: WalletRequest):
     llm = ChatBrowserUse(model="bu-latest")
-    
+
     agent = Agent(
         task=f"""Search for information about Ethereum wallet address {req.address}.
         Find:
         1. Who owns this wallet (if publicly known)
         2. Recent news or tweets related to this address or its owner
         3. Any notable on-chain events mentioned in crypto news
-        
+
         Return a brief summary of what you found.""",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
-    
+
     result = await agent.run()
     return { "context": result }
 

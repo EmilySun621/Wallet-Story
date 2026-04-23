@@ -44,6 +44,8 @@ async def handle_identity(ctx: Context, sender: str, msg: WalletRequest):
     agent = BrowserAgent(
         task=f"Search Etherscan and ENS for wallet {msg.address}. Find owner identity, ENS name, any labels.",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
     result = await agent.run()
     await ctx.send(orchestrator.address, AgentResult(
@@ -59,6 +61,8 @@ async def handle_news(ctx: Context, sender: str, msg: WalletRequest):
     agent = BrowserAgent(
         task=f"Search Google News and CoinDesk for recent news about wallet {msg.address} or its owner in the last 30 days.",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
     result = await agent.run()
     await ctx.send(orchestrator.address, AgentResult(
@@ -74,6 +78,8 @@ async def handle_defi(ctx: Context, sender: str, msg: WalletRequest):
     agent = BrowserAgent(
         task=f"Search DefiLlama and Zapper for DeFi positions of wallet {msg.address}. Find protocols and amounts.",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
     result = await agent.run()
     await ctx.send(orchestrator.address, AgentResult(
@@ -96,12 +102,14 @@ async def collect_results(ctx: Context, sender: str, msg: AgentResult):
        
        
 
-# The Actual function the fastAPI use to call  
+# The Actual function the fastAPI use to call
 async def identity_agent_task(address: str) -> str:
     llm = ChatBrowserUse(model="bu-latest")
     agent = BrowserAgent(
         task=f"Search Etherscan and ENS for wallet {address}. Find owner identity, ENS name, any labels.",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
     return await agent.run()
 
@@ -110,6 +118,8 @@ async def news_agent_task(address: str) -> str:
     agent = BrowserAgent(
         task=f"Search Google News and CoinDesk for recent news about wallet {address} or its owner in the last 30 days.",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
     return await agent.run()
 
@@ -118,5 +128,7 @@ async def defi_agent_task(address: str) -> str:
     agent = BrowserAgent(
         task=f"Search DefiLlama and Zapper for DeFi positions of wallet {address}.",
         llm=llm,
+        use_vision=False,
+        headless=True,
     )
     return await agent.run()

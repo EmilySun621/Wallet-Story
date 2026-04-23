@@ -4,16 +4,25 @@ const ANTHROPIC_KEY = import.meta.env.VITE_ANTHROPIC_KEY;
 const MORALIS_KEY = import.meta.env.VITE_MORALIS_KEY;
 
 export async function getTransactions(address) {
-  const response = await fetch(
-    `https://deep-index.moralis.io/api/v2.2/${address}?chain=eth&limit=50`,
-    {
-      headers: {
-        "X-API-Key": MORALIS_KEY,
-      },
-    },
-  );
-  const data = await response.json();
-  return data.result;
+  let allTxs = []
+  let cursor = null
+
+  do {
+    const url = cursor
+      ? `https://deep-index.moralis.io/api/v2.2/wallets/${address}/history?chain=eth&limit=100&cursor=${cursor}`
+      : `https://deep-index.moralis.io/api/v2.2/wallets/${address}/history?chain=eth&limit=100`
+
+    const response = await fetch(url, {
+      headers: { 'X-API-Key': MORALIS_KEY }
+    })
+    const data = await response.json()
+
+    allTxs = [...allTxs, ...data.result]
+    cursor = data.cursor
+
+  } while (cursor && allTxs.length < 500) // 最多拿500条
+
+  return allTxs
 }
 
 export async function getTokenBalances(address) {
@@ -166,11 +175,13 @@ Transaction data: ${JSON.stringify(sample)}
 Return JSON:
 {
   "insights": [
-    { "emoji": "🔴", "title": "short title", "description": "one sentence explanation" },
-    { "emoji": "🟡", "title": "short title", "description": "one sentence explanation" },
-    { "emoji": "🟢", "title": "short title", "description": "one sentence explanation" }
+    { "severity": "high", "title": "short title", "description": "one sentence explanation" },
+    { "severity": "medium", "title": "short title", "description": "one sentence explanation" },
+    { "severity": "low", "title": "short title", "description": "one sentence explanation" }
   ]
 }
+
+Severity levels: "high", "medium", "low"
 
 Reply in JSON only.`,
         },
@@ -229,9 +240,11 @@ export async function analyzeWithContext(transactions, context) {
     Return JSON:
     {
     "insights": [
-        { "emoji": "🔗", "title": "short title", "description": "one sentence combining on-chain + off-chain" }
+        { "severity": "info", "title": "short title", "description": "one sentence combining on-chain + off-chain" }
     ]
     }
+
+    Use severity: "info" for context-based insights.
 
     Reply in JSON only.`,
         },
