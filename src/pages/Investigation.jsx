@@ -771,21 +771,83 @@ function Investigation() {
           margin: 0;
         }
 
+        .chart-legend {
+          display: flex;
+          justify-content: center;
+          gap: 2rem;
+          margin-bottom: 1rem;
+          padding: 0.75rem;
+          background: #0a0a0a;
+          border-radius: 4px;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .legend-bar {
+          width: 24px;
+          height: 12px;
+          border-radius: 2px;
+        }
+
+        .legend-bar.observed {
+          background: #a78bfa;
+        }
+
+        .legend-line {
+          width: 24px;
+          height: 2px;
+          border-top: 2px dashed #fbbf24;
+        }
+
+        .legend-label {
+          color: #ccc;
+          font-size: 0.85rem;
+        }
+
+        .chart-caption {
+          margin-top: 1rem;
+          padding: 1rem;
+          background: #0f0f0f;
+          border-left: 3px solid #a78bfa;
+          color: #ccc;
+          font-size: 0.9rem;
+          line-height: 1.5;
+        }
+
+        .chart-caption strong {
+          color: #a78bfa;
+        }
+
         .timing-na-message {
-          padding: 2rem;
+          padding: 3rem 2rem;
           text-align: center;
+          background: #111;
+          border-radius: 8px;
+          border: 1px dashed #333;
+        }
+
+        .na-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+          opacity: 0.5;
         }
 
         .na-text {
           color: #ffaa00;
-          font-size: 1.1rem;
+          font-size: 1.3rem;
           margin-bottom: 1rem;
+          font-weight: bold;
         }
 
         .na-hint {
           color: #888;
           font-size: 0.9rem;
           line-height: 1.6;
+          margin-bottom: 0.75rem;
         }
 
         .na-hint strong {

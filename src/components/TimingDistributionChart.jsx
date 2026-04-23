@@ -47,12 +47,16 @@ export default function TimingDistributionChart({ timingAnalysis }) {
   if (total_timing_samples === 0) {
     return (
       <div className="timing-chart-container">
-        <h3>Signal 4: Pre-Resolution Loading Analysis</h3>
+        <h3>Signal 4: Timing Distribution Anomaly Detection</h3>
         <div className="timing-na-message">
-          <p className="na-text">{interpretation}</p>
+          <div className="na-icon">📊</div>
+          <p className="na-text">Timing Analysis Not Available</p>
           <p className="na-hint">
-            Note: This feature works for investigations on <strong>active markets</strong>.
-            Historical/archived markets may not have lifecycle metadata available via Polymarket Gamma API.
+            {interpretation || 'No timing data available for this wallet.'}
+          </p>
+          <p className="na-hint">
+            <strong>Note:</strong> This feature requires market lifecycle metadata.
+            Historical/archived markets may not have this data available via Polymarket Gamma API.
           </p>
         </div>
       </div>
@@ -72,7 +76,7 @@ export default function TimingDistributionChart({ timingAnalysis }) {
 
   return (
     <div className="timing-chart-container">
-      <h3>Signal 4: Pre-Resolution Loading Analysis</h3>
+      <h3>Signal 4: Timing Distribution Anomaly Detection</h3>
 
       <div className="timing-metrics">
         <div className="timing-metric">
@@ -102,7 +106,18 @@ export default function TimingDistributionChart({ timingAnalysis }) {
       </div>
 
       <div className="timing-chart-wrapper">
-        <ResponsiveContainer width="100%" height={250}>
+        <div className="chart-legend">
+          <div className="legend-item">
+            <span className="legend-bar observed"></span>
+            <span className="legend-label">Observed Distribution</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-line uniform"></span>
+            <span className="legend-label">Expected Uniform (10% baseline)</span>
+          </div>
+        </div>
+
+        <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 30 }}>
             <XAxis
               dataKey="binLabel"
@@ -126,11 +141,17 @@ export default function TimingDistributionChart({ timingAnalysis }) {
               y={expectedUniform}
               stroke="#fbbf24"
               strokeDasharray="3 3"
-              label={{ value: 'Uniform', position: 'right', fill: '#fbbf24', fontSize: 10 }}
+              label={{ value: 'Uniform Baseline', position: 'right', fill: '#fbbf24', fontSize: 10 }}
             />
             <Bar dataKey="count" fill="#a78bfa" />
           </BarChart>
         </ResponsiveContainer>
+
+        <div className="chart-caption">
+          <strong>Key Finding:</strong> {ks_vs_uniform && ks_vs_uniform.p_value < 1e-5
+            ? `Non-uniform timing pattern detected (KS p < ${ks_vs_uniform.p_value < 1e-10 ? '10⁻¹⁰' : '1e-5'}). Trading activity significantly deviates from random market entry, suggesting coordinated behavior.`
+            : 'Timing distribution consistent with random market entry (no significant anomaly detected).'}
+        </div>
       </div>
 
       <div className={`timing-interpretation ${getVerdictClass(interpretation)}`}>
