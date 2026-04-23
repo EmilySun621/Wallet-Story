@@ -4,6 +4,8 @@ api.py — FastAPI backend for WalletStory forensic investigations.
 Endpoints:
   - POST /investigate { address } → runs InvestigatorAgent, returns ForensicReport
   - GET /case/theo → returns precomputed Theo case study output
+  - GET /case/control → returns control case study output
+  - GET /watchlist → returns pre-cached watchlist of top Polymarket traders
   - GET /health → health check
 """
 
@@ -200,6 +202,46 @@ async def get_control_case():
         raise HTTPException(
             status_code=500,
             detail=f"Failed to load control case: {str(e)}",
+        )
+
+
+@app.get("/watchlist")
+async def get_watchlist():
+    """
+    Get pre-cached watchlist of analyzed wallets.
+
+    Returns array of analyzed Polymarket traders (top 30 + Theo seeds + control),
+    sorted by verdict severity (Critical → High → Medium → Low → Baseline).
+
+    Each entry contains:
+    - address, username, win_rate, p_value, verdict, trade_count, volume_usd,
+      cluster_size, cached_at
+
+    This is used for the Watchlist page frontend.
+    """
+    log.info("Fetching pre-cached watchlist")
+
+    # Load from backend/data/cached_watchlist.json
+    watchlist_path = Path(__file__).resolve().parent / "data" / "cached_watchlist.json"
+
+    if not watchlist_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Watchlist not found. Run `python backend/build_watchlist.py` first.",
+        )
+
+    try:
+        with open(watchlist_path) as f:
+            watchlist = json.load(f)
+
+        log.info("Returning %d cached wallets", len(watchlist))
+        return watchlist
+
+    except Exception as e:
+        log.error("Failed to load watchlist: %s", e, exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to load watchlist: {str(e)}",
         )
 
 
