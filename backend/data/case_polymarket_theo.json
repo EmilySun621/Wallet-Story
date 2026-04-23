@@ -1,0 +1,88 @@
+{
+  "case_id": "polymarket_theo",
+  "case_name": "Polymarket Theo Cluster",
+  "description": "French trader 'Théo' operated multiple coordinated Polymarket accounts to place ~$30M in bets on Trump winning the 2024 US election, evading per-account size limits. The cluster won ~$85M. First reported by NYT and Bloomberg in November 2024; Chainalysis later identified up to 11 linked accounts.",
+  "addresses": [
+    {
+      "address": "0x1f2dd6d473f3e824cd2f8a89d9c69fb96f6ad0cf",
+      "username": "Fredi9999",
+      "verified": true,
+      "source": "Polymarket profile page (polymarket.com/profile/@Fredi9999)",
+      "notes": "Primary account. Ranked #2 all-time profit on Polymarket leaderboard. +$16.6M profit, $76.6M volume."
+    },
+    {
+      "address": "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+      "username": "Theo4",
+      "verified": true,
+      "source": "Polymarket profile + Polymarket Analytics (polymarketanalytics.com/traders/0x56687bf447db6ffa42ffe2204a05edaa20f55839)",
+      "notes": "Ranked #1 all-time profit on Polymarket leaderboard. +$22M profit. 14 bets, only $19 in losses."
+    },
+    {
+      "address": "0x8119010a6e589062aa03583bb3f39ca632d9f887",
+      "username": "PrincessCaro",
+      "verified": true,
+      "source": "Polymarket profile page (polymarket.com/profile/0x8119010a6e589062aa03583bb3f39ca632d9f887)",
+      "notes": "Ranked #9 all-time profit. +$6.1M profit."
+    },
+    {
+      "address": "TODO: Michie wallet address not independently verified via public sources. Candidate 0xed2239a9150c3920000d0094d28fa51c7db03dd0 appeared in one Polymarket search result but could not be cross-referenced. Verify via Polymarket leaderboard page or PolyTrack cluster detection tool.",
+      "username": "Michie",
+      "verified": false,
+      "source": "WSJ, NYT, Bloomberg reporting confirm Michie as 4th account in the cluster. Ranked #14 all-time profit on Polymarket leaderboard post-election.",
+      "notes": "TODO: manually visit polymarket.com/profile/@Michie or polymarket.com/leaderboard to extract the 0x address and confirm."
+    }
+  ],
+  "chain": "polygon",
+  "market_context": {
+    "platform": "Polymarket",
+    "settlement_chain": "Polygon PoS",
+    "primary_markets": [
+      "Presidential Election Winner 2024",
+      "Popular Vote Winner 2024",
+      "Pennsylvania Winner 2024",
+      "Michigan Winner 2024",
+      "Wisconsin Winner 2024"
+    ],
+    "total_bet_amount_usd": 30000000,
+    "estimated_profit_usd": 85000000,
+    "total_accounts_chainalysis": 11
+  },
+  "reference_articles": [
+    {
+      "source": "New York Times (DealBook)",
+      "date": "2024-10-24",
+      "url": "https://www.nytimes.com/2024/10/24/business/dealbook/polymarket-whale-trump-election.html",
+      "note": "First identified the 4 accounts (Fredi9999, Theo4, PrincessCaro, Michie) as belonging to a single French trader."
+    },
+    {
+      "source": "Wall Street Journal",
+      "date": "2024-11-01",
+      "url": "https://www.wsj.com/finance/polymarket-whale-trump-election-bet-7ac7e6e0",
+      "note": "Interview with Théo. Confirmed French nationality, finance background, 'shy Trump voter' polling thesis."
+    },
+    {
+      "source": "Bloomberg",
+      "date": "2024-11-06",
+      "url": "https://www.bloomberg.com/news/articles/2024-11-06/polymarket-s-french-whale-hits-48-million-us-election-jackpot-with-trump-s-win",
+      "note": "Initial profit estimate of $48M from 4 accounts."
+    },
+    {
+      "source": "Bloomberg (updated analysis)",
+      "date": "2024-11-07",
+      "url": "https://www.bloomberg.com/news/articles/2024-11-07/trump-whale-s-polymarket-haul-boosted-to-85-million-in-new-analysis",
+      "note": "Chainalysis identified up to 11 accounts, revised profit estimate to $85M."
+    },
+    {
+      "source": "Chainalysis (X thread)",
+      "date": "2024-11-06",
+      "url": "https://x.com/chainalysis/status/1854294962147364961",
+      "note": "Disclosed 9 accounts linked by funding patterns, timing, and exchange cashout addresses."
+    },
+    {
+      "source": "Chainalysis (X update)",
+      "date": "2024-11-07",
+      "url": "https://x.com/chainalysis/status/1854584905776431343",
+      "note": "Updated to 10 confirmed + 1 suspected address. Total profit ~$83.5M confirmed."
+    }
+  ]
+}
