@@ -95,9 +95,24 @@ Starting from 3 publicly-reported seed wallets, exchange-anchor clustering indep
 - `backend/.env.example` with key placeholders
 - `.gitignore` updated
 
+## Day 1.5 Overnight Tasks (Autonomous) — COMPLETED
+
+- [x] **backend/investigator_agent.py** — Autonomous LLM agent with Claude tool loop (fetch_wallet_history, run_insider_detection, find_related_wallets, build_cluster_graph, summarize_timeline). Tested on Theo seed address.
+- [x] **docs/methodology.md** — Plain English explanation of binomial significance testing (null hypothesis, p-value interpretation, Theo example), Louvain community detection (modularity, algorithm walkthrough), exchange-anchor clustering strategy (3-signal convergence), and ForensicReport schema.
+- [x] **docs/architecture.md** — Full system architecture with Mermaid pipeline diagram (Frontend → Backend → APIs → LLM → EAS), stage-by-stage walkthrough, tech stack summary, deployment guide, and future roadmap.
+- [x] **README_DRAFT.md** — Complete README following template with Theo case study (real numbers: 13-wallet cluster, $209M/$186M, 97.3% win rate, p < 1e-300), methodology highlights, quick start guide, project structure, and attestation placeholders.
+- [x] **backend/api.py** — FastAPI app with endpoints: `POST /investigate` (runs InvestigatorAgent), `GET /case/theo` (precomputed output), `GET /health`. CORS enabled for localhost:5173, Uvicorn entry point.
+- [x] **src/pages/Investigation.jsx** — Scaffold with address input, validation, loading state, results panel (verdict badge, metrics grid, cluster info, per-wallet table), fetch to `/investigate` endpoint. Terminal UI theme.
+- [x] **src/pages/CaseLibrary.jsx** — Scaffold with featured Theo case card, metrics display, cluster analysis table, per-wallet breakdown, cross-reference sources. Fetches from `/case/theo` endpoint.
+
+All tasks committed. No existing files modified. No destructive commands run.
+
+---
+
 ## Day 2 Priorities
-1. Investigator agent (`backend/investigator_agent.py`)
+1. ~~Investigator agent (`backend/investigator_agent.py`)~~ ✅ Done
 2. EAS attestation (`src/lib/eas.js`)
-3. Investigation page (`src/pages/Investigation.jsx`)
-4. Case Library page
-5. Frontend integration with pipeline API
+3. ~~Investigation page (`src/pages/Investigation.jsx`)~~ ✅ Done
+4. ~~Case Library page~~ ✅ Done
+5. Frontend integration with pipeline API (navigation, routing)
+6. Testing end-to-end flow (backend → frontend)
