@@ -61,16 +61,17 @@ TOOLS = [
     },
     {
         "name": "run_insider_detection",
-        "description": "Run binomial statistical test on wallet trade data to detect insider trading signals. Returns p-value, verdict (Critical/High/Medium/Low), win rate.",
+        "description": "Run binomial statistical test on wallet trade data to detect insider trading signals. Returns p-value, verdict (Critical/High/Medium/Low), win rate. NOTE: Only call this AFTER fetching wallet histories with fetch_wallet_history.",
         "input_schema": {
             "type": "object",
             "properties": {
-                "wallet_data": {
-                    "type": "object",
-                    "description": "Dict mapping wallet addresses to their classified trade lists",
+                "addresses": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of wallet addresses to analyze (must have been fetched already)",
                 },
             },
-            "required": ["wallet_data"],
+            "required": ["addresses"],
         },
     },
     {
@@ -296,14 +297,27 @@ Be thorough but efficient. Stop when you have:
             "win_rate": wins / (wins + losses) if (wins + losses) > 0 else 0,
         }
 
-    def _run_insider_detection(self, wallet_data: dict) -> dict:
+    def _run_insider_detection(self, addresses: list[str]) -> dict:
         """Tool: Run statistical insider detection."""
-        # wallet_data is {address: classified_trades_list}
-        # Convert to wallet info format expected by analyze_cluster
-        wallet_infos = [
-            {"address": addr, "username": addr[:10]}
-            for addr in wallet_data.keys()
-        ]
+        # Build wallet_data from self.classified_trades for requested addresses
+        wallet_data = {}
+        wallet_infos = []
+
+        for addr in addresses:
+            addr_lower = addr.lower()
+            if addr_lower in self.classified_trades:
+                wallet_data[addr_lower] = self.classified_trades[addr_lower]
+                wallet_infos.append({"address": addr_lower, "username": addr_lower[:10]})
+            else:
+                # Address not fetched yet, skip
+                continue
+
+        if not wallet_data:
+            return {
+                "error": "No wallet data found. Call fetch_wallet_history first.",
+                "aggregate": {"verdict": "Low", "p_value": 1.0},
+                "per_wallet": []
+            }
 
         results = analyze_cluster(wallet_infos, wallet_data, baseline=0.5)
         self.insider_results = results
