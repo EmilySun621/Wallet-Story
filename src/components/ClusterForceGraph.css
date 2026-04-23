@@ -1,9 +1,13 @@
 .force-graph-container {
-  padding: 2rem;
+  padding: var(--space-xl);
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   position: relative;
+  width: 100%;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 .graph-na-message {
@@ -82,10 +86,15 @@
 
 /* Canvas */
 .graph-canvas {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--border-default);
   background: #0f172a;
+  flex: 1;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Tooltip */

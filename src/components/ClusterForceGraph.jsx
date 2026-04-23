@@ -11,24 +11,29 @@ import './ClusterForceGraph.css';
  */
 export default function ClusterForceGraph({ clusterData, onWalletClick }) {
   const graphRef = useRef();
+  const containerRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const [hoveredNode, setHoveredNode] = useState(null);
 
   // Update dimensions on resize
   useEffect(() => {
     const handleResize = () => {
-      const container = document.querySelector('.force-graph-container');
-      if (container) {
-        setDimensions({
-          width: container.clientWidth,
-          height: Math.max(600, window.innerHeight * 0.7)
-        });
+      const canvas = containerRef.current?.querySelector('.graph-canvas');
+      if (canvas) {
+        const width = canvas.clientWidth - 4; // subtract border width
+        const height = Math.max(500, canvas.clientHeight - 4);
+        setDimensions({ width, height });
       }
     };
 
-    handleResize();
+    // Initial size
+    const timeoutId = setTimeout(handleResize, 100);
+
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   if (!clusterData) {
@@ -132,8 +137,8 @@ export default function ClusterForceGraph({ clusterData, onWalletClick }) {
 
   const nodeCanvasObject = (node, ctx, globalScale) => {
     const label = node.label;
-    const fontSize = 12 / globalScale;
-    const nodeSize = node.type === 'wallet' ? 5 : 8;
+    const fontSize = 14 / globalScale;
+    const nodeSize = node.type === 'wallet' ? 8 : 12;
 
     // Draw node circle
     ctx.beginPath();
@@ -144,16 +149,23 @@ export default function ClusterForceGraph({ clusterData, onWalletClick }) {
     // Highlight hovered node
     if (hoveredNode && hoveredNode.id === node.id) {
       ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2 / globalScale;
+      ctx.lineWidth = 3 / globalScale;
       ctx.stroke();
     }
 
-    // Draw label
-    ctx.font = `${fontSize}px Inter, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillText(label, node.x, node.y + nodeSize + fontSize);
+    // Only draw label for hovered node or infrastructure nodes to avoid overlap
+    const shouldShowLabel = (hoveredNode && hoveredNode.id === node.id) || node.type !== 'wallet';
+
+    if (shouldShowLabel) {
+      ctx.font = `${fontSize}px Inter, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#e2e8f0';
+
+      // Alternate label position based on node index to reduce overlap
+      const labelOffset = nodeSize + fontSize + 2;
+      ctx.fillText(label, node.x, node.y + labelOffset);
+    }
   };
 
   const linkCanvasObject = (link, ctx) => {
@@ -174,7 +186,7 @@ export default function ClusterForceGraph({ clusterData, onWalletClick }) {
   };
 
   return (
-    <div className="force-graph-container">
+    <div className="force-graph-container" ref={containerRef}>
       <div className="graph-header">
         <h3 className="graph-title">Cluster Network Visualization</h3>
         <div className="graph-legend">
@@ -214,13 +226,16 @@ export default function ClusterForceGraph({ clusterData, onWalletClick }) {
           linkCanvasObject={linkCanvasObject}
           onNodeClick={handleNodeClick}
           onNodeHover={handleNodeHover}
+          onNodeHoverEnd={() => setHoveredNode(null)}
           cooldownTicks={100}
-          nodeRelSize={6}
+          nodeRelSize={10}
           linkWidth={2}
           linkDirectionalParticles={2}
           linkDirectionalParticleSpeed={0.005}
           d3AlphaDecay={0.02}
           d3VelocityDecay={0.3}
+          d3Force="charge"
+          d3ForceCharge={-200}
         />
       </div>
 
