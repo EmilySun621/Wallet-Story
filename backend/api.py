@@ -168,6 +168,45 @@ async def get_theo_case():
         )
 
 
+@app.get("/case/control")
+async def get_control_case():
+    """
+    Get control case study results.
+
+    Returns the control case investigation (legitimate trader with 39.3% win rate,
+    Low verdict, demonstrating that the pipeline does NOT flag legitimate traders).
+
+    This is used for the control case card in the Case Library.
+    """
+    log.info("Fetching control case")
+
+    # Load from examples/case_polymarket_control.json
+    output_path = (
+        Path(__file__).resolve().parent.parent
+        / "examples"
+        / "case_polymarket_control.json"
+    )
+
+    if not output_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Control case output not found.",
+        )
+
+    try:
+        with open(output_path) as f:
+            control_case = json.load(f)
+
+        return control_case
+
+    except Exception as e:
+        log.error("Failed to load control case: %s", e, exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to load control case: {str(e)}",
+        )
+
+
 # --- Main (for local testing with uvicorn) ---
 
 if __name__ == "__main__":
