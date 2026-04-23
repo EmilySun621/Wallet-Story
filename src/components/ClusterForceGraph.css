@@ -1,8 +1,9 @@
 .force-graph-container {
   padding: var(--space-xl);
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-none);
   position: relative;
   width: 100%;
   min-height: 600px;
@@ -152,11 +153,11 @@
 
 /* Footer */
 .graph-footer {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: rgba(167, 139, 250, 0.1);
-  border-radius: 8px;
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
 }
 
 .graph-hint {

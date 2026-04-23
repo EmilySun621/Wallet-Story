@@ -3,26 +3,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) var(--space-2xl);
-  border-radius: var(--radius-lg);
-  font-weight: 700;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-full);
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition-base);
+  letter-spacing: var(--tracking-wide);
+  box-shadow: var(--shadow-none);
+  transition: all var(--transition-fast);
   gap: var(--space-xs);
 }
 
 .verdict-label {
-  font-size: var(--text-6xl);
-  line-height: 1;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  font-weight: 700;
 }
 
 .verdict-pvalue {
-  font-size: var(--text-sm);
-  opacity: 0.9;
-  font-weight: 400;
-  letter-spacing: 0.05em;
+  font-size: var(--text-xs);
+  opacity: 0.8;
+  font-weight: 500;
+  letter-spacing: var(--tracking-normal);
 }
 
 .pvalue-mono {
@@ -34,31 +35,31 @@
 .verdict-critical {
   background: var(--verdict-critical-bg);
   color: var(--verdict-critical);
-  border: 2px solid var(--verdict-critical);
+  border: 1px solid var(--verdict-critical-border);
 }
 
 .verdict-high {
   background: var(--verdict-high-bg);
   color: var(--verdict-high);
-  border: 2px solid var(--verdict-high);
+  border: 1px solid var(--verdict-high-border);
 }
 
 .verdict-medium {
   background: var(--verdict-medium-bg);
   color: var(--verdict-medium);
-  border: 2px solid var(--verdict-medium);
+  border: 1px solid var(--verdict-medium-border);
 }
 
 .verdict-low {
   background: var(--verdict-low-bg);
   color: var(--verdict-low);
-  border: 2px solid var(--verdict-low);
+  border: 1px solid var(--verdict-low-border);
 }
 
 .verdict-baseline {
   background: var(--verdict-baseline-bg);
   color: var(--verdict-baseline);
-  border: 2px solid var(--verdict-baseline);
+  border: 1px solid var(--verdict-baseline-border);
 }
 
 /* Pulse animation for Critical severity */

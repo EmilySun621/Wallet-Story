@@ -3,7 +3,7 @@
 .cases-page {
   width: 100vw;
   min-height: 100vh;
-  background: #0a0e1a;
+  background: var(--bg-page);
   margin: 0;
   padding: 0;
   position: relative;
@@ -16,10 +16,10 @@
 /* HERO SECTION */
 .hero-section {
   width: 100vw;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  background: var(--bg-card);
   padding: 8rem 0 6rem 0;
   text-align: center;
-  border-bottom: 2px solid #1a1a2e;
+  border-bottom: 1px solid var(--border-default);
   position: relative;
   left: 50%;
   right: 50%;
@@ -37,7 +37,8 @@
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--space-lg);
-  line-height: 1.2;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
   font-family: var(--font-heading);
 }
 
@@ -56,32 +57,33 @@
 }
 
 .cta-badge {
-  padding: 1rem 2.5rem;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.125rem;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--brand-purple);
+  color: var(--text-primary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
   text-decoration: none;
   display: inline-block;
 }
 
 .cta-badge:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(167, 139, 250, 0.4);
+  transform: translateY(-1px);
+  opacity: 0.9;
 }
 
 .cta-badge.cta-secondary {
   background: transparent;
-  border: 2px solid #a78bfa;
-  color: #a78bfa;
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
 }
 
 .cta-badge.cta-secondary:hover {
-  background: rgba(167, 139, 250, 0.1);
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
 }
 
 /* SECTIONS */
@@ -89,8 +91,8 @@
 .featured-section,
 .money-flow-section {
   width: 100vw;
-  padding: 5rem 0;
-  border-bottom: 1px solid #1a1a2e;
+  padding: var(--space-4xl) 0;
+  border-bottom: 1px solid var(--border-default);
   position: relative;
   left: 50%;
   right: 50%;
@@ -155,10 +157,16 @@
 }
 
 .detail-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  transition: all var(--transition-fast);
+}
+
+.detail-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
 }
 
 .detail-card h3 {

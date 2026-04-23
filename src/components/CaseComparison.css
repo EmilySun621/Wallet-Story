@@ -1,8 +1,9 @@
 .case-comparison-container {
-  padding: 2rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  padding: var(--space-xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-none);
 }
 
 .comparison-title {
@@ -56,27 +57,27 @@
 }
 
 .case-column {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  padding: 2rem;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  border: 1px solid var(--border-default);
+  transition: all var(--transition-fast);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-lg);
 }
 
 .case-column:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
 }
 
 .theo-column {
-  border-left: 4px solid #dc2626;
+  /* No colored border - clean shadcn style */
 }
 
 .control-column {
-  border-left: 4px solid #6b7280;
+  /* No colored border - clean shadcn style */
 }
 
 .case-header {
@@ -112,15 +113,15 @@
 .metric-row {
   display: flex;
   justify-content: space-between;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 0.2s ease;
+  padding: var(--space-sm);
+  background: var(--bg-surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  transition: background var(--transition-fast);
 }
 
 .metric-row:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card-hover);
 }
 
 .metric-label {
@@ -143,10 +144,10 @@
 
 /* Footer */
 .comparison-footer {
-  padding: 1.5rem;
-  background: rgba(167, 139, 250, 0.1);
-  border-radius: 8px;
-  border: 1px solid rgba(167, 139, 250, 0.3);
+  padding: var(--space-lg);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
 }
 
 .footer-note {
