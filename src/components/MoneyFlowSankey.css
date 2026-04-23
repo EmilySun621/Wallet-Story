@@ -1,0 +1,101 @@
+.sankey-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.sankey-na-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.na-icon {
+  font-size: 4rem;
+}
+
+.na-text {
+  color: #94a3b8;
+  font-size: 1.125rem;
+}
+
+/* Header */
+.sankey-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sankey-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 0.5rem;
+}
+
+.sankey-subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Canvas */
+.sankey-canvas {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Footer */
+.sankey-footer {
+  padding: 1.5rem;
+  background: rgba(167, 139, 250, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.sankey-note {
+  color: #e2e8f0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sankey-container {
+    padding: 1.5rem;
+  }
+
+  .sankey-title {
+    font-size: 1.25rem;
+  }
+
+  .sankey-subtitle {
+    font-size: 0.8125rem;
+  }
+
+  .sankey-canvas {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sankey-container {
+    padding: 1rem;
+  }
+
+  .sankey-title {
+    font-size: 1.125rem;
+  }
+
+  .sankey-note {
+    font-size: 0.8125rem;
+  }
+}
