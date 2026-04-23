@@ -29,14 +29,20 @@ function Investigation() {
   };
 
   const handleInvestigate = async () => {
-    setError(null);
     setResult(null);
 
     // Validate input
-    if (!isValidAddress(address)) {
-      setError('Invalid address format. Must be 0x followed by 40 hex characters.');
+    if (!address.trim()) {
+      setError('Please enter a wallet address.');
       return;
     }
+
+    if (!isValidAddress(address)) {
+      setError('Invalid Ethereum address format. Must be 0x followed by 40 hexadecimal characters.');
+      return;
+    }
+
+    setError(null);
 
     setLoading(true);
     setProgressStep(0);
@@ -108,8 +114,11 @@ function Investigation() {
               type="text"
               placeholder="0x..."
               value={address}
-              onChange={(e) => setAddress(e.target.value.trim())}
-              className="terminal-input"
+              onChange={(e) => {
+                setAddress(e.target.value.trim());
+                setError(null); // Clear error on input change
+              }}
+              className={`terminal-input ${error ? 'input-error' : ''}`}
               disabled={loading}
               onKeyPress={(e) => e.key === 'Enter' && handleInvestigate()}
             />
@@ -149,7 +158,14 @@ function Investigation() {
           )}
           {error && (
             <div className="error-message">
-              ❌ {error}
+              <div className="error-icon">❌</div>
+              <div className="error-content">
+                <div className="error-title">Investigation Failed</div>
+                <div className="error-detail">{error}</div>
+                <button onClick={handleInvestigate} className="retry-button-inline">
+                  Retry Investigation
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -430,6 +446,15 @@ function Investigation() {
           border-color: #00ff00;
         }
 
+        .terminal-input.input-error {
+          border-color: #ff4444;
+          background: #1a0a0a;
+        }
+
+        .terminal-input.input-error:focus {
+          border-color: #ff6666;
+        }
+
         .terminal-button {
           padding: 0.75rem 1.5rem;
           background: #00ff00;
@@ -510,11 +535,50 @@ function Investigation() {
         }
 
         .error-message {
+          display: flex;
+          gap: 1rem;
+          padding: 1.5rem;
+          background: #1a0a0a;
+          border: 2px solid #ff4444;
+          border-radius: 8px;
+          align-items: flex-start;
+        }
+
+        .error-icon {
+          font-size: 2rem;
+          flex-shrink: 0;
+        }
+
+        .error-content {
+          flex: 1;
+        }
+
+        .error-title {
           color: #ff4444;
-          padding: 1rem;
-          background: #331111;
-          border: 1px solid #ff4444;
+          font-size: 1.1rem;
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+        }
+
+        .error-detail {
+          color: #ff8888;
+          margin-bottom: 1rem;
+          line-height: 1.5;
+        }
+
+        .retry-button-inline {
+          padding: 0.5rem 1rem;
+          background: #ff4444;
+          border: none;
+          color: #fff;
+          font-weight: bold;
+          cursor: pointer;
           border-radius: 4px;
+          transition: background 0.2s;
+        }
+
+        .retry-button-inline:hover {
+          background: #ff6666;
         }
 
         .results-grid {

@@ -78,10 +78,11 @@ function CaseLibrary() {
 
       {error && (
         <div className="error-card">
-          ❌ {error}
-          <br />
+          <div className="error-icon-large">❌</div>
+          <div className="error-title-large">Failed to Load Case Studies</div>
+          <div className="error-message-text">{error}</div>
           <button onClick={fetchTheoCase} className="retry-button">
-            Retry
+            🔄 Retry Loading
           </button>
         </div>
       )}
@@ -299,19 +300,41 @@ function CaseLibrary() {
         }
 
         .error-card {
-          border-color: #ff4444;
+          border: 2px solid #ff4444;
+          background: #1a0a0a;
+        }
+
+        .error-icon-large {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+        }
+
+        .error-title-large {
           color: #ff4444;
+          font-size: 1.3rem;
+          font-weight: bold;
+          margin-bottom: 0.75rem;
+        }
+
+        .error-message-text {
+          color: #ff8888;
+          margin-bottom: 1.5rem;
         }
 
         .retry-button {
           margin-top: 1rem;
-          padding: 0.5rem 1rem;
-          background: #00ff00;
+          padding: 0.75rem 1.5rem;
+          background: #ff4444;
           border: none;
-          color: #000;
+          color: #fff;
           font-weight: bold;
           cursor: pointer;
           border-radius: 4px;
+          transition: background 0.2s;
+        }
+
+        .retry-button:hover {
+          background: #ff6666;
         }
 
         .spinner {
