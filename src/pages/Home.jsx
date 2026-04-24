@@ -580,7 +580,63 @@ function Home() {
         </section>
       )}
 
-      {/* E2. WHO THIS IS FOR */}
+      {/* E2. REPRODUCIBILITY */}
+      <section className="reproducibility-section">
+        <div className="section-container">
+          <div className="reproducibility-overline">REPRODUCIBILITY</div>
+          <h2 className="section-title">Don't trust us. Run it yourself.</h2>
+          <p className="section-subtitle">
+            Every number in this repo can be reproduced in your browser in under 2 minutes — no API keys, no installation.
+          </p>
+
+          <div className="reproducibility-grid">
+            {/* LEFT: Colab Card */}
+            <div>
+              <a
+                href="https://colab.research.google.com/github/EmilySun621/Wallet-Story/blob/master/notebooks/walletstory_reproduce_theo.ipynb"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="colab-card"
+              >
+                <img
+                  src="https://colab.research.google.com/assets/colab-badge.svg"
+                  alt="Open In Colab"
+                  className="colab-badge-img-large"
+                />
+                <ul className="colab-bullets">
+                  <li>No API keys. No local Python.</li>
+                  <li>Reproduces all 5 signals + pairwise alignment</li>
+                  <li>Runtime ≈ 2 minutes in Colab free tier</li>
+                </ul>
+              </a>
+            </div>
+
+            {/* RIGHT: Code Preview */}
+            <div>
+              <pre className="repro-code-preview">{`# In your browser, in 2 minutes:
+
+case = requests.get(f"{REPO}/case_theo.json").json()
+trades = requests.get(f"{REPO}/theo_trades.json").json()
+
+# Signal 1: Binomial test
+binomtest(wins=15680, n=16000, p=0.5)
+→ p-value < 1e-300 ✓
+
+# Signal 4: Pairwise temporal alignment
+z_score = 28.9σ above null baseline ✓
+
+# All results match our published claims.`}</pre>
+              <p className="repro-code-caption">Excerpt from the Colab notebook</p>
+            </div>
+          </div>
+
+          <p className="repro-footer-text">
+            This is what 'open-source forensics' means. Every claim is cryptographically verifiable via EAS attestations AND computationally verifiable via a reproducible pipeline.
+          </p>
+        </div>
+      </section>
+
+      {/* E3. WHO THIS IS FOR */}
       <section className="deployment-section">
         <div className="section-container">
           <div className="deployment-overline">WHO THIS IS FOR</div>
