@@ -547,20 +547,33 @@
   color: #a78bfa;
 }
 
-/* === D. FEATURED CASE === */
-.featured-case-section {
+/* === D. CASE COMPARISON (THEO VS CONTROL) === */
+.case-comparison-section {
   padding: 5rem 2rem;
 }
 
-.featured-case-card {
-  max-width: 960px;
-  margin: 0 auto;
+.case-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: stretch;
+  margin-top: 3rem;
+}
+
+.case-col {
   background: rgba(17, 24, 39, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(220, 38, 38, 0.3);
   border-radius: 1rem;
-  padding: 3rem;
+  padding: 2.5rem;
+}
+
+.case-col-theo {
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.case-col-control {
+  border: 1px solid rgba(139, 92, 246, 0.15);
 }
 
 .case-header {
@@ -572,7 +585,7 @@
 }
 
 .case-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
   text-align: center;
@@ -621,8 +634,8 @@
 
 .case-stats-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
@@ -634,13 +647,13 @@
 }
 
 .case-stat-value {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #f1f5f9;
 }
 
 .case-stat-label {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: #94a3b8;
   margin-top: 0.25rem;
 }
@@ -815,38 +828,9 @@
   color: #a78bfa;
 }
 
-/* === E. CONTROL CASE === */
-.control-case-section {
-  padding: 0 2rem 5rem 2rem;
-}
-
-.control-case-card {
-  max-width: 960px;
-  margin: 0 auto;
-  background: rgba(17, 24, 39, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(139, 92, 246, 0.15);
-  border-radius: 1rem;
-  padding: 2rem;
-}
-
-.control-header {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.control-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-  color: #f1f5f9;
-}
-
+/* === CONTROL CASE STYLES (nested in case-comparison) === */
 .control-subtitle {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: #94a3b8;
   margin: 0.5rem 0 0 0;
 }
@@ -867,23 +851,6 @@
 
 .control-divider {
   color: #475569;
-}
-
-.control-cta {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  color: #a78bfa;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: all 200ms ease;
-}
-
-.control-cta:hover {
-  background: rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.5);
 }
 
 /* === VERIFY ON-CHAIN BLOCKS === */
@@ -1234,16 +1201,21 @@
     font-size: 0.75rem;
   }
 
-  .featured-case-section {
+  .case-comparison-section {
     padding: 3rem 1.5rem;
   }
 
-  .featured-case-card {
+  .case-comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .case-col {
     padding: 2rem 1.5rem;
   }
 
   .case-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .case-stats-row {
@@ -1257,18 +1229,6 @@
   .deployment-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-  }
-
-  .control-case-section {
-    padding: 0 1.5rem 3rem 1.5rem;
-  }
-
-  .control-case-card {
-    padding: 1.5rem;
-  }
-
-  .try-it-section {
-    padding: 3rem 1.5rem;
   }
 
   .try-it-input-container {

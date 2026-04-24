@@ -371,189 +371,188 @@ function Home() {
         </div>
       </section>
 
-      {/* D. FEATURED CASE — THEO CLUSTER */}
-      {theoCase && (
-        <section className="featured-case-section">
+      {/* D. CASE COMPARISON — THEO VS CONTROL */}
+      {theoCase && controlCase && (
+        <section className="case-comparison-section">
           <div className="section-container">
-            <div className="featured-case-card">
-              <div className="case-header">
-                <VerdictBadge severity="Critical" pValue={0} />
-                <h2 className="case-title">The Polymarket Theo Cluster</h2>
-              </div>
+            <h2 className="section-title">Real cases. Real results.</h2>
 
-              <div className="case-sources">
-                <span className="sources-label">Coverage:</span>
-                <a
-                  href="https://nypost.com/2024/11/13/business/polymarket-whale-earned-85m-on-donald-trump-win/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="source-tag source-tag-link"
-                >
-                  NY Post <ExternalLink size={10} />
-                </a>
-                <a
-                  href="https://www.cbsnews.com/news/french-whale-made-over-80-million-on-polymarket-betting-on-trump-election-win-60-minutes/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="source-tag source-tag-link"
-                >
-                  60 Minutes <ExternalLink size={10} />
-                </a>
-                <a
-                  href="https://x.com/chainalysis/status/1854294960532529425"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="source-tag source-tag-link"
-                >
-                  Chainalysis (Nov 6) <ExternalLink size={10} />
-                </a>
-                <a
-                  href="https://x.com/chainalysis/status/1854584905776431343"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="source-tag source-tag-link"
-                >
-                  Chainalysis (Nov 7) <ExternalLink size={10} />
-                </a>
-              </div>
+            <div className="case-comparison-grid">
+              {/* Theo Column */}
+              <div className="case-col case-col-theo">
+                <div className="case-header">
+                  <VerdictBadge severity="Critical" pValue={0} />
+                  <h3 className="case-title">The Polymarket Theo Cluster</h3>
+                </div>
 
-              <div className="case-stats-row">
-                <div className="case-stat">
-                  <span className="case-stat-value">12</span>
-                  <span className="case-stat-label">wallets</span>
-                </div>
-                <div className="case-stat">
-                  <span className="case-stat-value">$209M</span>
-                  <span className="case-stat-label">volume</span>
-                </div>
-                <div className="case-stat">
-                  <span className="case-stat-value">98%</span>
-                  <span className="case-stat-label">win rate</span>
-                </div>
-                <div className="case-stat">
-                  <span className="case-stat-value">p &lt; 10⁻³⁰⁰</span>
-                  <span className="case-stat-label">significance</span>
-                </div>
-                <div className="case-stat">
-                  <span className="case-stat-value">4/4</span>
-                  <span className="case-stat-label">signals</span>
-                </div>
-              </div>
-
-              <div className="case-pipeline">
-                <div className="pipeline-overline">HOW WE GOT HERE</div>
-                <div className="pipeline-steps">
-                  <div className="pipeline-step">
-                    <span className="step-number">①</span> Seeded with <span className="step-value">Theo4</span> wallet (publicly reported by NYT)
-                  </div>
-                  <div className="pipeline-step">
-                    <span className="step-number">②</span> Fetched <span className="step-value">4,000</span> trades → <span className="step-value">99.2%</span> individual win rate
-                  </div>
-                  <div className="pipeline-step">
-                    <span className="step-number">③</span> Binomial test vs 50% baseline → p <span className="step-value">&lt; 10⁻³⁰⁰</span>
-                  </div>
-                  <div className="pipeline-step">
-                    <span className="step-number">④</span> Exchange-anchor clustering → <span className="step-value">11</span> candidate wallets sharing same funder + exchange + Polymarket proxy
-                  </div>
-                </div>
-                <div className="pipeline-result">
-                  Result: 12-wallet cluster, matching Chainalysis's published count of 11.
-                </div>
-              </div>
-
-              <div className="verify-onchain">
-                <div className="verify-overline">VERIFY ON-CHAIN</div>
-                <div className="verify-label">Seed wallet (Theo4)</div>
-                <div className="verify-address">{THEO4_ADDRESS}</div>
-                <div className="verify-actions">
-                  <button
-                    className="verify-btn"
-                    onClick={() => handleCopyAddress(THEO4_ADDRESS)}
-                  >
-                    {copiedAddress === THEO4_ADDRESS ? (
-                      <>✓ Copied</>
-                    ) : (
-                      <><Copy size={14} /> Copy</>
-                    )}
-                  </button>
+                <div className="case-sources">
+                  <span className="sources-label">Coverage:</span>
                   <a
-                    href={`https://polygonscan.com/address/${THEO4_ADDRESS}`}
+                    href="https://nypost.com/2024/11/13/business/polymarket-whale-earned-85m-on-donald-trump-win/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="verify-btn"
+                    className="source-tag source-tag-link"
                   >
-                    <ExternalLink size={14} /> Polygonscan
+                    NY Post <ExternalLink size={10} />
                   </a>
                   <a
-                    href={`https://polymarket.com/profile/${THEO4_ADDRESS}`}
+                    href="https://www.cbsnews.com/news/french-whale-made-over-80-million-on-polymarket-betting-on-trump-election-win-60-minutes/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="verify-btn"
+                    className="source-tag source-tag-link"
                   >
-                    <ExternalLink size={14} /> Polymarket
+                    60 Minutes <ExternalLink size={10} />
+                  </a>
+                  <a
+                    href="https://x.com/chainalysis/status/1854294960532529425"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="source-tag source-tag-link"
+                  >
+                    Chainalysis (Nov 6) <ExternalLink size={10} />
+                  </a>
+                  <a
+                    href="https://x.com/chainalysis/status/1854584905776431343"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="source-tag source-tag-link"
+                  >
+                    Chainalysis (Nov 7) <ExternalLink size={10} />
                   </a>
                 </div>
 
-                <a
-                  href="https://colab.research.google.com/github/EmilySun621/Wallet-Story/blob/master/notebooks/walletstory_reproduce_theo.ipynb"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="reproduce-colab-link"
-                >
-                  <span className="reproduce-icon">📊</span>
-                  <span>Reproduce this case in Colab</span>
-                  <span className="reproduce-arrow">→</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+                <div className="case-stats-row">
+                  <div className="case-stat">
+                    <span className="case-stat-value">12</span>
+                    <span className="case-stat-label">wallets</span>
+                  </div>
+                  <div className="case-stat">
+                    <span className="case-stat-value">$209M</span>
+                    <span className="case-stat-label">volume</span>
+                  </div>
+                  <div className="case-stat">
+                    <span className="case-stat-value">98%</span>
+                    <span className="case-stat-label">win rate</span>
+                  </div>
+                  <div className="case-stat">
+                    <span className="case-stat-value">p &lt; 10⁻³⁰⁰</span>
+                    <span className="case-stat-label">significance</span>
+                  </div>
+                  <div className="case-stat">
+                    <span className="case-stat-value">4/4</span>
+                    <span className="case-stat-label">signals</span>
+                  </div>
+                </div>
 
-      {/* E. FALSIFIABILITY — CONTROL CASE */}
-      {controlCase && (
-        <section className="control-case-section">
-          <div className="section-container">
-            <div className="control-case-card">
-              <div className="control-header">
-                <VerdictBadge severity="Low" />
-                <div>
-                  <h3 className="control-title">Control: legitimate skilled trader</h3>
-                  <p className="control-subtitle">Same pipeline. Different result. This is falsifiability.</p>
+                <div className="case-pipeline">
+                  <div className="pipeline-overline">HOW WE GOT HERE</div>
+                  <div className="pipeline-steps">
+                    <div className="pipeline-step">
+                      <span className="step-number">①</span> Seeded with <span className="step-value">Theo4</span> wallet (publicly reported by NYT)
+                    </div>
+                    <div className="pipeline-step">
+                      <span className="step-number">②</span> Fetched <span className="step-value">4,000</span> trades → <span className="step-value">99.2%</span> individual win rate
+                    </div>
+                    <div className="pipeline-step">
+                      <span className="step-number">③</span> Binomial test vs 50% baseline → p <span className="step-value">&lt; 10⁻³⁰⁰</span>
+                    </div>
+                    <div className="pipeline-step">
+                      <span className="step-number">④</span> Exchange-anchor clustering → <span className="step-value">11</span> candidate wallets sharing same funder + exchange + Polymarket proxy
+                    </div>
+                  </div>
+                  <div className="pipeline-result">
+                    Result: 12-wallet cluster, matching Chainalysis's published count of 11.
+                  </div>
+                </div>
+
+                <div className="verify-onchain">
+                  <div className="verify-overline">VERIFY ON-CHAIN</div>
+                  <div className="verify-label">Seed wallet (Theo4)</div>
+                  <div className="verify-address">{THEO4_ADDRESS}</div>
+                  <div className="verify-actions">
+                    <button
+                      className="verify-btn"
+                      onClick={() => handleCopyAddress(THEO4_ADDRESS)}
+                    >
+                      {copiedAddress === THEO4_ADDRESS ? (
+                        <>✓ Copied</>
+                      ) : (
+                        <><Copy size={14} /> Copy</>
+                      )}
+                    </button>
+                    <a
+                      href={`https://polygonscan.com/address/${THEO4_ADDRESS}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="verify-btn"
+                    >
+                      <ExternalLink size={14} /> Polygonscan
+                    </a>
+                    <a
+                      href={`https://polymarket.com/profile/${THEO4_ADDRESS}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="verify-btn"
+                    >
+                      <ExternalLink size={14} /> Polymarket
+                    </a>
+                  </div>
+
+                  <a
+                    href="https://colab.research.google.com/github/EmilySun621/Wallet-Story/blob/master/notebooks/walletstory_reproduce_theo.ipynb"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="reproduce-colab-link"
+                  >
+                    <span className="reproduce-icon">📊</span>
+                    <span>Reproduce this case in Colab</span>
+                    <span className="reproduce-arrow">→</span>
+                  </a>
                 </div>
               </div>
 
-              <div className="control-stats">
-                <span className="control-stat">39% win rate</span>
-                <span className="control-divider">•</span>
-                <span className="control-stat">single wallet</span>
-                <span className="control-divider">•</span>
-                <span className="control-stat">0/4 signals detected</span>
-              </div>
+              {/* Control Column */}
+              <div className="case-col case-col-control">
+                <div className="case-header">
+                  <VerdictBadge severity="Low" />
+                  <div>
+                    <h3 className="case-title">Control: legitimate skilled trader</h3>
+                    <p className="control-subtitle">Same pipeline. Different result. This is falsifiability.</p>
+                  </div>
+                </div>
 
-              <div className="verify-onchain">
-                <div className="verify-overline">VERIFY ON-CHAIN</div>
-                <div className="verify-label">Control wallet (legitimate trader)</div>
-                <div className="verify-address">{CONTROL_ADDRESS}</div>
-                <div className="verify-actions">
-                  <button
-                    className="verify-btn"
-                    onClick={() => handleCopyAddress(CONTROL_ADDRESS)}
-                  >
-                    {copiedAddress === CONTROL_ADDRESS ? (
-                      <>✓ Copied</>
-                    ) : (
-                      <><Copy size={14} /> Copy</>
-                    )}
-                  </button>
-                  <a
-                    href={`https://polygonscan.com/address/${CONTROL_ADDRESS}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="verify-btn"
-                  >
-                    <ExternalLink size={14} /> Polygonscan
-                  </a>
+                <div className="control-stats">
+                  <span className="control-stat">39% win rate</span>
+                  <span className="control-divider">•</span>
+                  <span className="control-stat">single wallet</span>
+                  <span className="control-divider">•</span>
+                  <span className="control-stat">0/4 signals detected</span>
+                </div>
+
+                <div className="verify-onchain">
+                  <div className="verify-overline">VERIFY ON-CHAIN</div>
+                  <div className="verify-label">Control wallet (legitimate trader)</div>
+                  <div className="verify-address">{CONTROL_ADDRESS}</div>
+                  <div className="verify-actions">
+                    <button
+                      className="verify-btn"
+                      onClick={() => handleCopyAddress(CONTROL_ADDRESS)}
+                    >
+                      {copiedAddress === CONTROL_ADDRESS ? (
+                        <>✓ Copied</>
+                      ) : (
+                        <><Copy size={14} /> Copy</>
+                      )}
+                    </button>
+                    <a
+                      href={`https://polygonscan.com/address/${CONTROL_ADDRESS}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="verify-btn"
+                    >
+                      <ExternalLink size={14} /> Polygonscan
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
