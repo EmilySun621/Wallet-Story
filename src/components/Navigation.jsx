@@ -23,16 +23,16 @@ function Navigation() {
             Home
           </Link>
           <Link
-            to="/methodology"
-            className={`nav-link-full ${location.pathname === '/methodology' ? 'active' : ''}`}
-          >
-            Methodology
-          </Link>
-          <Link
             to="/investigation"
             className={`nav-link-full ${location.pathname === '/investigation' ? 'active' : ''}`}
           >
             Investigate
+          </Link>
+          <Link
+            to="/methodology"
+            className={`nav-link-full ${location.pathname === '/methodology' ? 'active' : ''}`}
+          >
+            Methodology
           </Link>
           <Link
             to="/beta"

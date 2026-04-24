@@ -129,6 +129,7 @@
   text-align: center;
   margin: 0 0 1rem 0;
   color: #f1f5f9;
+  text-wrap: balance;
 }
 
 .section-subtitle {
@@ -136,8 +137,9 @@
   text-align: center;
   color: #94a3b8;
   margin: 0 auto 2rem auto;
-  max-width: 560px;
+  max-width: 640px;
   line-height: 1.5;
+  text-wrap: balance;
 }
 
 .signals-grid {

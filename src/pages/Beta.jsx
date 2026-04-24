@@ -16,8 +16,9 @@ export default function Beta() {
 
   return (
     <div className="beta-page">
-      {/* Hero */}
-      <section className="beta-hero">
+      <div className="beta-container">
+        {/* Hero */}
+        <section className="beta-hero">
         <h1>What's next</h1>
         <p className="subtitle">
           WalletStory v1.0 ships today. Here's what's coming in v1.1 and v1.2 — preview UI, not yet functional.
@@ -299,6 +300,7 @@ export default function Beta() {
           <ExternalLink size={16} />
         </a>
       </section>
+      </div>
     </div>
   );
 }
