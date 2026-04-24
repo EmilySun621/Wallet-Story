@@ -199,6 +199,12 @@ _Based on publicly documented capabilities, April 2026._
 
 Every claim in this repo is designed to be cross-checked by anyone. No trust required.
 
+### Option 0 — Run the analysis yourself in Colab (30 seconds)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EmilySun621/Wallet-Story/blob/master/notebooks/walletstory_reproduce_theo.ipynb)
+
+Click the badge. Run all cells. See the Theo case reproduce end-to-end — no API keys, no installation, no trust required.
+
 ### Option 1 — Verify against public data
 
 - Paste `0x56687bf447db6ffa42ffe2204a05edaa20f55839` into [Polygonscan](https://polygonscan.com/address/0x56687bf447db6ffa42ffe2204a05edaa20f55839)
