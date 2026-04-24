@@ -343,6 +343,48 @@ function Investigation() {
           {error && !loading && (
             <p className="error-message-large">{error}</p>
           )}
+
+          {/* Quick-select chips */}
+          <div className="quick-select-block">
+            <p className="quick-select-label">
+              Not sure where to start? Try a known case:
+            </p>
+            <div className="quick-select-chips">
+              <button
+                className="quick-select-chip chip-critical"
+                onClick={() => setAddress('0x56687bf447db6ffa42ffe2204a05edaa20f55839')}
+              >
+                <span className="chip-icon">🎯</span>
+                <span className="chip-name">Theo4</span>
+                <span className="chip-verdict">Critical</span>
+              </button>
+              <button
+                className="quick-select-chip chip-critical"
+                onClick={() => setAddress('0x1f2dd6d473f3e824cd2f8a89d9c69fb96f6ad0cf')}
+              >
+                <span className="chip-icon">📊</span>
+                <span className="chip-name">Fredi9999</span>
+                <span className="chip-verdict">Critical</span>
+              </button>
+              <button
+                className="quick-select-chip chip-low"
+                onClick={() => setAddress('0x006cc834cc092684f1b56626e23bedb3835c16ea')}
+              >
+                <span className="chip-icon">✅</span>
+                <span className="chip-name">Control wallet</span>
+                <span className="chip-verdict">Low</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Duration notice */}
+          <p className="duration-notice">
+            <span className="duration-icon">⏱</span>
+            Analysis takes <strong>60–90 seconds</strong> for fresh wallets.
+            Known cases (Theo4, Fredi9999, Control) return pre-computed
+            results in seconds. First request may take an extra 30s if our
+            backend is cold-starting.
+          </p>
         </div>
       </section>
 

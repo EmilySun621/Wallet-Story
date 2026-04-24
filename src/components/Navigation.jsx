@@ -7,13 +7,21 @@ function Navigation() {
     <nav className="top-nav-full-width">
       <div className="nav-container-full">
         <div className="nav-left-full">
-          <h1 className="nav-logo-full">
-            <span className="logo-hex">⬡</span>
-            WalletStory
-          </h1>
+          <Link to="/" className="nav-logo-link">
+            <h1 className="nav-logo-full">
+              <span className="logo-hex">⬡</span>
+              WalletStory
+            </h1>
+          </Link>
         </div>
 
         <div className="nav-links-full">
+          <Link
+            to="/"
+            className={`nav-link-full ${location.pathname === '/' ? 'active' : ''}`}
+          >
+            Home
+          </Link>
           <Link
             to="/methodology"
             className={`nav-link-full ${location.pathname === '/methodology' ? 'active' : ''}`}

@@ -31,7 +31,6 @@ function Home() {
   const [theoCase, setTheoCase] = useState(null);
   const [controlCase, setControlCase] = useState(null);
   const [watchlistCount, setWatchlistCount] = useState(14);
-  const [addressInput, setAddressInput] = useState('');
   const [copiedAddress, setCopiedAddress] = useState(null);
 
   useEffect(() => {
@@ -63,20 +62,6 @@ function Home() {
     } catch (err) {
       console.error('Failed to load watchlist:', err);
     }
-  };
-
-  const handleInvestigate = () => {
-    if (addressInput.trim()) {
-      navigate(`/investigation?address=${addressInput.trim()}`);
-    }
-  };
-
-  const fillAddress = (addr) => {
-    setAddressInput(addr);
-  };
-
-  const scrollToTryIt = () => {
-    document.getElementById('try-it-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleCopyAddress = async (address) => {
@@ -115,7 +100,7 @@ function Home() {
           </div>
 
           <div className="hero-cta">
-            <button className="cta-primary" onClick={scrollToTryIt}>
+            <button className="cta-primary" onClick={() => navigate('/investigation')}>
               Investigate a wallet →
             </button>
             <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="cta-secondary">
@@ -695,40 +680,7 @@ z_score = 28.9σ above null baseline ✓
         </div>
       </section>
 
-      {/* F. TRY IT */}
-      <section className="try-it-section" id="try-it-section">
-        <div className="section-container">
-          <h2 className="section-title">Try it on any wallet</h2>
-
-          <div className="try-it-input-container">
-            <input
-              type="text"
-              className="address-input"
-              placeholder="Paste any Polygon wallet address..."
-              value={addressInput}
-              onChange={(e) => setAddressInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleInvestigate()}
-            />
-            <button className="investigate-button" onClick={handleInvestigate}>
-              Investigate →
-            </button>
-          </div>
-
-          <div className="suggestion-chips">
-            <button className="chip" onClick={() => fillAddress(THEO4_ADDRESS)}>
-              🎯 Try Theo4 (Critical)
-            </button>
-            <button className="chip" onClick={() => fillAddress(FREDI_ADDRESS)}>
-              📊 Try Fredi9999 (Critical)
-            </button>
-            <button className="chip" onClick={() => fillAddress(CONTROL_ADDRESS)}>
-              ✅ Try Control (Low)
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* G. FOOTER */}
+      {/* F. FOOTER */}
       <footer className="home-footer">
         <div className="footer-container">
           <div className="footer-brand">

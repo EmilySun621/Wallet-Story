@@ -50,6 +50,16 @@ body {
   align-items: center;
 }
 
+.nav-logo-link {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 200ms ease;
+}
+
+.nav-logo-link:hover {
+  opacity: 0.8;
+}
+
 .nav-logo-full {
   font-size: var(--text-2xl);
   font-weight: 700;
