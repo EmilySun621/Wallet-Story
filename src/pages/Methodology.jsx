@@ -212,6 +212,27 @@ function Methodology() {
                 <p className="enhancement-description">
                   For the Theo cluster: observed mean alignment = <strong>0.2978</strong>, null baseline = <strong>0.2324</strong> ± 0.0023, z-score <strong>28.9σ</strong>. Full matrix available in the Colab reproducibility notebook.
                 </p>
+
+                <div className="colab-verify-card">
+                  <div className="colab-verify-header">
+                    <span className="colab-verify-label">Verify this claim yourself</span>
+                  </div>
+                  <p className="colab-verify-desc">
+                    Run the full pairwise alignment analysis in your browser. Zero API keys, zero setup. Runtime ≈ 90 seconds.
+                  </p>
+                  <a
+                    href="https://colab.research.google.com/github/EmilySun621/Wallet-Story/blob/master/notebooks/walletstory_reproduce_theo.ipynb"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="colab-verify-button"
+                  >
+                    <img src="https://colab.research.google.com/assets/colab-badge.svg"
+                         alt="Open In Colab"
+                         className="colab-badge-img" />
+                    <span>Open notebook in Colab</span>
+                  </a>
+                </div>
+
                 <pre className="signal-code">
 {`# Pairwise alignment score (linear kernel)
 def alignment_score(trades_a, trades_b, kernel_sec=86400):

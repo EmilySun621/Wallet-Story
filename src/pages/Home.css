@@ -947,6 +947,43 @@
   transform: translateY(-1px);
 }
 
+/* Reproduce Colab Link */
+.reproduce-colab-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  font-size: 13px;
+  color: #94A3B8;
+  text-decoration: none;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.4);
+  transition: all 200ms ease;
+}
+
+.reproduce-colab-link:hover {
+  color: #A78BFA;
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(139, 92, 246, 0.08);
+  transform: translateX(2px);
+}
+
+.reproduce-icon {
+  font-size: 16px;
+}
+
+.reproduce-arrow {
+  margin-left: 0.25rem;
+  font-size: 14px;
+  transition: transform 200ms ease;
+}
+
+.reproduce-colab-link:hover .reproduce-arrow {
+  transform: translateX(3px);
+}
+
 /* === F. TRY IT === */
 .try-it-section {
   padding: 5rem 2rem;

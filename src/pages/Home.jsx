@@ -512,6 +512,17 @@ function Home() {
                     <ExternalLink size={14} /> Polymarket
                   </a>
                 </div>
+
+                <a
+                  href="https://colab.research.google.com/github/EmilySun621/Wallet-Story/blob/master/notebooks/walletstory_reproduce_theo.ipynb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="reproduce-colab-link"
+                >
+                  <span className="reproduce-icon">📊</span>
+                  <span>Reproduce this case in Colab</span>
+                  <span className="reproduce-arrow">→</span>
+                </a>
               </div>
             </div>
           </div>
