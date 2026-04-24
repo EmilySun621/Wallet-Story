@@ -126,16 +126,17 @@ TOOLS = [
     },
     {
         "name": "summarize_timeline",
-        "description": "Generate a timeline summary of key trading events and cluster activity.",
+        "description": "Generate a timeline summary of all trades previously fetched via fetch_wallet_history. Uses the cached server-side trade data — no arguments needed. Call this once near the end of the investigation to get first/last trade timestamps and recent activity.",
         "input_schema": {
             "type": "object",
             "properties": {
-                "trades": {
-                    "type": "object",
-                    "description": "Dict mapping wallet addresses to their trade lists",
+                "addresses": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Optional list of wallet addresses to include. If omitted, uses all wallets fetched so far.",
                 },
             },
-            "required": ["trades"],
+            "required": [],
         },
     },
 ]
@@ -622,10 +623,24 @@ Be thorough but efficient. Stop when you have:
             "seed_community_size": analysis.seed_community_size,
         }
 
-    def _summarize_timeline(self, trades: dict) -> dict:
-        """Tool: Generate timeline of trading activity."""
+    def _summarize_timeline(self, addresses: list | None = None, trades: dict | None = None) -> dict:
+        """Tool: Generate timeline of trading activity.
+
+        Reads from server-side cached trade data (self.wallet_trades) rather than
+        requiring the LLM to pass thousands of trades through a tool call.
+        The `trades` argument is accepted for backward compatibility but ignored.
+        """
+        # Pick which wallets to include: explicit addresses, or everything we have.
+        if addresses:
+            source = {
+                addr.lower(): self.wallet_trades.get(addr.lower(), [])
+                for addr in addresses
+            }
+        else:
+            source = self.wallet_trades
+
         all_trades = []
-        for addr, trade_list in trades.items():
+        for addr, trade_list in source.items():
             for t in trade_list:
                 if "timestamp" in t:
                     all_trades.append({

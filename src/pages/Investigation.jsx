@@ -873,13 +873,23 @@ function Investigation() {
           {/* Publish Attestation button */}
           <div className="attestation-section">
             {!attestationUID && (
-              <button
-                className="attest-button"
-                onClick={handlePublishAttestation}
-                disabled={attestationLoading}
-              >
-                {attestationLoading ? '⏳ Publishing...' : 'Publish Attestation to Chain'}
-              </button>
+              <div className="attestation-actions">
+                <button
+                  className="attest-button"
+                  onClick={handlePublishAttestation}
+                  disabled={attestationLoading}
+                >
+                  {attestationLoading ? '⏳ Publishing...' : 'Publish Attestation to Chain'}
+                </button>
+                <a
+                  href="https://sepolia.easscan.org/attestation/view/0xbb4f00be5c0e4340afe22f847b1235e8c97575e0cc06abb1919ff4af58a4e1d4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="attest-view-evidence"
+                >
+                  View our evidence on chain →
+                </a>
+              </div>
             )}
 
             {attestationError && (
