@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BarChart3, Network, GitBranch, Clock, Check, X, BookOpen, Scale, Code2, Map, ExternalLink, Shield, GraduationCap, FileCheck, Copy } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import ClusterForceGraph from '../components/ClusterForceGraph';
+import architectureImg from '../assets/ChatGPT Image Apr 23, 2026, 06_16_40 PM.png';
 import '../terminal-theme.css';
 import './Home.css';
 
@@ -378,7 +379,7 @@ function Home() {
           </p>
 
           <img
-            src="/src/assets/ChatGPT Image Apr 23, 2026, 06_16_40 PM.png"
+            src={architectureImg}
             alt="WalletStory 5-layer architecture: User → React frontend → FastAPI → Claude Investigator Agent → 5 forensic tools → ForensicReport JSON → EAS attestation on Sepolia"
             className="architecture-image"
           />
