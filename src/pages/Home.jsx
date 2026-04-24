@@ -12,7 +12,7 @@ import '../terminal-theme.css';
 import './Home.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const GITHUB_URL = 'https://github.com/yourusername/walletstory'; // Update with actual repo
+const GITHUB_URL = 'https://github.com/EmilySun621/Wallet-Story';
 
 // Academic paper citation
 const PAPER_QUOTE = "Our approach can be used to detect pairs or clusters of insiders whose behaviour suggests insider trading and/or market manipulation.";

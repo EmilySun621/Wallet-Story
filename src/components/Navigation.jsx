@@ -21,10 +21,22 @@ function Navigation() {
             Case Library
           </Link>
           <Link
+            to="/methodology"
+            className={`nav-link-full ${location.pathname === '/methodology' ? 'active' : ''}`}
+          >
+            Methodology
+          </Link>
+          <Link
             to="/investigation"
             className={`nav-link-full ${location.pathname === '/investigation' ? 'active' : ''}`}
           >
             Investigate
+          </Link>
+          <Link
+            to="/beta"
+            className={`nav-link-full ${location.pathname === '/beta' ? 'active' : ''}`}
+          >
+            Beta
           </Link>
         </div>
       </div>

@@ -98,7 +98,7 @@ function CaseLibrary() {
             <a href="/investigation" className="cta-badge">
               Try Investigation →
             </a>
-            <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="cta-badge cta-secondary">
+            <a href="https://github.com/EmilySun621/Wallet-Story" target="_blank" rel="noopener noreferrer" className="cta-badge cta-secondary">
               View on GitHub
             </a>
           </div>
@@ -244,7 +244,7 @@ function CaseLibrary() {
         <p className="section-subtitle">Rigorous forensic analysis, verifiable on-chain</p>
 
         <div className="methodology-cards">
-          <a href="https://github.com/your-repo/methodology.md" target="_blank" rel="noopener noreferrer" className="methodology-card">
+          <a href="https://github.com/EmilySun621/Wallet-Story/methodology.md" target="_blank" rel="noopener noreferrer" className="methodology-card">
             <h3>Statistical Framework<span className="methodology-link-icon">→</span></h3>
             <p>
               Binomial significance testing, Bayesian prior probability modeling,
@@ -252,7 +252,7 @@ function CaseLibrary() {
             </p>
           </a>
 
-          <a href="https://github.com/your-repo/architecture.md" target="_blank" rel="noopener noreferrer" className="methodology-card">
+          <a href="https://github.com/EmilySun621/Wallet-Story/architecture.md" target="_blank" rel="noopener noreferrer" className="methodology-card">
             <h3>Architecture<span className="methodology-link-icon">→</span></h3>
             <p>
               Graph-based clustering, shared infrastructure detection, and wallet
@@ -260,7 +260,7 @@ function CaseLibrary() {
             </p>
           </a>
 
-          <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="methodology-card">
+          <a href="https://github.com/EmilySun621/Wallet-Story" target="_blank" rel="noopener noreferrer" className="methodology-card">
             <h3>Open Source<span className="methodology-link-icon">→</span></h3>
             <p>
               Full pipeline publicly available on GitHub. Reproduce findings,
@@ -278,7 +278,7 @@ function CaseLibrary() {
             Findings are corroborated by Bloomberg and Chainalysis investigations.
           </p>
           <div className="footer-links">
-            <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="footer-link">
+            <a href="https://github.com/EmilySun621/Wallet-Story" target="_blank" rel="noopener noreferrer" className="footer-link">
               GitHub →
             </a>
             <a href="/investigation" className="footer-link">

@@ -24,7 +24,7 @@ const PAPER_2 = {
   quote: "Crypto assets are within the domain of insider trading law, alongside securities and commodities."
 };
 
-const GITHUB_URL = import.meta.env.VITE_GITHUB_URL || 'https://github.com/yourusername/walletstory';
+const GITHUB_URL = import.meta.env.VITE_GITHUB_URL || 'https://github.com/EmilySun621/Wallet-Story';
 
 function Methodology() {
   return (
