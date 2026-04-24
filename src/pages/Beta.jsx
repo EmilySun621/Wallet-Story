@@ -1,7 +1,19 @@
+import { useState } from 'react';
 import { Bot, Sparkles, Gem, Server, ExternalLink } from 'lucide-react';
 import './Beta.css';
 
 export default function Beta() {
+  // Slider states
+  const [confidence, setConfidence] = useState(10); // 1e-10
+  const [cashout, setCashout] = useState(2000000);
+  const [binCount, setBinCount] = useState(10);
+  const [maxCandidates, setMaxCandidates] = useState(15);
+
+  // Format helpers
+  const formatConfidence = (val) => `1e-${val}`;
+  const formatCashout = (val) => `$${(val / 1000000).toFixed(1)}M`;
+  const formatBins = (val) => `${val} bins`;
+
   return (
     <div className="beta-page">
       {/* Hero */}
@@ -21,48 +33,72 @@ export default function Beta() {
         </p>
 
         <div className="model-grid">
+          {/* Claude Sonnet 4.5 - Active */}
           <div className="model-card active">
-            <input type="radio" name="model" checked readOnly />
-            <div className="model-icon">
-              <Bot size={24} />
+            <div className="model-card-header">
+              <input type="radio" name="model" checked readOnly />
+              <div className="model-icon">
+                <Bot size={24} />
+              </div>
+              <div className="model-info">
+                <div className="model-name">Claude Sonnet 4.5</div>
+                <div className="model-status active-badge">Active</div>
+              </div>
             </div>
-            <div className="model-info">
-              <div className="model-name">Claude Sonnet 4.5</div>
-              <div className="model-status active-badge">Active</div>
-            </div>
-          </div>
-
-          <div className="model-card disabled">
-            <input type="radio" name="model" disabled />
-            <div className="model-icon">
-              <Sparkles size={24} />
-            </div>
-            <div className="model-info">
-              <div className="model-name">GPT-5</div>
-              <div className="model-status coming-badge v1-1">Coming in v1.1</div>
+            <div className="model-description">
+              Our production model. Superior tool-use reliability, transparent chain-of-thought reasoning, and consistent forensic analysis. Powers every investigation today.
             </div>
           </div>
 
+          {/* GPT-5 */}
           <div className="model-card disabled">
-            <input type="radio" name="model" disabled />
-            <div className="model-icon">
-              <Gem size={24} />
+            <div className="model-card-header">
+              <input type="radio" name="model" disabled />
+              <div className="model-icon">
+                <Sparkles size={24} />
+              </div>
+              <div className="model-info">
+                <div className="model-name">GPT-5</div>
+                <div className="model-status coming-badge v1-1">Coming in v1.1</div>
+              </div>
             </div>
-            <div className="model-info">
-              <div className="model-name">Gemini 2.0 Pro</div>
-              <div className="model-status coming-badge v1-1">Coming in v1.1</div>
+            <div className="model-description">
+              OpenAI's fastest frontier model. Sub-second first token — ideal for real-time prediction-market surveillance pipelines where latency matters.
             </div>
           </div>
 
+          {/* Gemini 2.0 Pro */}
           <div className="model-card disabled">
-            <input type="radio" name="model" disabled />
-            <div className="model-icon">
-              <Server size={24} />
+            <div className="model-card-header">
+              <input type="radio" name="model" disabled />
+              <div className="model-icon">
+                <Gem size={24} />
+              </div>
+              <div className="model-info">
+                <div className="model-name">Gemini 2.0 Pro</div>
+                <div className="model-status coming-badge v1-1">Coming in v1.1</div>
+              </div>
             </div>
-            <div className="model-info">
-              <div className="model-name">Self-hosted</div>
-              <div className="model-subtitle">(Ollama, vLLM)</div>
-              <div className="model-status coming-badge v1-2">Coming in v1.2</div>
+            <div className="model-description">
+              Google DeepMind's multi-modal reasoning. Extended context window for analyzing long trade histories. Cross-model verdict validation.
+            </div>
+          </div>
+
+          {/* Self-hosted */}
+          <div className="model-card disabled">
+            <div className="model-card-header">
+              <input type="radio" name="model" disabled />
+              <div className="model-icon">
+                <Server size={24} />
+              </div>
+              <div className="model-info">
+                <div className="model-name">Self-hosted</div>
+                <div className="model-subtitle">(Ollama, vLLM)</div>
+                <div className="model-status coming-badge v1-2">Coming in v1.2</div>
+              </div>
+            </div>
+            <div className="model-description">
+              Deploy WalletStory on your own GPU infrastructure. For teams with data-residency requirements, air-gapped compliance environments, or cost-sensitive large-scale scanning.
             </div>
           </div>
         </div>
@@ -77,40 +113,79 @@ export default function Beta() {
         </p>
 
         <div className="params-grid">
-          <div className="param-control disabled">
+          {/* Confidence threshold */}
+          <div className="param-control">
             <div className="param-header">
               <label>Confidence threshold (p-value cutoff for Critical verdict)</label>
               <span className="version-tag v1-1">v1.1</span>
             </div>
-            <div className="param-value">1e-10</div>
-            <input type="range" min="0" max="100" value="20" disabled className="param-slider" />
+            <div className="param-value">{formatConfidence(confidence)}</div>
+            <input
+              type="range"
+              min="1"
+              max="15"
+              value={confidence}
+              onChange={(e) => setConfidence(parseInt(e.target.value))}
+              className="param-slider"
+            />
+            <div className="param-helper">Preview only — not yet connected to pipeline</div>
           </div>
 
-          <div className="param-control disabled">
+          {/* Clustering min cashout */}
+          <div className="param-control">
             <div className="param-header">
               <label>Clustering min cashout</label>
               <span className="version-tag v1-1">v1.1</span>
             </div>
-            <div className="param-value">$2,000,000</div>
-            <input type="range" min="0" max="100" value="30" disabled className="param-slider" />
+            <div className="param-value">{formatCashout(cashout)}</div>
+            <input
+              type="range"
+              min="500000"
+              max="10000000"
+              step="500000"
+              value={cashout}
+              onChange={(e) => setCashout(parseInt(e.target.value))}
+              className="param-slider"
+            />
+            <div className="param-helper">Preview only — not yet connected to pipeline</div>
           </div>
 
-          <div className="param-control disabled">
+          {/* Timing KS bin count */}
+          <div className="param-control">
             <div className="param-header">
               <label>Timing KS bin count</label>
               <span className="version-tag v1-1">v1.1</span>
             </div>
-            <div className="param-value">10 bins</div>
-            <input type="range" min="0" max="100" value="40" disabled className="param-slider" />
+            <div className="param-value">{formatBins(binCount)}</div>
+            <input
+              type="range"
+              min="5"
+              max="50"
+              step="5"
+              value={binCount}
+              onChange={(e) => setBinCount(parseInt(e.target.value))}
+              className="param-slider"
+            />
+            <div className="param-helper">Preview only — not yet connected to pipeline</div>
           </div>
 
-          <div className="param-control disabled">
+          {/* Max candidates */}
+          <div className="param-control">
             <div className="param-header">
               <label>Max candidates to surface</label>
               <span className="version-tag v1-1">v1.1</span>
             </div>
-            <div className="param-value">15</div>
-            <input type="range" min="0" max="100" value="50" disabled className="param-slider" />
+            <div className="param-value">{maxCandidates}</div>
+            <input
+              type="range"
+              min="5"
+              max="50"
+              step="5"
+              value={maxCandidates}
+              onChange={(e) => setMaxCandidates(parseInt(e.target.value))}
+              className="param-slider"
+            />
+            <div className="param-helper">Preview only — not yet connected to pipeline</div>
           </div>
         </div>
       </section>
@@ -167,23 +242,25 @@ export default function Beta() {
         </p>
 
         <div className="api-preview">
-          <pre><code>{`POST /v1/investigate
-Authorization: Bearer <your_api_key>
+          <pre><code>
+<span className="api-method">POST</span> <span className="api-method">/v1/investigate</span>
+<span className="api-header">Authorization:</span> Bearer &lt;your_api_key&gt;
 
-{
-  "address": "0x...",
-  "depth": "full",
-  "webhook_url": "https://yourplatform.com/walletstory-callback"
-}
+{'{'}
+  <span className="api-key">"address"</span>: <span className="api-string">"0x..."</span>,
+  <span className="api-key">"depth"</span>: <span className="api-string">"full"</span>,
+  <span className="api-key">"webhook_url"</span>: <span className="api-string">"https://yourplatform.com/walletstory-callback"</span>
+{'}'}
 
-# Response
-{
-  "verdict": "Critical",
-  "p_value": 1e-300,
-  "cluster_size": 12,
-  "attestation_uid": "0x...",
-  "easscan_url": "https://sepolia.easscan.org/attestation/view/0x..."
-}`}</code></pre>
+<span className="api-comment"># Response</span>
+{'{'}
+  <span className="api-key">"verdict"</span>: <span className="api-string">"Critical"</span>,
+  <span className="api-key">"p_value"</span>: <span className="api-number">1e-300</span>,
+  <span className="api-key">"cluster_size"</span>: <span className="api-number">12</span>,
+  <span className="api-key">"attestation_uid"</span>: <span className="api-string">"0x..."</span>,
+  <span className="api-key">"easscan_url"</span>: <span className="api-string">"https://sepolia.easscan.org/attestation/view/0x..."</span>
+{'}'}
+          </code></pre>
         </div>
 
         <div className="api-features">
