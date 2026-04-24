@@ -2,6 +2,49 @@
 
 This document explains the statistical and graph-theoretical methods used in WalletStory's forensic pipeline.
 
+## Academic Foundation
+
+WalletStory builds on two peer-reviewed network forensics frameworks:
+
+### Foundation Paper 1
+**"Needles in a Haystack: Using Forensic Network Science to Uncover Insider Trading"** ([arXiv:2512.18918](https://arxiv.org/html/2512.18918v1))
+
+Key contributions:
+- p-value null-hypothesis testing
+- Coordinated cluster detection in trade networks
+- Analyzed 2.9M US equities insider trades over 10 years
+
+### Foundation Paper 2
+**"Forensic Network Detection of Insider Trading"** (PAPER_2_CITATION_PLACEHOLDER)
+
+Key contributions:
+- Pairwise temporal alignment scores with null-model Z-scores
+- Dual null models (structural + shuffled)
+- Z-scores > 100 (p < 0.001) against 1,000 simulations
+- Validated against SEC prosecution database
+
+### From equities to on-chain: method translation
+
+| Traditional finance | WalletStory on-chain |
+|---|---|
+| SEC Form 4 filings (14-day lag) | Real-time trades via Polymarket API |
+| Named corporate insider identities | Pseudonymous wallet addresses |
+| Company affiliation as grouping key | Shared Polymarket proxy + funder + exchange |
+| 7-day temporal alignment kernel | Normalized market-lifetime kernel (KS test) |
+| Structural + shuffled null models | Binomial (50% baseline) + KS (uniform baseline) |
+| Network centrality analysis | Louvain community detection + exchange-anchor |
+| SEC prosecution ground-truth | Chainalysis / NYT / Bloomberg public reports |
+| PDF publication | EAS attestation on Sepolia |
+
+### Where on-chain gives us new leverage
+
+- Shared-funder tracing proves common ownership cryptographically
+- Sub-minute time kernels (DeFi block-time resolution)
+- Pipeline is fully replayable by anyone with an Alchemy key
+- Findings are tamper-proof via on-chain attestation
+
+---
+
 ## 1. Binomial Significance Testing (Insider Detection)
 
 ### Overview

@@ -17,6 +17,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from investigator_agent import InvestigatorAgent
@@ -69,8 +70,10 @@ class InvestigateResponse(BaseModel):
     wallets_analyzed: int
     total_cluster_size: int
     insider_detection: dict[str, Any]
+    seed_wallet_detection: dict[str, Any]
     per_wallet: list[dict[str, Any]]
     cluster_info: dict[str, Any]
+    timing_analysis: dict[str, Any] | None = None
     methodology: str
     agent_iterations: int
 
@@ -125,6 +128,59 @@ async def investigate_wallet(request: InvestigateRequest):
             status_code=500,
             detail=f"Investigation failed: {str(e)}",
         )
+
+
+@app.post("/investigate/stream")
+async def investigate_wallet_stream(request: InvestigateRequest):
+    """
+    Stream live investigation progress via Server-Sent Events (SSE).
+
+    Returns a stream of events showing:
+    - Agent reasoning steps
+    - Tool calls being made
+    - Tool execution results with duration
+    - Final forensic report
+
+    This allows the frontend to show real-time progress instead of a blocking wait.
+    """
+    log.info("Received /investigate/stream request for %s", request.address)
+
+    async def event_generator():
+        try:
+            # Initialize agent
+            agent = InvestigatorAgent()
+
+            # Stream investigation progress
+            for event in agent.investigate_stream(
+                seed_address=request.address,
+                max_iterations=request.max_iterations,
+            ):
+                # Format as SSE event
+                event_name = event.get("event", "message")
+                event_data = json.dumps(event.get("data", {}), default=str)
+
+                yield f"event: {event_name}\ndata: {event_data}\n\n"
+
+                # If complete or error, we're done
+                if event_name in ("complete", "error"):
+                    break
+
+            log.info("Investigation stream complete for %s", request.address)
+
+        except Exception as e:
+            log.error("Investigation stream failed: %s", e, exc_info=True)
+            error_event = json.dumps({"message": str(e)})
+            yield f"event: error\ndata: {error_event}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        },
+    )
 
 
 @app.get("/case/theo")

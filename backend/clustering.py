@@ -290,10 +290,12 @@ def discover_cluster_via_exchange(
     if shared_proxy:
         log.info("Shared Polymarket proxy confirmed: %s", shared_proxy[:10])
 
-    candidates = sorted([
-        addr for addr, info in cluster_wallets.items()
-        if not info["is_seed"]
-    ])
+    # Sort candidates by cashed_out_usd (to_exchange), take top 15
+    candidates = sorted(
+        [addr for addr, info in cluster_wallets.items() if not info["is_seed"]],
+        key=lambda addr: cluster_wallets[addr]["to_exchange"],
+        reverse=True,
+    )[:15]
 
     return {
         "exchange": exchange_addr,

@@ -185,7 +185,7 @@ def analyze_cluster(
             "win_rate": round(agg_win_rate, 6),
             "baseline": baseline,
             "p_value": agg_p,
-            "p_value_scientific": f"{agg_p:.2e}",
+            "p_value_scientific": "< 1e-300" if (agg_p == 0 or agg_p < 1e-300) else f"{agg_p:.2e}",
             "verdict": agg_verdict,
             "total_usdc_volume": round(agg_volume, 2),
         },
@@ -575,5 +575,7 @@ if __name__ == "__main__":
 
     print(f"\nPer-wallet:")
     for r in result["per_wallet"]:
+        p_val = r['p_value']
+        p_str = "< 1e-300" if (p_val == 0 or p_val < 1e-300) else f"{p_val:.2e}"
         print(f"  {r['username']}: {r['wins']}/{r['wins']+r['losses']} "
-              f"({r['win_rate']*100:.1f}%) p={r['p_value']:.2e} → {r['verdict']}")
+              f"({r['win_rate']*100:.1f}%) p={p_str} → {r['verdict']}")

@@ -174,6 +174,157 @@
   font-weight: 500;
 }
 
+/* === AGENT ACTIVITY LOG === */
+.agent-activity-section {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 3vw;
+}
+
+.agent-activity-log {
+  background: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-height: 500px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.agent-activity-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.agent-activity-log::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.3);
+  border-radius: 4px;
+}
+
+.agent-activity-log::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+}
+
+.agent-activity-log::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+.activity-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.05);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.activity-entry:last-child {
+  border-bottom: none;
+}
+
+.activity-entry:hover {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.activity-entry-running {
+  background: rgba(234, 179, 8, 0.05);
+  border-left: 3px solid #eab308;
+  padding-left: calc(1rem - 3px);
+}
+
+.activity-entry-running .activity-icon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.activity-entry-done {
+  opacity: 0.85;
+}
+
+.activity-entry-error {
+  border-left: 3px solid #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+  padding-left: calc(1rem - 3px);
+}
+
+.activity-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 1.5em;
+  text-align: center;
+}
+
+.activity-text {
+  flex: 1;
+  color: #e2e8f0;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.activity-text strong {
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.activity-text em {
+  font-style: italic;
+  color: #93c5fd;
+}
+
+.activity-text code {
+  background: rgba(17, 24, 39, 0.6);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875em;
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.activity-entry-running .activity-text {
+  color: #fef08a;
+  font-weight: 500;
+}
+
+.activity-entry-error .activity-text {
+  color: #fca5a5;
+}
+
+.activity-duration {
+  flex-shrink: 0;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(17, 24, 39, 0.6);
+  border-radius: 0.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.activity-entry-done .activity-duration {
+  color: #86efac;
+}
+
+.activity-summary {
+  margin-top: 0.5rem;
+  padding-left: 2.25rem;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 /* === RESULTS SECTION === */
 .results-section {
   width: 100vw;
@@ -270,6 +421,189 @@
   overflow: hidden;
   min-width: 0;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* === SUBJECT HEADER === */
+.subject-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem auto;
+  padding: 1rem 1.5rem;
+  background: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.subject-label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.subject-address {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.copy-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: opacity 150ms;
+  padding: 0.25rem;
+}
+
+.copy-icon:hover {
+  opacity: 1;
+}
+
+.subject-links {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.subject-link {
+  font-size: 0.8125rem;
+  color: #8b5cf6;
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.subject-link:hover {
+  color: #a78bfa;
+}
+
+/* === NARRATIVE SUMMARY === */
+.narrative-summary {
+  max-width: 720px;
+  margin: 0 auto 3rem auto;
+  text-align: center;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: #cbd5e1;
+}
+
+/* === WALLET STAT CARD === */
+.wallet-stat-card {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-stat-title {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  text-align: center;
+}
+
+/* === FORENSIC SIGNALS CHECKLIST === */
+.signals-checklist-card {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.signals-checklist-title {
+  font-size: 1.25rem;
+  color: #f8fafc;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.signals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.signal-row {
+  display: grid;
+  grid-template-columns: 2rem 14rem 1fr;
+  align-items: start;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: background 150ms;
+}
+
+.signal-row:hover {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.signal-icon {
+  font-size: 1.125rem;
+  text-align: center;
+}
+
+.signal-positive .signal-icon {
+  color: #22c55e;
+}
+
+.signal-na .signal-icon {
+  color: #64748b;
+}
+
+.signal-negative .signal-icon {
+  color: #ef4444;
+}
+
+.signal-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+.signal-detail {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.signal-na .signal-detail {
+  font-style: italic;
+  color: #64748b;
+}
+
+.signals-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  font-size: 0.875rem;
+  color: #94a3b8;
+  text-align: right;
+}
+
+/* === TIMING CHART CARD === */
+.timing-chart-card {
+  max-width: 1200px;
+  margin: 3rem auto;
 }
 
 /* === ATTESTATION UI === */

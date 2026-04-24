@@ -1,3 +1,4 @@
+import { formatPValue } from '../lib/formatters';
 import './VerdictBadge.css';
 
 /**
@@ -13,14 +14,6 @@ export default function VerdictBadge({ severity, pValue, label, pulse }) {
   const severityClass = `verdict-${severity.toLowerCase()}`;
   const shouldPulse = pulse !== undefined ? pulse : (severity === 'Critical');
 
-  // Format p-value for display
-  const formatPValue = (p) => {
-    if (p === 0 || p < 1e-250) {
-      return '< 10⁻²⁵⁰';
-    }
-    return p.toExponential(2);
-  };
-
   return (
     <div className={`verdict-badge ${severityClass} ${shouldPulse ? 'pulse' : ''}`}>
       <div className="verdict-label">
@@ -28,7 +21,7 @@ export default function VerdictBadge({ severity, pValue, label, pulse }) {
       </div>
       {pValue !== undefined && (
         <div className="verdict-pvalue">
-          p = <span className="pvalue-mono">{formatPValue(pValue)}</span>
+          p = <span className="pvalue-mono">{formatPValue(pValue, null)}</span>
         </div>
       )}
     </div>

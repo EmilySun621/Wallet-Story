@@ -12,14 +12,11 @@
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    rgba(0, 0, 0, 0.1) 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
   color-scheme: dark;
   color: var(--text-primary);
   background: var(--bg-page);
@@ -27,10 +24,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
 html,
@@ -39,6 +32,16 @@ body {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
 }
 
 #root {
@@ -53,9 +56,12 @@ body {
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
+h2,
+.hero-title,
+.section-title {
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--text-h);
 }
 
@@ -81,15 +87,35 @@ p {
   margin: 0;
 }
 
+/* === MONOSPACE PRESERVATION FOR TECHNICAL ELEMENTS === */
 code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+pre,
+.mono,
+.counter,
+[class*="address"],
+[class*="hash"],
+[class*="p-value"],
+[class*="code-snippet"],
+.signal-example,
+.signal-detail,
+.architecture-box,
+.stat-value-number,
+.methodology-code,
+.verify-address,
+.address-input,
+.step-value,
+.pipeline-result,
+.arch-box,
+.arch-tool-name,
+.arch-tool-impl,
+.arch-report-bullets {
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, Monaco, 'Courier New', monospace !important;
 }
 
 code {
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
   font-size: 15px;
   line-height: 135%;
   padding: 4px 8px;

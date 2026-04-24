@@ -1,12 +1,3 @@
-# Watchlist Builder Progress
-
-**Status**: Incomplete
-**Results Collected**: 14/15 minimum
-**Timestamp**: 2026-04-23T23:09:03.323729Z
-
-## Partial Results
-
-```json
 [
   {
     "address": "0xd0c042c08f755ff940249f62745e82d356345565",
@@ -177,4 +168,3 @@
     "cached_at": "2026-04-23T23:09:02.295003Z"
   }
 ]
-```
