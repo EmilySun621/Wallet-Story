@@ -287,7 +287,7 @@ function Home() {
 
           {/* Column-spanning footer */}
           <p className="academic-footer">
-            Independent validation: Chainalysis publicly reported 11 coordinated Theo accounts. Our pipeline surfaced 11 candidates from a single seed — matching their count with open-source code. <a href="/cases">View the case →</a>
+            Independent validation: Chainalysis publicly reported 11 coordinated Theo accounts. Our pipeline surfaced 11 candidates from a single seed — matching their count with open-source code.
           </p>
         </div>
       </section>
@@ -368,10 +368,6 @@ function Home() {
             alt="WalletStory 5-layer architecture: User → React frontend → FastAPI → Claude Investigator Agent → 5 forensic tools → ForensicReport JSON → EAS attestation on Sepolia"
             className="architecture-image"
           />
-
-          <p className="architecture-description">
-            Each layer is grounded in peer-reviewed research. The investigator agent's statistical methods extend the network forensics framework of arXiv:2512.18918 (December 2025); the attestation layer translates Verstein's (2023) legal framework into cryptographic evidence. <a href="/methodology">See the full methodology →</a>
-          </p>
         </div>
       </section>
 
