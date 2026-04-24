@@ -9,6 +9,7 @@ Endpoints:
   - GET /health → health check
 """
 
+import asyncio
 import json
 import logging
 import os
@@ -19,6 +20,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
+from starlette.concurrency import iterate_in_threadpool
 
 from investigator_agent import InvestigatorAgent
 
@@ -150,16 +152,24 @@ async def investigate_wallet_stream(request: InvestigateRequest):
             # Initialize agent
             agent = InvestigatorAgent()
 
-            # Stream investigation progress
-            for event in agent.investigate_stream(
+            # Wrap sync generator in a threadpool so the blocking LLM/HTTP calls
+            # inside don't stall the event loop — otherwise SSE flushes are
+            # deferred until the entire pipeline ends (which is what we saw in
+            # production behind Render's proxy).
+            sync_events = agent.investigate_stream(
                 seed_address=request.address,
                 max_iterations=request.max_iterations,
-            ):
-                # Format as SSE event
+            )
+
+            async for event in iterate_in_threadpool(sync_events):
                 event_name = event.get("event", "message")
                 event_data = json.dumps(event.get("data", {}), default=str)
 
                 yield f"event: {event_name}\ndata: {event_data}\n\n"
+
+                # Force a loop tick so the ASGI server flushes the chunk to the
+                # proxy/client immediately instead of batching.
+                await asyncio.sleep(0)
 
                 # If complete or error, we're done
                 if event_name in ("complete", "error"):
