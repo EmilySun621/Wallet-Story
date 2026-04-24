@@ -123,7 +123,7 @@ function Home() {
         <div className="section-container">
           <h2 className="section-title">Four converging signals. One verdict.</h2>
           <p className="section-subtitle">
-            Each signal is independently measurable, peer-reviewed, and reproducible on-chain.
+            Independently measurable. Peer-reviewed. Reproducible on-chain.
           </p>
 
           <div className="signals-grid">
@@ -574,7 +574,7 @@ function Home() {
           <div className="reproducibility-overline">REPRODUCIBILITY</div>
           <h2 className="section-title">Don't trust us. Run it yourself.</h2>
           <p className="section-subtitle">
-            Every number in this repo can be reproduced in your browser in under 2 minutes — no API keys, no installation.
+            Every number reproduces in your browser in 2 minutes. No API keys, no installation.
           </p>
 
           <div className="reproducibility-grid">
