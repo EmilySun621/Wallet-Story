@@ -36,7 +36,7 @@ app = FastAPI(
 # CORS middleware — allow frontend (any localhost port in dev, deployed domain in prod)
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"http://localhost:[0-9]+",  # Allow any localhost port (5173-5176, etc.)
+    allow_origin_regex=r"(http://localhost:[0-9]+|https://.*\.vercel\.app|https://.*-emilysun621\.vercel\.app)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

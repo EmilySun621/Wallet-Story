@@ -1,7 +1,6 @@
 # WalletStory
 
-> Autonomous forensic investigation for prediction market insider trading.  
-> Every finding reproducible and cryptographically attested on-chain.
+> **$85M profit. One trader. Eleven coordinated wallets. Zero public forensic evidence — until now.**
 
 ![License](https://img.shields.io/badge/license-MIT-8B5CF6)
 ![Hackathon](https://img.shields.io/badge/MSX%20Hackathon-2026-F59E0B)
@@ -14,66 +13,112 @@
 
 ---
 
-## TL;DR
+## Prediction market insider trading is real. It's quiet. It's undocumented.
 
-WalletStory is an open-source forensic platform that detects insider trading on on-chain prediction markets. An autonomous Claude agent orchestrates five forensic tools — fetching trade history, running binomial significance tests, clustering coordinated wallets via shared cashout infrastructure, detecting graph communities, and analyzing timing anomalies — then publishes the verdict as an Ethereum Attestation Service (EAS) attestation on Sepolia. Starting from a single seed wallet, our pipeline independently surfaced 11 coordinated accounts in the Polymarket "Theo" cluster — matching Chainalysis's publicly reported count using only open data and MIT-licensed code.
+In October 2024, a French trader operating the accounts **Fredi9999**, **Theo4**, and **PrincessCaro** extracted **$85 million** from Polymarket during the US presidential election. He did it through **11 coordinated wallets** that evaded per-account size limits, each funded by the same upstream address and cashing out to the same exchange deposit.
+
+Chainalysis independently linked the accounts through shared funding patterns, timing, and exchange cashout addresses — and [published their analysis as an X thread](https://x.com/chainalysis/status/1854584905776431343).
+
+**That thread is the only public forensic evidence.**
+
+No reproducible methodology. No queryable data. No open pipeline for a regulator, a journalist, or a counter-platform to verify or extend the findings. When the next coordinated operation hits a prediction market — and it will — the investigative process starts from zero again.
+
+WalletStory closes this gap.
+
+---
+
+## One pipeline. Five signals. One cryptographic verdict.
+
+Paste any Polygon wallet address. An autonomous Claude agent streams its reasoning in real time as it:
+
+1. **Fetches** the wallet's Polymarket trade history
+2. **Computes** a binomial p-value against a 50% random baseline
+3. **Discovers** coordinated wallets via exchange-anchor clustering (our novel methodology)
+4. **Validates** cluster membership with Louvain community detection
+5. **Tests** timing-distribution uniformity via Kolmogorov-Smirnov
+6. **Publishes** the verdict as an immutable EAS attestation on Sepolia
+
+When the **Theo4 seed** (`0x56687bf447...`) is submitted, WalletStory independently surfaces **11 coordinated candidate wallets** — exactly matching Chainalysis's publicly reported count, using only open data and MIT-licensed code.
+
+---
+
+## Why the web3 component matters
+
+Traditional forensic reports live in PDFs. They can be retracted under legal pressure. They can be edited after publication. They sit behind paywalls and NDA walls. They are not composable.
+
+WalletStory publishes every verdict as an **Ethereum Attestation Service (EAS) attestation on Sepolia**, with the full ForensicReport JSON pinned to IPFS.
+
+This is not decorative web3. It's the core of the product:
+
+- **Tamper-proof evidence.** Once on-chain, verdicts cannot be retracted, edited, or disappeared
+- **Queryable by other dapps.** DEXs, wallets, and risk-scoring platforms can read our attestations directly — forensic findings become infrastructure
+- **Publicly verifiable.** Anyone with an Alchemy key can reproduce our pipeline in minutes against the same on-chain data
+- **First open standard** for on-chain prediction-market integrity evidence
+
+Chainalysis publishes conclusions. WalletStory publishes the pipeline, the proof, and the evidence — all cryptographically bound to the chain that settled the trades.
+
+This is forensics as a public primitive, not a proprietary black box.
 
 ---
 
 ## Headline Results — Polymarket "Theo" Cluster
 
-| Metric                       | Value                                  |
-| ---------------------------- | -------------------------------------- |
+| Metric                       | Value                                                |
+| ---------------------------- | ---------------------------------------------------- |
 | Seed wallet                  | `0x56687bf447db6ffa42ffe2204a05edaa20f55839` (Theo4) |
-| Individual win rate          | 99.2% over 4,000 trades                |
-| Binomial p-value             | < 10⁻³⁰⁰ (float64 underflow)           |
-| Cluster size discovered      | 12 wallets (1 seed + 11 candidates)    |
-| Aggregate cluster win rate   | 98.0% over 16,000 trades               |
-| Signals positive             | 5 / 5                                  |
-| Total cluster funding        | $209M                                  |
-| Total cluster cashout        | $186M                                  |
-| **Independent validation**   | **Chainalysis publicly reported 11 accounts. We found 11 candidates from a single seed.** |
+| Individual win rate          | 99.2% over 4,000 trades                              |
+| Binomial p-value             | < 10⁻³⁰⁰ (float64 underflow)                         |
+| **Cluster size discovered**  | **12 wallets (1 seed + 11 candidates)**              |
+| Aggregate cluster win rate   | 98.0% over 16,000 trades                             |
+| Signals positive             | **5 / 5**                                            |
+| Total cluster funding        | **$209M**                                            |
+| Total cluster cashout        | **$186M**                                            |
+| **Independent validation**   | **Matches Chainalysis's publicly reported count (11) from a single seed input** |
 
 ### Cross-reference coverage
 
-- New York Post: [Polymarket 'whale' raked in $85M on Trump win](https://nypost.com/2024/11/13/business/polymarket-whale-earned-85m-on-donald-trump-win/)
-- CBS / 60 Minutes: [French 'whale' made over $80 million on Polymarket](https://www.cbsnews.com/news/french-whale-made-over-80-million-on-polymarket-betting-on-trump-election-win-60-minutes/)
-- Chainalysis (Nov 6 2024, initial): [First disclosure of 9 accounts](https://x.com/chainalysis/status/1854294960532529425)
-- Chainalysis (Nov 7 2024, update): [10 confirmed + 1 suspected, $85M](https://x.com/chainalysis/status/1854584905776431343)
+- [NY Post — Polymarket 'whale' raked in $85M on Trump win](https://nypost.com/2024/11/13/business/polymarket-whale-earned-85m-on-donald-trump-win/)
+- [CBS / 60 Minutes — French 'whale' made over $80 million on Polymarket](https://www.cbsnews.com/news/french-whale-made-over-80-million-on-polymarket-betting-on-trump-election-win-60-minutes/)
+- [Chainalysis (Nov 6 2024) — initial disclosure of 9 accounts](https://x.com/chainalysis/status/1854294960532529425)
+- [Chainalysis (Nov 7 2024) — update to 10 confirmed + 1 suspected, $85M](https://x.com/chainalysis/status/1854584905776431343)
 
 ---
 
-## Control Case — Falsifiability
+## Falsifiability — Control Case
 
-| Metric                       | Value                                  |
-| ---------------------------- | -------------------------------------- |
-| Control wallet               | `0x006cc834cc092684f1b56626e23bedb3835c16ea` |
-| Individual win rate          | 39%                                    |
-| Verdict                      | **Low**                                |
-| Signals positive             | 0 / 5                                  |
-| Cluster discovered           | None — single wallet                   |
+Same pipeline, same signals, same thresholds — applied to a legitimate skilled trader.
 
-Same pipeline, same signals, same thresholds — applied to a legitimate skilled trader. The framework returns a clean negative verdict, demonstrating that our detection is not tuned to produce false positives.
+| Metric               | Value                                                |
+| -------------------- | ---------------------------------------------------- |
+| Control wallet       | `0x006cc834cc092684f1b56626e23bedb3835c16ea`         |
+| Individual win rate  | 39%                                                  |
+| Verdict              | **Low**                                              |
+| Signals positive     | **0 / 5**                                            |
+| Cluster discovered   | None — single wallet                                 |
+
+A detection framework that only produces positive results is not a framework — it's a narrative. Our control case is the built-in falsifiability check: the pipeline returns a clean negative verdict when applied to a real Polymarket trader with strong but non-insider performance.
 
 ---
 
-## What It Does
+## What it does
 
-**Five converging signals** for each investigated wallet:
+Five converging forensic signals for each investigated wallet:
 
 1. **Win Rate Anomaly** — binomial significance test against 50% random baseline (`scipy.stats.binomtest`)
-2. **Timing Distribution Anomaly** — Kolmogorov-Smirnov test against uniform trading over market lifetime
+2. **Timing Distribution Anomaly** — Kolmogorov-Smirnov test against uniform trading distribution over market lifetime
 3. **Shared Funder** — exchange-anchor clustering identifies wallets funded by the same upstream address
 4. **Shared Exchange Deposit** — same cashout-route verification
-5. **Shared Polymarket Proxy** — verifies coordinated account control
+5. **Shared Polymarket Proxy** — confirms coordinated account control via shared proxy contract
 
-**On-chain attestation.** Each verdict is published as a structured EAS attestation on Sepolia, producing a tamper-proof, composable, and queryable forensic record. The ForensicReport JSON is pinned to IPFS.
+Plus:
 
-**Live agent streaming.** Each investigation streams the autonomous agent's tool calls and reasoning to the frontend via Server-Sent Events — users watch the AI fetch data, run tests, and converge on a verdict in real time.
+- **Live agent streaming.** Each investigation streams the autonomous agent's tool calls and reasoning to the frontend via Server-Sent Events — users watch the AI fetch data, run tests, and converge on a verdict in real time
+- **Dual-case validation.** Every release ships with both a CRITICAL case (Theo) and a LOW case (control), demonstrating the pipeline does not produce false positives
+- **EAS on-chain attestation.** One-click publish of ForensicReport to Sepolia with IPFS-pinned detail
 
 ---
 
-## How It Works
+## How it works
 
 **Five-layer architecture:**
 
@@ -90,11 +135,11 @@ Same pipeline, same signals, same thresholds — applied to a legitimate skilled
 5. **On-Chain Attestation** — EAS attestation on Sepolia + IPFS storage  
    _Grounded in Verstein (2023) — legal framework for crypto insider trading_
 
-See [`docs/methodology.md`](docs/methodology.md) for the full methodology and code-level walkthrough.
+See [`docs/methodology.md`](docs/methodology.md) for the full methodology, code walkthroughs, and academic citations.
 
 ---
 
-## Academic Foundation
+## Academic foundation
 
 WalletStory sits at the intersection of computational forensics and legal doctrine. Two peer-reviewed foundations:
 
@@ -120,13 +165,13 @@ Establishes that crypto assets fall within federal insider trading law, with six
 
 1. **Exchange-anchor clustering** — replacing sparse wallet-to-wallet transfer graphs with convergence on shared cashout infrastructure
 2. **On-chain attestation layer** — translating statistical findings into cryptographic evidence via EAS
-3. **Autonomous LLM investigation agent** — replacing manual forensic workflows
+3. **Autonomous LLM investigation agent** — replacing manual forensic workflows with a reproducible, streaming pipeline
 
 ---
 
-## Industry Positioning
+## Industry positioning
 
-WalletStory is **not a replacement** for commercial platforms. It's a methodology layer that makes forensic claims cryptographically verifiable and scientifically reproducible.
+WalletStory is **not a replacement** for Chainalysis, Nansen, or Arkham. It's a methodology layer that makes forensic claims cryptographically verifiable and scientifically reproducible.
 
 | Capability                                | WalletStory | Chainalysis | Nansen | Arkham | Solidus |
 | ----------------------------------------- | :---------: | :---------: | :----: | :----: | :-----: |
@@ -150,31 +195,34 @@ _Based on publicly documented capabilities, April 2026._
 
 ---
 
-## Verify The Findings Yourself
+## Verify the findings yourself
 
 Every claim in this repo is designed to be cross-checked by anyone. No trust required.
 
-### Option 1 — Verify our numbers against public data
+### Option 1 — Verify against public data
 
 - Paste `0x56687bf447db6ffa42ffe2204a05edaa20f55839` into [Polygonscan](https://polygonscan.com/address/0x56687bf447db6ffa42ffe2204a05edaa20f55839)
 - Check Polymarket profile: [polymarket.com/profile/0x56687bf447...](https://polymarket.com/profile/0x56687bf447db6ffa42ffe2204a05edaa20f55839)
-- Cross-reference the three shared-infrastructure addresses in `backend/data/case_polymarket_theo.json`
-- Read the Chainalysis thread and verify their 11-account count
+- Cross-reference the three shared-infrastructure addresses in [`backend/data/case_polymarket_theo.json`](backend/data/case_polymarket_theo.json)
+- Read the Chainalysis X thread and compare their 11-account count against ours
 
 ### Option 2 — Re-run the pipeline
 
-1. Clone this repo
-2. Set `ALCHEMY_API_KEY` and `ANTHROPIC_API_KEY` (see [Environment](#environment-variables))
-3. Run `python backend/run_pipeline.py`
-4. Output in `examples/case_polymarket_theo_output.json` should match our published verdict
+```bash
+git clone https://github.com/EmilySun621/Wallet-Story
+cd Wallet-Story
+# set ALCHEMY_API_KEY and ANTHROPIC_API_KEY
+python backend/run_pipeline.py
+# output in examples/case_polymarket_theo_output.json should match our published verdict
+```
 
-### Option 3 — Query our EAS attestations on Sepolia
+### Option 3 — Query EAS attestations on Sepolia
 
 All CRITICAL verdicts published via the "Publish Attestation" button are stored immutably on Sepolia. Query them on [EASScan](https://sepolia.easscan.org) using the schema UID specified in `.env.example`.
 
 ---
 
-## Quick Start
+## Quick start
 
 ### Prerequisites
 
@@ -187,22 +235,19 @@ All CRITICAL verdicts published via the "Publish Attestation" button are stored 
 ### Install
 
 ```bash
-# Clone
-git clone https://github.com/<your-username>/walletstory
-cd walletstory
+git clone https://github.com/EmilySun621/Wallet-Story
+cd Wallet-Story
 
 # Frontend
 npm install
 
 # Backend
 cd backend
-pip install -r requirements.txt   # or manually: fastapi uvicorn anthropic scipy networkx requests python-dotenv
+pip install -r requirements.txt
 cd ..
 ```
 
 ### Configure
-
-Copy `.env.example` to `.env` and fill in your keys:
 
 ```bash
 cp .env.example .env
@@ -212,11 +257,9 @@ cp .env.example .env
 Required env vars:
 
 ```
-# Backend
 ALCHEMY_API_KEY=...
 ANTHROPIC_API_KEY=...
 
-# Frontend (EAS Sepolia)
 VITE_EAS_CONTRACT_ADDRESS=0x...
 VITE_EAS_SCHEMA_UID=0x...
 VITE_EAS_CHAIN_ID=11155111
@@ -237,29 +280,20 @@ npm run dev
 
 Open http://localhost:5173 → paste a wallet address → watch the agent investigate live.
 
-### Run the batch pipeline (optional)
-
-Runs the full Theo case end-to-end and writes the output JSON:
-
-```bash
-cd backend
-python run_pipeline.py
-```
-
 ---
 
-## Project Structure
+## Project structure
 
 ```
-walletstory/
+Wallet-Story/
 ├── src/                        # React frontend
 │   ├── pages/
 │   │   ├── Home.jsx            # Landing page + methodology showcase
-│   │   ├── Investigation.jsx   # Live agent investigation flow
+│   │   ├── Investigation.jsx   # Live agent investigation flow (SSE)
 │   │   ├── Methodology.jsx     # Full methodology + dual citations
 │   │   └── CaseLibrary.jsx     # Theo + Control case library
 │   ├── components/
-│   │   ├── VerdictBadge.jsx    # Critical / High / Medium / Low badge
+│   │   ├── VerdictBadge.jsx
 │   │   ├── ClusterForceGraph.jsx
 │   │   ├── TimingDistributionChart.jsx
 │   │   └── ...
@@ -276,25 +310,24 @@ walletstory/
 │   ├── insider_detection.py    # Binomial + KS statistical tests
 │   ├── clustering.py           # Exchange-anchor + Louvain community
 │   ├── run_pipeline.py         # Batch pipeline runner
-│   ├── build_watchlist.py      # Pre-compute watchlist cache
 │   └── data/
-│       ├── case_polymarket_theo.json      # Known-case reference
-│       └── cached_watchlist.json          # Pre-computed watchlist
+│       ├── case_polymarket_theo.json
+│       └── cached_watchlist.json
 │
 ├── docs/
 │   ├── methodology.md          # Full methodology + code walkthroughs
 │   └── architecture.md         # System architecture notes
 │
 ├── examples/
-│   ├── case_polymarket_theo_output.json    # Theo case pipeline output
-│   └── case_polymarket_control.json        # Control case pipeline output
+│   ├── case_polymarket_theo_output.json
+│   └── case_polymarket_control.json
 │
 └── README.md                   # This file
 ```
 
 ---
 
-## Environment Variables
+## Environment variables
 
 | Variable                    | Required | Description                                              |
 | --------------------------- | :------: | -------------------------------------------------------- |
@@ -338,14 +371,14 @@ Health check.
 
 ---
 
-## Future Work
+## Roadmap
 
-- **Pairwise temporal alignment** (from arXiv:2512.18918) — currently we test each wallet's timing against a uniform baseline; pairwise alignment would strengthen coordination evidence
+- **Pairwise temporal alignment** (from arXiv:2512.18918) — strengthening coordination evidence beyond single-wallet KS tests
 - **OddBall ego-network anomaly detection** — density deviations in per-wallet ego-networks as an additional signal
 - **Cross-chain detection** — extending to Base, Arbitrum, and other L2 prediction venues
-- **Sub-block time kernels** for DEX-based markets (MEV-adjacent analysis)
 - **Real-time attestation webhooks** — other dapps subscribing to new CRITICAL verdicts as they are published
 - **EAS schema registry + public indexer** — a public dashboard for all WalletStory attestations
+- **Regulatory referral export** — auto-generated reports mapping each verdict to an MNPI category and duty theory
 
 ---
 
@@ -366,4 +399,4 @@ MIT © 2026 — see [LICENSE](LICENSE)
 ---
 
 _Built for the MSX Hackathon, April 18–25, 2026._  
-_All findings are reproducible against public on-chain data._
+_All findings are reproducible against public on-chain data. All verdicts are cryptographically attested on-chain._

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import VerdictBadge from './VerdictBadge';
 import './CaseComparison.css';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 /**
  * CaseComparison — Side-by-side comparison of Theo cluster vs Control case
  *
@@ -19,8 +21,8 @@ export default function CaseComparison() {
       try {
         setLoading(true);
         const [theoRes, controlRes] = await Promise.all([
-          fetch('http://localhost:8000/case/theo'),
-          fetch('http://localhost:8000/case/control')
+          fetch(`${API_URL}/case/theo`),
+          fetch(`${API_URL}/case/control`)
         ]);
 
         if (!theoRes.ok || !controlRes.ok) {
