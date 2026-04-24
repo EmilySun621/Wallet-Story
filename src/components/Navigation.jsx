@@ -15,12 +15,6 @@ function Navigation() {
 
         <div className="nav-links-full">
           <Link
-            to="/cases"
-            className={`nav-link-full ${location.pathname === '/' || location.pathname === '/cases' ? 'active' : ''}`}
-          >
-            Case Library
-          </Link>
-          <Link
             to="/methodology"
             className={`nav-link-full ${location.pathname === '/methodology' ? 'active' : ''}`}
           >

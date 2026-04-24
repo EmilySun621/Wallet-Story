@@ -5,7 +5,6 @@ import ScrollToTop from './components/ScrollToTop'
 // WalletStory forensic investigation pages
 import Home from './pages/Home'
 import Investigation from './pages/Investigation'
-import CaseLibrary from './pages/CaseLibrary_v2'
 import Methodology from './pages/Methodology'
 import Beta from './pages/Beta'
 
@@ -18,7 +17,6 @@ function App() {
         <main className="main-content-full-width">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/cases" element={<CaseLibrary />} />
             <Route path="/investigation" element={<Investigation />} />
             <Route path="/methodology" element={<Methodology />} />
             <Route path="/beta" element={<Beta />} />

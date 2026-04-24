@@ -7,8 +7,8 @@
 ![Network](https://img.shields.io/badge/EAS-Sepolia-10B981)
 ![Validated](https://img.shields.io/badge/Chainalysis--matched-11%2F11-10B981)
 
-**Live demo:** _[TODO — paste Vercel URL after deploy]_  
-**Demo video:** _[TODO — paste Loom URL]_  
+**Live demo:** [wallet-story.vercel.app](https://wallet-story.vercel.app)
+**Demo video:** _[TODO — paste Loom URL]_
 **Example attestation:** _[TODO — paste EASScan URL]_
 
 ---
