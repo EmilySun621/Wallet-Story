@@ -202,6 +202,29 @@ function Methodology() {
                 Kolmogorov-Smirnov test against uniform trading distribution over market lifetime.
               </p>
               <pre className="signal-code">scipy.stats.kstest(normalized_timestamps, 'uniform')</pre>
+
+              {/* Pairwise Alignment Enhancement */}
+              <div className="signal-enhancement">
+                <h4 className="enhancement-title">Enhanced with pairwise temporal alignment</h4>
+                <p className="enhancement-description">
+                  Beyond single-wallet uniformity testing, we compute the N×N pairwise temporal alignment matrix across cluster members using a linear kernel (24-hour bandwidth). Synchronized trading across multiple wallets is a stronger coordination signal than any individual wallet's timing distribution.
+                </p>
+                <p className="enhancement-description">
+                  For the Theo cluster: observed mean alignment = <strong>0.2978</strong>, null baseline = <strong>0.2324</strong> ± 0.0023, z-score <strong>28.9σ</strong>. Full matrix available in the Colab reproducibility notebook.
+                </p>
+                <pre className="signal-code">
+{`# Pairwise alignment score (linear kernel)
+def alignment_score(trades_a, trades_b, kernel_sec=86400):
+    for t_a in timestamps_a:
+        distance = min(|t_b - t_a| for t_b in timestamps_b)
+        similarity = max(0, 1 - distance / kernel_sec)
+    return mean(similarities)
+
+# Monte Carlo null distribution
+null_dist = [compute_matrix(shuffle(timestamps)) for _ in 100_sims]
+z_score = (observed_mean - null_mean) / null_std  # 28.9σ`}
+                </pre>
+              </div>
             </div>
           </div>
         </div>

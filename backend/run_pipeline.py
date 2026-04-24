@@ -33,6 +33,9 @@ from insider_detection import (
     pre_resolution_load_share,
     volume_weighted_entry_time,
     timing_ks_test_vs_uniform,
+    compute_pairwise_alignment_matrix,
+    alignment_null_distribution,
+    test_alignment_significance,
 )
 from clustering import (
     build_graph,
@@ -206,6 +209,57 @@ def main():
     log.info("Timing: %d samples, load_share=%.2f%%, vw_median=%.3f, KS_p=%.2e",
              len(all_cluster_timings), load_share * 100, vw_median,
              ks_result["p_value"] if ks_result else 1.0)
+
+    # ---- 3.6 Pairwise Temporal Alignment (cluster-level coordination) ----
+    if len(all_trades) > 1:
+        log.info("=" * 60)
+        log.info("STEP 3.6: Pairwise temporal alignment analysis")
+        log.info("=" * 60)
+
+        # Build wallet_trades dict for alignment functions
+        wallet_trades_for_alignment = {}
+        for addr, trades in all_trades.items():
+            # Filter to trades with timestamps
+            trades_with_ts = [t for t in trades if t.get('timestamp')]
+            if trades_with_ts:
+                wallet_trades_for_alignment[addr] = trades_with_ts
+
+        if len(wallet_trades_for_alignment) > 1:
+            addresses, matrix = compute_pairwise_alignment_matrix(
+                wallet_trades_for_alignment, kernel_seconds=86400
+            )
+            null_dist = alignment_null_distribution(
+                wallet_trades_for_alignment, n_simulations=100, kernel_seconds=86400
+            )
+            sig = test_alignment_significance(matrix, null_dist)
+
+            # Interpretation
+            if sig['p_value'] < 0.01:
+                alignment_interpretation = (
+                    f"Cluster members trade in synchronized patterns "
+                    f"{sig['z_score']:.1f}σ above the null baseline."
+                )
+            else:
+                alignment_interpretation = "No significant pairwise coordination detected."
+
+            timing_analysis['pairwise_alignment'] = {
+                'addresses': addresses,
+                'matrix': matrix,
+                'observed_mean': round(sig['observed_mean'], 4),
+                'null_mean': round(sig['null_mean'], 4),
+                'null_std': round(sig['null_std'], 4),
+                'z_score': round(sig['z_score'], 2),
+                'p_value': sig['p_value'],
+                'interpretation': alignment_interpretation
+            }
+
+            log.info("Pairwise alignment: observed=%.4f, null=%.4f±%.4f, z=%.2f, p=%.2e",
+                     sig['observed_mean'], sig['null_mean'], sig['null_std'],
+                     sig['z_score'], sig['p_value'])
+        else:
+            log.warning("Only 1 wallet with timestamps, skipping pairwise alignment")
+    else:
+        log.info("Single-wallet cluster, skipping pairwise alignment")
 
     # ---- 4. Clustering ----
     log.info("=" * 60)

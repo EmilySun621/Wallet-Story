@@ -541,6 +541,201 @@ def verdict_adjustment_from_timing(ks_p_value, load_share):
 
 
 # ===================================================================
+# Pairwise Temporal Alignment Signal
+# ===================================================================
+
+def pairwise_alignment_score(trades_a, trades_b, kernel_seconds=86400):
+    """
+    Temporal similarity between two wallets' trade timestamps.
+
+    Linear kernel: same hour = 1.0, 24h apart = 0.0.
+    For each trade in A, find the closest trade in B, compute
+    kernel value, then average. Returns float in [0, 1].
+
+    Args:
+        trades_a: list of trade dicts with 'timestamp' field
+        trades_b: list of trade dicts with 'timestamp' field
+        kernel_seconds: kernel bandwidth (default 86400 = 24 hours)
+
+    Returns:
+        float in [0, 1]: mean similarity across all trades in A
+    """
+    import numpy as np
+
+    # Extract timestamps
+    ts_a = [t.get('timestamp') for t in trades_a if t.get('timestamp')]
+    ts_b = [t.get('timestamp') for t in trades_b if t.get('timestamp')]
+
+    if not ts_a or not ts_b:
+        return 0.0
+
+    ts_a = np.array(sorted(ts_a))
+    ts_b = np.array(sorted(ts_b))
+
+    # For each trade in A, find closest trade in B
+    similarities = []
+    for t_a in ts_a:
+        # Compute distance to all trades in B
+        distances = np.abs(ts_b - t_a)
+        min_distance = np.min(distances)
+
+        # Linear kernel: similarity = max(0, 1 - distance/bandwidth)
+        similarity = max(0.0, 1.0 - min_distance / kernel_seconds)
+        similarities.append(similarity)
+
+    return float(np.mean(similarities))
+
+
+def compute_pairwise_alignment_matrix(wallet_trades_dict, kernel_seconds=86400):
+    """
+    Returns (addresses_list, N x N list-of-lists matrix).
+    Diagonal is 1.0.
+
+    Args:
+        wallet_trades_dict: {address: [trade_dicts]}
+        kernel_seconds: kernel bandwidth
+
+    Returns:
+        tuple: (addresses_list, matrix)
+            - addresses_list: sorted list of wallet addresses
+            - matrix: N x N list of lists, matrix[i][j] = alignment score
+    """
+    addresses = sorted(wallet_trades_dict.keys())
+    n = len(addresses)
+
+    # Initialize matrix
+    matrix = [[0.0 for _ in range(n)] for _ in range(n)]
+
+    # Compute pairwise scores
+    for i, addr_a in enumerate(addresses):
+        for j, addr_b in enumerate(addresses):
+            if i == j:
+                matrix[i][j] = 1.0
+            elif i < j:
+                # Compute score once, mirror it
+                score = pairwise_alignment_score(
+                    wallet_trades_dict[addr_a],
+                    wallet_trades_dict[addr_b],
+                    kernel_seconds
+                )
+                matrix[i][j] = score
+                matrix[j][i] = score
+            # else: already filled by mirroring
+
+    return addresses, matrix
+
+
+def alignment_null_distribution(wallet_trades_dict, n_simulations=100, kernel_seconds=86400):
+    """
+    For each sim: uniformly redistribute timestamps within each
+    wallet's observed time range (preserving count), recompute
+    pairwise alignment, record mean off-diagonal.
+    Returns list of null means.
+
+    Args:
+        wallet_trades_dict: {address: [trade_dicts]}
+        n_simulations: number of Monte Carlo simulations
+        kernel_seconds: kernel bandwidth
+
+    Returns:
+        list of floats: mean off-diagonal alignment for each simulation
+    """
+    import numpy as np
+
+    # Extract time ranges for each wallet
+    wallet_ranges = {}
+    for addr, trades in wallet_trades_dict.items():
+        timestamps = [t.get('timestamp') for t in trades if t.get('timestamp')]
+        if timestamps:
+            wallet_ranges[addr] = {
+                'min': min(timestamps),
+                'max': max(timestamps),
+                'count': len(timestamps)
+            }
+
+    null_means = []
+
+    for _ in range(n_simulations):
+        # Shuffle timestamps for each wallet
+        shuffled_trades = {}
+        for addr, info in wallet_ranges.items():
+            # Generate uniform random timestamps in wallet's time range
+            random_ts = np.random.uniform(
+                info['min'],
+                info['max'],
+                size=info['count']
+            )
+            shuffled_trades[addr] = [{'timestamp': int(ts)} for ts in random_ts]
+
+        # Compute pairwise alignment matrix
+        _, matrix = compute_pairwise_alignment_matrix(shuffled_trades, kernel_seconds)
+
+        # Compute mean off-diagonal
+        n = len(matrix)
+        off_diagonal_sum = 0.0
+        off_diagonal_count = 0
+        for i in range(n):
+            for j in range(n):
+                if i != j:
+                    off_diagonal_sum += matrix[i][j]
+                    off_diagonal_count += 1
+
+        if off_diagonal_count > 0:
+            null_means.append(off_diagonal_sum / off_diagonal_count)
+
+    return null_means
+
+
+def test_alignment_significance(observed_matrix, null_distribution):
+    """
+    Returns dict: observed_mean, null_mean, null_std, z_score,
+    p_value (one-tailed via scipy.stats.norm).
+
+    Args:
+        observed_matrix: N x N list of lists from compute_pairwise_alignment_matrix
+        null_distribution: list of null means from alignment_null_distribution
+
+    Returns:
+        dict with statistical test results
+    """
+    import numpy as np
+    from scipy.stats import norm
+
+    # Compute observed mean off-diagonal
+    n = len(observed_matrix)
+    off_diagonal_sum = 0.0
+    off_diagonal_count = 0
+    for i in range(n):
+        for j in range(n):
+            if i != j:
+                off_diagonal_sum += observed_matrix[i][j]
+                off_diagonal_count += 1
+
+    observed_mean = off_diagonal_sum / off_diagonal_count if off_diagonal_count > 0 else 0.0
+
+    # Null distribution statistics
+    null_mean = float(np.mean(null_distribution))
+    null_std = float(np.std(null_distribution, ddof=1))
+
+    # Z-score and p-value
+    if null_std > 0:
+        z_score = (observed_mean - null_mean) / null_std
+        # One-tailed test: P(Z > z_score)
+        p_value = 1 - norm.cdf(z_score)
+    else:
+        z_score = 0.0
+        p_value = 1.0
+
+    return {
+        'observed_mean': float(observed_mean),
+        'null_mean': null_mean,
+        'null_std': null_std,
+        'z_score': float(z_score),
+        'p_value': float(p_value)
+    }
+
+
+# ===================================================================
 # CLI smoke test
 # ===================================================================
 
