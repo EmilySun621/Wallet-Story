@@ -869,3 +869,92 @@
   color: #cbd5e1;
   font-weight: 600;
 }
+
+/* === CACHE INDICATOR === */
+.cached-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: #a78bfa;
+  padding: 0.5rem 0.75rem;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.cached-rerun {
+  background: none;
+  border: none;
+  color: #a78bfa;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+
+.cached-rerun:hover {
+  color: #c4b5fd;
+}
+
+/* === RECENT INVESTIGATIONS === */
+.recent-investigations {
+  margin-top: 1.5rem;
+}
+
+.recent-label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0 0 0.5rem;
+}
+
+.recent-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.recent-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.recent-chip:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.recent-addr {
+  color: #cbd5e1;
+}
+
+.recent-verdict {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.recent-verdict-critical {
+  color: #ef4444;
+}
+
+.recent-verdict-low {
+  color: #10b981;
+}
+
+.recent-verdict-medium {
+  color: #f59e0b;
+}
+
+.recent-verdict-baseline {
+  color: #10b981;
+}

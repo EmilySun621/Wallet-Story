@@ -49,6 +49,47 @@ function Investigation() {
   const [attestationError, setAttestationError] = useState(null);
   const [attestationUID, setAttestationUID] = useState(null);
 
+  // Cache state and helpers
+  const CACHE_KEY = 'walletstory_cache_v1';
+  const CACHE_MAX_ENTRIES = 20;
+  const [fromCache, setFromCache] = useState(false);
+  const [forceRefresh, setForceRefresh] = useState(false);
+
+  const readCache = () => {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  };
+
+  const writeCache = (entries) => {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(entries));
+    } catch (e) {
+      console.warn('localStorage write failed', e);
+    }
+  };
+
+  const getCached = (addr) => {
+    if (!addr) return null;
+    const entries = readCache();
+    return entries[addr.toLowerCase()] || null;
+  };
+
+  const saveCached = (addr, resultData, logEntries) => {
+    const entries = readCache();
+    entries[addr.toLowerCase()] = {
+      address: addr,
+      result: resultData,
+      activityLog: logEntries,
+      timestamp: Date.now(),
+    };
+    const sorted = Object.entries(entries).sort((a, b) => b[1].timestamp - a[1].timestamp);
+    writeCache(Object.fromEntries(sorted.slice(0, CACHE_MAX_ENTRIES)));
+  };
+
   // Auto-scroll activity log to bottom
   useEffect(() => {
     if (activityLogRef.current) {
@@ -151,6 +192,12 @@ function Investigation() {
 
       setResult(data);
       setLoading(false);
+
+      // Snapshot the current activityLog and persist alongside the result
+      setActivityLog(prev => {
+        saveCached(address.trim(), data, prev);
+        return prev;
+      });
     }
     else if (eventName === 'error') {
       setActivityLog(prev => [...prev, {
@@ -181,6 +228,18 @@ function Investigation() {
       setError('Invalid Ethereum address format. Must start with 0x followed by 40 hex characters.');
       return;
     }
+
+    // Cache check — serve instantly if we have a stored result and user didn't request a fresh run
+    const cached = getCached(address.trim());
+    if (cached && !forceRefresh) {
+      setActivityLog(cached.activityLog || []);
+      setResult(cached.result);
+      setFromCache(true);
+      setError(null);
+      return;
+    }
+    setFromCache(false);
+    setForceRefresh(false);
 
     setLoading(true);
 
@@ -375,14 +434,43 @@ function Investigation() {
                 <span className="chip-verdict">Low</span>
               </button>
             </div>
+
+            {/* Recent investigations history panel */}
+            {Object.keys(readCache()).length > 0 && (
+              <div className="recent-investigations">
+                <p className="recent-label">Recent investigations (from this browser):</p>
+                <div className="recent-chips">
+                  {Object.entries(readCache())
+                    .sort((a, b) => b[1].timestamp - a[1].timestamp)
+                    .slice(0, 6)
+                    .map(([addr, entry]) => (
+                      <button
+                        key={addr}
+                        className="recent-chip"
+                        onClick={() => setAddress(entry.address)}
+                        title={`Investigated ${new Date(entry.timestamp).toLocaleString()}`}
+                      >
+                        <span className="recent-addr">
+                          {entry.address.slice(0, 8)}…{entry.address.slice(-4)}
+                        </span>
+                        {entry.result?.verdict && (
+                          <span className={`recent-verdict recent-verdict-${entry.result.verdict.toLowerCase()}`}>
+                            {entry.result.verdict}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Duration notice */}
           <p className="duration-notice">
             <span className="duration-icon">⏱</span>
             Analysis takes <strong>60–90 seconds</strong> for fresh wallets.
-            Known cases (Theo4, Fredi9999, Control) return pre-computed
-            results in seconds. First request may take an extra 30s if our
+            Previously investigated wallets (including Theo4, Fredi9999, Control after first run)
+            load instantly from local cache. First request may take an extra 30s if our
             backend is cold-starting.
           </p>
         </div>
@@ -431,6 +519,23 @@ function Investigation() {
       {/* C. RESULTS SECTION */}
       {result && !loading && (
         <section className="results-section">
+          {/* Cache Indicator */}
+          {fromCache && (
+            <div className="cached-indicator">
+              <span>✓ Loaded from cache</span>
+              <button
+                className="cached-rerun"
+                onClick={() => {
+                  setForceRefresh(true);
+                  setFromCache(false);
+                  handleInvestigate();
+                }}
+              >
+                Run fresh
+              </button>
+            </div>
+          )}
+
           {/* Subject Address Header */}
           <div className="subject-header">
             <div className="subject-label">Subject:</div>
