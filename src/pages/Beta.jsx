@@ -242,25 +242,37 @@ export default function Beta() {
         </p>
 
         <div className="api-preview">
-          <pre><code>
-<span className="api-method">POST</span> <span className="api-method">/v1/investigate</span>
-<span className="api-header">Authorization:</span> Bearer &lt;your_api_key&gt;
-
-{'{'}
-  <span className="api-key">"address"</span>: <span className="api-string">"0x..."</span>,
-  <span className="api-key">"depth"</span>: <span className="api-string">"full"</span>,
-  <span className="api-key">"webhook_url"</span>: <span className="api-string">"https://yourplatform.com/walletstory-callback"</span>
-{'}'}
-
-<span className="api-comment"># Response</span>
-{'{'}
-  <span className="api-key">"verdict"</span>: <span className="api-string">"Critical"</span>,
-  <span className="api-key">"p_value"</span>: <span className="api-number">1e-300</span>,
-  <span className="api-key">"cluster_size"</span>: <span className="api-number">12</span>,
-  <span className="api-key">"attestation_uid"</span>: <span className="api-string">"0x..."</span>,
-  <span className="api-key">"easscan_url"</span>: <span className="api-string">"https://sepolia.easscan.org/attestation/view/0x..."</span>
-{'}'}
-          </code></pre>
+          <pre className="api-code-block">
+            <span className="code-method">POST</span>{' '}
+            <span className="code-path">/v1/investigate</span>{'\n'}
+            <span className="code-header">Authorization:</span> Bearer{' '}
+            <span className="code-value">&lt;your_api_key&gt;</span>
+            {'\n\n'}
+            {'{'}{'\n'}
+            {'  '}<span className="code-key">"address"</span>:{' '}
+            <span className="code-string">"0x..."</span>,{'\n'}
+            {'  '}<span className="code-key">"depth"</span>:{' '}
+            <span className="code-string">"full"</span>,{'\n'}
+            {'  '}<span className="code-key">"webhook_url"</span>:{' '}
+            <span className="code-string">"https://yourplatform.com/walletstory-callback"</span>
+            {'\n'}
+            {'}'}
+            {'\n\n'}
+            <span className="code-comment"># Response</span>{'\n'}
+            {'{'}{'\n'}
+            {'  '}<span className="code-key">"verdict"</span>:{' '}
+            <span className="code-string">"Critical"</span>,{'\n'}
+            {'  '}<span className="code-key">"p_value"</span>:{' '}
+            <span className="code-number">1e-300</span>,{'\n'}
+            {'  '}<span className="code-key">"cluster_size"</span>:{' '}
+            <span className="code-number">12</span>,{'\n'}
+            {'  '}<span className="code-key">"attestation_uid"</span>:{' '}
+            <span className="code-string">"0x..."</span>,{'\n'}
+            {'  '}<span className="code-key">"easscan_url"</span>:{' '}
+            <span className="code-string">"https://sepolia.easscan.org/attestation/view/0x..."</span>
+            {'\n'}
+            {'}'}
+          </pre>
         </div>
 
         <div className="api-features">
