@@ -102,6 +102,13 @@ function Methodology() {
           <p className="foundation-summary">
             WalletStory sits at the intersection of computational forensics and legal doctrine. Paper 1 provides the statistical network framework; Paper 2 establishes that our findings are legally actionable under existing federal securities law. Together, they frame on-chain prediction market surveillance as both a statistical discipline and a compliance primitive.
           </p>
+
+          <div className="methodology-generalization">
+            <div className="card-overline">WHY POLYMARKET AS OUR VALIDATION SET</div>
+            <p>
+              Public on-chain trade data, documented insider trading cases (2024 US election cycle), and a published peer-reviewed forensic framework (arXiv:2512.18918). The methodology is market-agnostic: any venue with (a) on-chain trade data, (b) an oracle or reference price, and (c) public event timestamps can plug in — including tokenized equity exchanges, RWA perpetuals markets, and Pre-IPO token platforms.
+            </p>
+          </div>
         </div>
       </section>
 

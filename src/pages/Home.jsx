@@ -79,10 +79,18 @@ function Home() {
       {/* A. HERO */}
       <section className="hero-section">
         <div className="hero-container">
-          <h1 className="hero-title">WalletStory</h1>
+          <h1 className="hero-title">On-chain market surveillance for tokenized markets.</h1>
           <p className="hero-subtitle">
-            Autonomous forensic investigation for prediction market insider trading. Every finding published on-chain.
+            NYSE has SMARTS. NASDAQ has SMARTS. Tokenized exchanges don't — because no one built market surveillance for pseudonymous on-chain markets. We did. Validated on Polymarket, where insider trading is documented and peer-reviewed forensic papers exist. Generalizes to tokenized equities, RWA perpetuals, and Pre-IPO markets.
           </p>
+
+          <div className="ticker-chip-row">
+            <span className="ticker-chip">POLY-ELECTION</span>
+            <span className="ticker-chip">AAPL.M</span>
+            <span className="ticker-chip">NVDA.M</span>
+            <span className="ticker-chip">SPACEX.M</span>
+            <span className="ticker-chip ticker-chip-more">+ any on-chain market</span>
+          </div>
 
           <div className="stats-strip">
             <div className="stat-pill">
@@ -622,7 +630,7 @@ z_score = 28.9σ above null baseline ✓
           <div className="deployment-overline">WHO THIS IS FOR</div>
           <h2 className="section-title">Three deployment paths</h2>
           <p className="section-subtitle">
-            From on-demand audits to real-time surveillance to educational infrastructure — each scenario uses the same open pipeline.
+            From on-demand audits to real-time surveillance to educational infrastructure — the same forensic pipeline, validated on Polymarket, plugs into any on-chain market: prediction markets, tokenized equities (AAPL.M, NVDA.M), RWA perpetuals, and Pre-IPO tokens.
           </p>
 
           <div className="deployment-grid">
@@ -633,7 +641,7 @@ z_score = 28.9σ above null baseline ✓
               </div>
               <h3 className="deployment-role">Prediction-market operators</h3>
               <p className="deployment-description">
-                Integrate the WalletStory pipeline into onboarding flows and ongoing surveillance to flag coordinated accounts before they reach market-moving positions. The EAS attestation layer creates a documented compliance trail.
+                Integrate the WalletStory pipeline into onboarding flows and ongoing surveillance to flag coordinated accounts before they reach market-moving positions. The EAS attestation layer creates a documented compliance trail. Drop-in integration with tokenized stock exchanges via webhook — verdict, p-value, and on-chain attestation UID in one response.
               </p>
               <p className="deployment-value">
                 Polymarket, Kalshi, Azuro, and emerging on-chain prediction venues.
